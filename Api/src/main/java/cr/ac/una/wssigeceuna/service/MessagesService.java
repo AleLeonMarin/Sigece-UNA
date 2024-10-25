@@ -1,0 +1,130 @@
+package cr.ac.una.wssigeceuna.service;
+
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import cr.ac.una.wssigeceuna.model.Messages;
+import cr.ac.una.wssigeceuna.model.MessagesDto;
+import cr.ac.una.wssigeceuna.util.CodigoRespuesta;
+import cr.ac.una.wssigeceuna.util.Respuesta;
+
+@Stateless
+@LocalBean
+public class MessagesService {
+
+    private static final Logger LOG = Logger.getLogger(MessagesService.class.getName());
+
+    @PersistenceContext(unitName = "SigeceUnaWsPU")
+    private EntityManager em;
+
+    public Respuesta getMessage(Long id) {
+        try {
+            Messages sms = em.find(Messages.class, id);
+            if (sms == null) {
+                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
+                        "No se encontró el mensaje con el ID proporcionado.", "getMessage NoResultException");
+            }
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Mensaje", new MessagesDto(sms));
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrió un error al consultar el mensaje.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al consultar el mensaje.",
+                    "getMessage " + ex.getMessage());
+        }
+    }
+
+    public Respuesta getMensajesByChat(Long chat) {
+        try {
+            Query qryMensajes = em.createNamedQuery("Mensajes.findByChat", Messages.class);
+            qryMensajes.setParameter("chat", chat);
+            em.refresh(chat);
+            List<Messages> sms = qryMensajes.getResultList();
+            List<MessagesDto> smsDto = new ArrayList<>();
+            for (Messages message : sms) {
+                smsDto.add(new MessagesDto(message));
+            }
+
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Mensajes", smsDto);
+        } catch (NoResultException ex) {
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
+                    "No se encontraron mensajes para este chat.", "getMensajesByChat NoResultException");
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrió un error al consultar los mensajes del chat.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
+                    "Ocurrió un error al consultar los mensajes del chat.", "getMensajesByChat " + ex.getMessage());
+        }
+    }
+
+    public Respuesta saveMessage(MessagesDto sms) {
+        try {
+            Messages mensaje;
+            if (sms.getId() != null && sms.getId() > 0) {
+                mensaje = em.find(Messages.class, sms.getId());
+                if (mensaje == null) {
+                    return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
+                            "No se encontró el mensaje a modificar.", "guardarMensaje NoResultException");
+                }
+                mensaje.update(sms);
+                mensaje = em.merge(mensaje);
+            } else {
+                mensaje = new Messages(sms);
+                em.persist(mensaje);
+            }
+            em.flush();
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Mensaje", new MessagesDto(mensaje));
+        } catch (jakarta.validation.ConstraintViolationException ex) {
+            ex.getConstraintViolations().forEach(violation -> {
+                LOG.log(Level.SEVERE, "Validation error in field {0}: {1}",
+                        new Object[] { violation.getPropertyPath(), violation.getMessage() });
+            });
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error de validación al guardar el mensaje.",
+                    "guardarMensaje " + ex.getMessage());
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrió un error al guardar el mensaje.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al guardar el mensaje.",
+                    "guardarMensaje " + ex.getMessage());
+        }
+    }
+
+    public Respuesta sendMessages(List<MessagesDto> mensajesDtoList) {
+        try {
+            List<Messages> mensajes = new ArrayList<>();
+            for (MessagesDto mensajeDto : mensajesDtoList) {
+                Messages mensaje = new Messages(mensajeDto);
+                em.persist(mensaje);
+                mensajes.add(mensaje);
+            }
+            em.flush();
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Mensajes", mensajesDtoList);
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrió un error al enviar los mensajes.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al enviar los mensajes.",
+                    "enviarMensajes " + ex.getMessage());
+        }
+    }
+
+    public Respuesta deleteMessages(Long id) {
+        try {
+            Messages mensaje = em.find(Messages.class, id);
+            if (mensaje == null) {
+                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el mensaje a eliminar.",
+                        "eliminarMensaje NoResultException");
+            }
+            em.remove(mensaje);
+            em.flush();
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "");
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrió un error al eliminar el mensaje.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al eliminar el mensaje.",
+                    "eliminarMensaje " + ex.getMessage());
+        }
+    }
+
+}

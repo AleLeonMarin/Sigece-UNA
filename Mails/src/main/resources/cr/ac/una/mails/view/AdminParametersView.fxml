@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane id="AnchorPane" fx:id="root" prefHeight="496.0" prefWidth="772.0" stylesheets="@Styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/22" fx:controller="cr.ac.una.mails.controller.AdminParametersController">
+   <children>
+      <BorderPane layoutX="151.0" layoutY="83.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <center>
+            <VBox alignment="CENTER" prefHeight="429.0" prefWidth="649.0" spacing="20.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Text fill="#000000a5" strokeType="OUTSIDE" strokeWidth="0.0" text="Parámetros del servidor para el envío de correos" wrappingWidth="462.13671875">
+                     <font>
+                        <Font size="21.0" />
+                     </font>
+                  </Text>
+                  <HBox alignment="CENTER" prefHeight="41.0" prefWidth="772.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/mail.png" />
+                           </image>
+                        </ImageView>
+                        <MFXTextField fx:id="txtCorreo" floatMode="BORDER" floatingText="Correo" prefHeight="40.0" prefWidth="385.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="52.0" prefWidth="772.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="43.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/padlock.png" />
+                           </image>
+                        </ImageView>
+                        <MFXTextField fx:id="txtClave" floatMode="BORDER" floatingText="Clave" prefHeight="40.0" prefWidth="385.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="45.0" prefWidth="772.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="37.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/computer.png" />
+                           </image>
+                        </ImageView>
+                        <MFXTextField fx:id="txtPuerto" floatMode="BORDER" floatingText="Puerto" prefHeight="40.0" prefWidth="385.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="45.0" prefWidth="772.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/server.png" />
+                           </image>
+                        </ImageView>
+                        <MFXTextField fx:id="txtServer" floatMode="BORDER" floatingText="Servidor" prefHeight="40.0" prefWidth="385.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="45.0" prefWidth="772.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/wall-clock.png" />
+                           </image>
+                        </ImageView>
+                        <MFXTextField fx:id="txtTimeout" floatMode="BORDER" floatingText="Cantidad de correos por hora" prefHeight="40.0" prefWidth="385.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="31.0" prefWidth="772.0">
+                     <children>
+                        <MFXButton fx:id="btnSave" onAction="#onActionBtnSave" prefHeight="25.0" prefWidth="101.0" styleClass="button-Register" text="Guardar">
+                           <HBox.margin>
+                              <Insets right="20.0" />
+                           </HBox.margin>
+                        </MFXButton>
+                        <MFXButton fx:id="btnInfo" ellipsisString="" onAction="#onActionBtnInfo" prefHeight="48.0" prefWidth="55.0" styleClass="image-info-button" text=" " textFill="WHITE" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </center>
+      </BorderPane>
+      <StackPane prefHeight="150.0" prefWidth="200.0" />
+   </children>
+</AnchorPane>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="826.0" prefWidth="1148.0" styleClass="stack-personal-pane1" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.security.controller.SecurityAppController">
+    <children>
+        <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="721.0" prefWidth="1081.0" styleClass="stack-personal-pane">
+            <children>
+                <HBox fx:id="root" prefHeight="100.0" prefWidth="200.0">
+                    <children>
+                        <VBox alignment="TOP_CENTER" prefHeight="628.0" prefWidth="226.0" spacing="20.0">
+                            <children>
+                                <ImageView fx:id="imgViewUserPhotProf" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                    <VBox.margin>
+                                        <Insets top="10.0" />
+                                    </VBox.margin>
+                                    <image>
+                                        <Image url="@../resources/profileBlank.png" />
+                                    </image>
+                                </ImageView>
+                                <MFXButton fx:id="btnAdminUsers" onAction="#onActionBtnAdminUsers" prefHeight="35.0" prefWidth="200.0" styleClass="button-Register" text="Administración de Usuarios" textAlignment="JUSTIFY">
+                                    <VBox.margin>
+                                        <Insets top="35.0" />
+                                    </VBox.margin>
+                                </MFXButton>
+                                <MFXButton fx:id="btnAdminSystems" onAction="#onActionBtnAdminSystems" prefHeight="35.0" prefWidth="200.0" styleClass="button-Register" text="Administración de Sistemas" />
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <MFXButton fx:id="btnLogOut" buttonType="RAISED" onAction="#onActionBtnLogOut" prefHeight="48.0" prefWidth="46.0" styleClass="image-LogOut-button" text="‎ ">
+                                 <HBox.margin>
+                                    <Insets left="20.0" />
+                                 </HBox.margin>
+                              </MFXButton>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="170.0" />
+                           </VBox.margin>
+                        </HBox>
+                            </children>
+                        </VBox>
+                        <Separator orientation="VERTICAL" prefHeight="628.0" prefWidth="16.0" />
+                  <StackPane prefHeight="628.0" prefWidth="787.0" />
+                    </children>
+                </HBox>
+            </children>
+        </StackPane>
+    </children>
+</StackPane>

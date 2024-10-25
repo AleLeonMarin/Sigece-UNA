@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="501.0" prefWidth="738.0" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.mails.controller.BuzonController">
+   <children>
+      <StackPane layoutX="16.0" layoutY="127.0" prefHeight="501.0" prefWidth="730.0" styleClass="stack-personal-pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-4.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="477.0" prefWidth="695.0">
+               <children>
+                  <HBox prefHeight="33.0" prefWidth="650.0">
+                     <children>
+                        <ImageView fitHeight="83.0" fitWidth="276.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/Buzon.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </ImageView>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <MFXFilterComboBox fx:id="cmbEstado" floatMode="BORDER" floatingText="Estado" prefHeight="38.0" prefWidth="123.0" />
+                        <MFXTextField fx:id="txtBusqueda" floatMode="DISABLED" floatingText="Buscar" prefHeight="39.0" prefWidth="292.0">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </MFXTextField>
+                        <MFXButton fx:id="btnBuscar" onAction="#onActionBtnBuscar" prefHeight="30.0" prefWidth="62.0" styleClass="button-redStyle" text="Buscar">
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </MFXButton>
+                     </children>
+                  </HBox>
+                  <TableView fx:id="tbvMails" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="307.0" prefWidth="529.0">
+                     <VBox.margin>
+                        <Insets left="40.0" top="10.0" />
+                     </VBox.margin>
+                     <columns>
+                        <TableColumn fx:id="tbcDestinatario" prefWidth="182.0" text="Destinatario" />
+                        <TableColumn fx:id="tbcEstado" prefWidth="99.0" text="Estado" />
+                        <TableColumn fx:id="tbcFecha" prefWidth="209.0" text="Fecha" />
+                        <TableColumn fx:id="tbcId" prefWidth="38.0" text="ID " />
+                     </columns>
+                  </TableView>
+                  <HBox alignment="CENTER" prefHeight="60.0" prefWidth="563.0" spacing="20.0">
+                     <children>
+                        <MFXButton fx:id="btnDelete" onAction="#onActionBtnDelete" prefHeight="30.0" prefWidth="75.0" styleClass="button-blueStyle" text="Eliminar">
+                           <HBox.margin>
+                              <Insets left="15.0" />
+                           </HBox.margin>
+                        </MFXButton>
+                        <MFXButton fx:id="btnShowContent" onAction="#onActionBtnShowContent" prefHeight="30.0" prefWidth="112.0" styleClass="button-blueStyle" text="Ver Contenido" />
+                        <MFXButton fx:id="btnSendNow" onAction="#onActionBtnSendNow" prefHeight="30.0" prefWidth="162.0" styleClass="button-blueStyle" text="Actualizar Correos" />
+                     </children>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </StackPane>
+      <Button fx:id="btnNewMail" layoutX="664.0" layoutY="501.0" mnemonicParsing="false" onAction="#onActionBtnNewMail" prefHeight="66.0" prefWidth="62.0" styleClass="image-newMail-button" />
+   </children>
+   <padding>
+      <Insets left="20.0" />
+   </padding>
+</AnchorPane>

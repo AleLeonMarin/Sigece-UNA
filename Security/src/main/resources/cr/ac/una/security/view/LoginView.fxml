@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="622.0" styleClass="stack-personal-pane1" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.security.controller.LoginController">
+   <children>
+      <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="469.0" prefWidth="485.0" styleClass="stack-personal-pane">
+         <StackPane.margin>
+            <Insets bottom="50.0" left="70.0" right="70.0" top="50.0" />
+         </StackPane.margin>
+         <children>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" StackPane.alignment="CENTER">
+               <children>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/profileBlank.png" />
+                     </image></ImageView>
+                  <MFXTextField fx:id="textMail" floatMode="BORDER" floatingText="Correo electrónico" prefHeight="32.0" prefWidth="266.0" />
+                  <MFXTextField fx:id="textPassword" floatMode="BORDER" floatingText="Contraseña" prefHeight="32.0" prefWidth="266.0">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin></MFXTextField>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                     <children>
+                        <MFXButton fx:id="btnRegister" onAction="#onActionBtnRegister" prefHeight="40.0" prefWidth="135.0" styleClass="button-Register" text="Nuevo Usuario">
+                           <HBox.margin>
+                              <Insets bottom="20.0" top="20.0" />
+                           </HBox.margin>
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                        </MFXButton>
+                        <MFXButton fx:id="btnLogIn" onAction="#onActionBtnLogIn" prefHeight="40.0" prefWidth="135.0" styleClass="button-SignIn" text="Ingresar">
+                           <HBox.margin>
+                              <Insets bottom="20.0" top="20.0" />
+                           </HBox.margin>
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                        </MFXButton>
+                     </children>
+                  </HBox>
+                  <Separator prefHeight="0.0" prefWidth="272.0" />
+                  <MFXButton fx:id="btnChangePass" onAction="#onActionBtnChangePass" prefHeight="31.0" prefWidth="177.0" styleClass="button-ForgetPass" text="Olvidaste tu contraseña?">
+                     <VBox.margin>
+                        <Insets bottom="20.0" top="20.0" />
+                     </VBox.margin>
+                  </MFXButton>
+               </children>
+            </VBox>
+         </children>
+      </StackPane>
+   </children>
+</StackPane>

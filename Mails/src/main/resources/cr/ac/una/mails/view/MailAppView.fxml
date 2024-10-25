@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="727.0" prefWidth="1147.0" styleClass="stack-personal-pane1" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.mails.controller.MailAppController">
+    <children>
+        <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="678.0" prefWidth="1081.0" styleClass="stack-personal-pane">
+            <children>
+                <HBox fx:id="root" prefHeight="100.0" prefWidth="200.0">
+                    <children>
+                        <VBox alignment="TOP_CENTER" prefHeight="721.0" prefWidth="276.0" spacing="20.0">
+                            <children>
+                                <ImageView fx:id="imgViewUserPhotProf" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                    <VBox.margin>
+                                        <Insets top="10.0" />
+                                    </VBox.margin>
+                                    <image>
+                                        <Image url="@../resources/Logo.png" />
+                                    </image>
+                                </ImageView>
+                                <MFXButton fx:id="btnAdminParameters" onAction="#onActionBtnAdminParameters" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Administración de Parametros" textAlignment="JUSTIFY">
+                                    <VBox.margin>
+                                        <Insets top="35.0" />
+                                    </VBox.margin>
+                                </MFXButton>
+                                <MFXButton fx:id="btnAdminProcess" ellipsisString="" onAction="#onActionBtnAdminProcess" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Procesos de Notificación" textOverrun="CLIP" />
+                                <MFXButton fx:id="btnMailBox" onAction="#onBtnMailBox" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Buzón de Correos" />
+                        <MFXButton fx:id="btnMassiveMails" onAction="#onActionBtnMassiveMails" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Generación de Correos Masivos" />
+                        <MFXButton fx:id="btnNewMail" onAction="#onActionBtnNewMail" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Envío de Correos" />
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <MFXButton fx:id="btnLogOut" buttonType="RAISED" prefHeight="48.0" prefWidth="49.0" styleClass="button-blueStyle" text="‎ ">
+                                 <HBox.margin>
+                                    <Insets left="20.0" />
+                                 </HBox.margin>
+                                 <graphic>
+                                    <ImageView fitHeight="32.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../resources/logout.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </MFXButton>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="170.0" />
+                           </VBox.margin>
+                        </HBox>
+                            </children>
+                        </VBox>
+                        <Separator orientation="VERTICAL" prefHeight="721.0" prefWidth="17.0" />
+                  <StackPane fx:id="stackPaneRoot" prefHeight="628.0" prefWidth="787.0">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" />
+                     </children></StackPane>
+                    </children>
+                </HBox>
+            </children>
+        </StackPane>
+    </children>
+</StackPane>

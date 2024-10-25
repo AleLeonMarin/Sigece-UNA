@@ -1,0 +1,291 @@
+.stack-personal-pane1 {
+    -fx-background-color: #808080;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);
+}
+.stack-personal-pane {
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 15;
+    -fx-padding: 0;
+    -fx-border-radius: 15;
+    -fx-border-color: #d0d0d0;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);
+}
+
+.image-profile {
+
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 10, 0, 0, 2);
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.button-Register {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #070F2B;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.button-SignIn {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #1b1a54;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+
+}
+
+.button-ForgetPass {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #525b90;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+
+}
+
+.button-SignIn:pressed, .button-SignIn:hover, .button-SignIn:armed, .button-SignIn:focused {
+    -fx-background-color: #0A1B42;
+    -fx-text-fill: white;
+}
+
+.button-Register:pressed, .button-Register:hover, .button-Register:armed, .button-Register:focused {
+    -fx-background-color: #070f2b;
+    -fx-text-fill: white;
+}
+
+.button-ForgetPass:pressed, .button-ForgetPass:hover, .button-ForgetPass:armed, .button-ForgetPass:focused {
+    -fx-background-color: #525b90;
+    -fx-text-fill: white;
+}
+
+.image-button {
+    -fx-background-image: url("../resources/go-home.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 10, 0, 0, 2);
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.image-button:hover, .image-button:pressed, .image-button:armed, .image-button:focused {
+    -fx-background-image: url("../resources/go-home.png");
+    -fx-background-color: #f0f0f0;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 10, 0, 0, 2);
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.image-LogOut-button {
+    -fx-background-image: url("../resources/logout-512.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #525b90;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+
+}
+
+.image-LogOut-button:hover, .image-LogOut-button:pressed, .image-LogOut-button:armed, .image-LogOut-button:focused {
+    -fx-background-image: url("../resources/logout-512.png");
+    -fx-background-color: rgba(28, 34, 73, 0.68);
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.jfx-btn-add > ImageView {-fx-image: url("../resources/add-user.png");}
+
+.jfx-txfs-security,
+	.jfx-txfs-security:focused,
+	.jfx-txfs-security:hover,
+	.jfx-txfs-security:armed,
+	.jfx-txfs-security:selected,
+	.jfx-txfs-security:unfocused {
+		-fx-background-color: transparent;
+		/* Fondo transparente */
+		-fx-border-color: transparent;
+		/* Borde transparente */
+		-fx-border-width: 0;
+		/* Ancho del borde a 0 */
+		-fx-border-style: none;
+		/* Sin estilo de borde */
+		-fx-padding: 0;
+		/* Sin relleno */
+		-fx-background-insets: 0;
+		/* Sin insets de fondo */
+		-fx-background-radius: 0;
+		/* Sin radio de fondo */
+	}
+
+
+
+	.jfx-txfs-security-container,
+	.jfx-txfs-security-container:focused,
+	.jfx-txfs-security-container:hover,
+	.jfx-txfs-security-container:armed,
+	.jfx-txfs-security-container:selected,
+	.jfx-txfs-security-container:unfocused {
+		-fx-border-color: BLACK;
+		/* Borde transparente */
+		-fx-border-width: 0 0 1 0;
+		/* Línea inferior */
+		-fx-border-style: solid;
+		/* Estilo de línea sólido */
+		-fx-border-radius: 0;
+		/* Sin radio */
+	}
+
+.jfx-btn-save > ImageView {-fx-image: url("../resources/save.png");}
+.jfx-btn-delete > ImageView {-fx-image: url("../resources/delete.png");}
+.jfx-btn-new > ImageView {-fx-image: url("../resources/add.png");}
+
+.jfx-btn-save {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #1b1a54;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+
+}
+
+.jfx-btn-save:pressed, .jfx-btn-save:hover, .jfx-btn-save:armed, .jfx-btn-save:focused {
+    -fx-background-color: #0A1B42;
+    -fx-text-fill: white;
+}
+
+.jfx-btn-delete {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #1b1a54;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+
+}
+
+.jfx-btn-delete:pressed, .jfx-btn-delete:hover, .jfx-btn-delete:armed, .jfx-btn-delete:focused {
+    -fx-background-color: #0A1B42;
+    -fx-text-fill: white;
+}
+
+.jfx-btn-new {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #1b1a54;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+
+}
+
+.jfx-btn-new:pressed, .jfx-btn-new:hover, .jfx-btn-new:armed, .jfx-btn-new:focused {
+    -fx-background-color: #0A1B42;
+    -fx-text-fill: white;
+}
+
+.jfx-tbvUser-btnDelete{
+
+    -fx-opacity: 0.8;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #da372c;
+    -fx-background-image: url("../resources/delete.png");
+}

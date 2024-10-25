@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="627.0" prefWidth="846.0" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.security.controller.AdminSystemController">
+   <children>
+      <VBox prefHeight="200.0" prefWidth="0.0">
+         <children>
+            <TabPane fx:id="tpbSistemas" prefHeight="600.0" prefWidth="846.0" tabClosingPolicy="UNAVAILABLE">
+               <tabs>
+                  <Tab fx:id="tptSistemas" text="Administracion de Sistemas">
+                     <content>
+                        <HBox alignment="CENTER" prefHeight="627.0" prefWidth="856.0" spacing="10.0">
+                           <children>
+                              <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="361.0" styleClass="stack-personal-pane">
+                                 <HBox.margin>
+                                    <Insets bottom="5.0" top="5.0" />
+                                 </HBox.margin>
+                                 <children>
+                                    <TableView fx:id="tbvSistemas" prefHeight="200.0" prefWidth="200.0">
+                                       <StackPane.margin>
+                                          <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                       </StackPane.margin>
+                                    </TableView>
+                                 </children>
+                              </StackPane>
+                              <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="438.0" styleClass="stack-personal-pane">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="475.0" prefWidth="100.0" spacing="40.0">
+                                       <children>
+                                          <Text fill="#00000099" strokeType="OUTSIDE" strokeWidth="0.0" text="Creacion de Sistemas" wrappingWidth="346.13671875">
+                                             <font>
+                                                <Font name="Segoe UI" size="20.0" />
+                                             </font>
+                                          </Text>
+                                          <MFXTextField fx:id="txfID" floatMode="BORDER" floatingText="ID" onKeyPressed="#onKeyPressedTxfIdSystema">
+                                             <styleClass>
+                                                <String fx:value="jfx-txfs-security" />
+                                                <String fx:value="jfx-txfs-security-container" />
+                                             </styleClass>
+                                          </MFXTextField>
+                                          <MFXTextField fx:id="txfName" floatMode="BORDER" floatingText="Nombre" layoutX="182.0" layoutY="237.0" prefWidth="200.0">
+                                             <styleClass>
+                                                <String fx:value="jfx-txfs-security" />
+                                                <String fx:value="jfx-txfs-security-container" />
+                                             </styleClass>
+                                          </MFXTextField>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </StackPane>
+                           </children>
+                        </HBox>
+                     </content>
+                  </Tab>
+                  <Tab fx:id="tptRoles" onSelectionChanged="#onSelectiontptRoles" text="Administracion de Roles">
+                     <content>
+                        <HBox alignment="CENTER" prefHeight="627.0" prefWidth="856.0" spacing="10.0">
+                           <children>
+                              <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="361.0" styleClass="stack-personal-pane">
+                                 <HBox.margin>
+                                    <Insets bottom="5.0" top="5.0" />
+                                 </HBox.margin>
+                                 <children>
+                                    <TableView fx:id="tbvRoles" prefHeight="200.0" prefWidth="200.0">
+                                       <StackPane.margin>
+                                          <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                       </StackPane.margin>
+                                    </TableView>
+                                 </children>
+                              </StackPane>
+                              <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="438.0" styleClass="stack-personal-pane">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
+                                       <children>
+                                          <Text fill="#00000099" strokeType="OUTSIDE" strokeWidth="0.0" text="Creacion de Roles" wrappingWidth="346.13671875">
+                                             <font>
+                                                <Font name="Segoe UI" size="20.0" />
+                                             </font>
+                                          </Text>
+                                          <MFXTextField fx:id="txfIdRol" floatMode="BORDER" floatingText="ID" onKeyPressed="#onKeyPressedTxfIdRol">
+                                             <styleClass>
+                                                <String fx:value="jfx-txfs-security" />
+                                                <String fx:value="jfx-txfs-security-container" />
+                                             </styleClass>
+                                          </MFXTextField>
+                                          <MFXTextField fx:id="txfNombreRol" floatMode="BORDER" floatingText="Nombre" prefHeight="39.0" prefWidth="200.0">
+                                             <styleClass>
+                                                <String fx:value="jfx-txfs-security" />
+                                                <String fx:value="jfx-txfs-security-container" />
+                                             </styleClass>
+                                          </MFXTextField>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </StackPane>
+                           </children>
+                        </HBox>
+                     </content>
+                  </Tab>
+               </tabs>
+            </TabPane>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+               <children>
+                  <MFXButton fx:id="btnDelete" onAction="#onActionBtnDelete" prefHeight="35.0" prefWidth="100.0" styleClass="jfx-btn-delete" text="Eliminar">
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
+                  </MFXButton>
+                  <MFXButton fx:id="btnAccept" onAction="#onActionBtnAccept" prefHeight="35.0" prefWidth="111.0" styleClass="jfx-btn-save" text="Guardar">
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
+                  </MFXButton>
+                  <MFXButton fx:id="btnNew" layoutX="237.0" layoutY="43.0" onAction="#onActionBtnNew" prefHeight="35.0" prefWidth="90.0" styleClass="jfx-btn-new" text="Nuevo">
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
+                  </MFXButton>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</StackPane>

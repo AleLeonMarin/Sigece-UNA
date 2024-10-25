@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseMoved="#onActionRoot" prefHeight="681.0" prefWidth="900.0" styleClass="stack-personal-pane1" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.security.controller.RegisterController">
+    <children>
+        <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="850.0" styleClass="stack-personal-pane">
+            <StackPane.margin>
+                <Insets left="170.0" right="170.0" />
+            </StackPane.margin>
+         <children>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+                     <children>
+                        <Label text="Nuevo Usuario" textFill="#908b8b">
+                           <font>
+                              <Font size="22.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/add-user.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="627.0" prefWidth="856.0" spacing="10.0">
+                     <children>
+                        <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="400.0" styleClass="stack-personal-pane">
+                           <children>
+                              <VBox alignment="CENTER" prefHeight="520.0" prefWidth="395.0" spacing="15.0" StackPane.alignment="CENTER">
+                                 <StackPane.margin>
+                                    <Insets top="20.0" />
+                                 </StackPane.margin>
+                                 <children>
+                                    <StackPane prefHeight="119.0" prefWidth="0.0" styleClass="stack-personal-pane">
+                                       <VBox.margin>
+                                          <Insets left="120.0" right="120.0" />
+                                       </VBox.margin>
+                                       <children>
+                                          <ImageView fx:id="imgViewUser" fitHeight="115.0" fitWidth="135.0" onMouseClicked="#onActionImgvPhoto" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../resources/add-photo.jpg" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </StackPane>
+                                    <MFXTextField fx:id="txfNombre" floatMode="BORDER" floatingText="Nombre" prefHeight="39.0" prefWidth="292.0">
+                                       <styleClass>
+                                          <String fx:value="jfx-txfs-security" />
+                                          <String fx:value="jfx-txfs-security-container" />
+                                       </styleClass>
+                                    </MFXTextField>
+                                    <HBox alignment="TOP_CENTER" prefHeight="45.0" prefWidth="417.0" spacing="5.0">
+                                       <children>
+                                          <MFXTextField fx:id="txfLasts" floatMode="BORDER" floatingText="Apellidos" prefHeight="41.0" prefWidth="292.0">
+                                             <styleClass>
+                                                <String fx:value="jfx-txfs-security" />
+                                                <String fx:value="jfx-txfs-security-container" />
+                                             </styleClass>
+                                          </MFXTextField>
+                                       </children>
+                                    </HBox>
+                                    <MFXTextField fx:id="txfCed" floatMode="BORDER" floatingText="Cédula" prefHeight="39.0" prefWidth="292.0">
+                                       <styleClass>
+                                          <String fx:value="jfx-txfs-security" />
+                                          <String fx:value="jfx-txfs-security-container" />
+                                       </styleClass>
+                                    </MFXTextField>
+                                    <MFXTextField fx:id="txfMail" floatMode="BORDER" floatingText="Correo" prefHeight="39.0" prefWidth="292.0">
+                                       <styleClass>
+                                          <String fx:value="jfx-txfs-security" />
+                                          <String fx:value="jfx-txfs-security-container" />
+                                       </styleClass>
+                                    </MFXTextField>
+                                    <MFXTextField fx:id="txfTel" floatMode="BORDER" floatingText="Telefono" prefHeight="39.0" prefWidth="292.0">
+                                       <styleClass>
+                                          <String fx:value="jfx-txfs-security" />
+                                          <String fx:value="jfx-txfs-security-container" />
+                                       </styleClass>
+                                    </MFXTextField>
+                                    <MFXTextField fx:id="txfCel" floatMode="BORDER" floatingText="Celular" prefHeight="39.0" prefWidth="292.0">
+                                       <styleClass>
+                                          <String fx:value="jfx-txfs-security" />
+                                          <String fx:value="jfx-txfs-security-container" />
+                                       </styleClass>
+                                    </MFXTextField>
+                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </StackPane>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" />
+                        <StackPane layoutX="252.0" layoutY="26.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="400.0" styleClass="stack-personal-pane">
+                           <children>
+                              <VBox alignment="CENTER" prefHeight="520.0" prefWidth="395.0" spacing="10.0" StackPane.alignment="CENTER">
+                                 <StackPane.margin>
+                                    <Insets top="20.0" />
+                                 </StackPane.margin>
+                                 <children>
+                                    <HBox alignment="TOP_CENTER" prefHeight="116.0" prefWidth="396.0" spacing="30.0">
+                                       <children>
+                                          <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                                             <children>
+                                                <Label text="Idioma" />
+                                                <MFXComboBox fx:id="cmbLan" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
+                                    <MFXTextField fx:id="txfUser" floatMode="BORDER" floatingText="Usuario" prefHeight="39.0" prefWidth="292.0">
+                                       <styleClass>
+                                          <String fx:value="jfx-txfs-security" />
+                                          <String fx:value="jfx-txfs-security-container" />
+                                       </styleClass>
+                                    </MFXTextField>
+                                    <MFXTextField fx:id="txfPassword" floatMode="BORDER" floatingText="Clave" prefHeight="39.0" prefWidth="292.0">
+                                       <styleClass>
+                                          <String fx:value="jfx-txfs-security" />
+                                          <String fx:value="jfx-txfs-security-container" />
+                                       </styleClass>
+                                    </MFXTextField>
+                                    <MFXTextField fx:id="txfStatus" floatMode="BORDER" floatingText="Estado" prefHeight="39.0" prefWidth="292.0">
+                                       <styleClass>
+                                          <String fx:value="jfx-txfs-security" />
+                                          <String fx:value="jfx-txfs-security-container" />
+                                       </styleClass>
+                                    </MFXTextField>
+                                    <MFXButton fx:id="btnRegister" onAction="#onActionBtnRegister" prefHeight="40.0" prefWidth="80.0" styleClass="button-Register" text="Registrar" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </StackPane>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+        </StackPane>
+      <MFXButton fx:id="btnGoBack" ellipsisString="" onAction="#onActionBtnGoback" prefHeight="31.0" prefWidth="78.0" styleClass="button-ForgetPass" text="Regresar" translateX="-170.0" translateY="320.0" />
+    </children>
+</StackPane>

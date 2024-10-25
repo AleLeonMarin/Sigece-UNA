@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="428.0" prefWidth="591.0" styleClass="stack-personal-pane2" stylesheets="@Styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/22" fx:controller="cr.ac.una.mails.controller.EnvioCorreoController">
+   <children>
+      <StackPane layoutX="45.0" layoutY="55.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="333.0" prefWidth="522.0" styleClass="stack-personal-pane" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="45.0" AnchorPane.rightAnchor="33.0" AnchorPane.topAnchor="55.0">
+         <children>
+            <VBox prefHeight="324.0" prefWidth="518.0" spacing="10.0">
+               <children>
+                  <Text fill="#0000009f" strokeType="OUTSIDE" strokeWidth="0.0" text="Nuevo Mensaje" wrappingWidth="93.13671875">
+                     <VBox.margin>
+                        <Insets left="10.0" top="10.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font name="Segoe UI" size="12.0" />
+                     </font>
+                  </Text>
+                  <MFXTextField fx:id="txtDireccionCorreo" animated="false" borderGap="5.0" floatMode="BORDER" prefHeight="38.0" prefWidth="260.0" promptText="Para:">
+                     <VBox.margin>
+                        <Insets left="20.0" />
+                     </VBox.margin>
+                  </MFXTextField>
+                  <MFXTextField fx:id="txtCorreoAsunto" animated="false" borderGap="5.0" floatMode="BORDER" prefHeight="38.0" prefWidth="260.0" promptText="Asunto:">
+                     <VBox.margin>
+                        <Insets left="20.0" />
+                     </VBox.margin>
+                  </MFXTextField>
+                  <TextArea fx:id="txtCorreoContenido" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="187.0" prefWidth="478.0" VBox.vgrow="ALWAYS">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="20.0" right="20.0" />
+                     </VBox.margin>
+                  </TextArea>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="15.0" VBox.vgrow="NEVER">
+                     <children>
+                        <MFXButton fx:id="btnCancelar" onAction="#onActionBtnCancelar" prefHeight="30.0" prefWidth="80.0" styleClass="button-redStyle" text="Cancelar" HBox.hgrow="NEVER" />
+                        <MFXButton fx:id="btnEnviar" onAction="#onActionBtnEnviar" prefHeight="30.0" prefWidth="80.0" styleClass="button-blueStyle" text="Enviar" HBox.hgrow="NEVER">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </MFXButton>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </StackPane>
+      <ImageView fitHeight="99.0" fitWidth="156.0" layoutX="14.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../resources/Logo.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

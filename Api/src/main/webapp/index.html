@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SigeceUNA</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+      body,
+      html {
+        height: 100%; /* Asegura que el body y html ocupen todo el alto de la pantalla */
+        margin: 0; /* Elimina el margen predeterminado */
+        display: flex; /* Usa Flexbox para alinear los elementos internos */
+        align-items: center; /* Centra verticalmente */
+        justify-content: center; /* Centra horizontalmente */
+        text-align: center;
+        font-family: Arial, sans-serif;
+        background-color: #d84646; /* Color de fondo rojo */
+        color: white;
+      }
+
+      .container {
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.05);
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(5px);
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        padding: 40px;
+        backdrop-filter: blur(5px);
+        color: white;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: white;
+        color: red;
+        text-decoration: none;
+        border-radius: 5px;
+      }
+
+      .btn:hover {
+        background-color: #f8f9fa;
+        color: #dc3545;
+      }
+
+      /* Ajustando el patrón de círculos diagonales */
+      body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 19px,
+          rgba(255, 255, 255, 0.3) 20px
+        );
+        pointer-events: none; /* Evita interferencias con la interacción del usuario */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Bienvenido a Sigece UNA</h1>
+      <a href="http://localhost:8080/Api/docs" class="btn">
+        Comenzar
+      </a>
+    </div>
+  </body>
+</html>
