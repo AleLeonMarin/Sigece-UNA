@@ -6,6 +6,7 @@ import java.util.List;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
+import jakarta.json.bind.annotation.JsonbTransient;
 
 @JsonbPropertyOrder({
         "id", "name", "version", "modified", "roles"
@@ -17,7 +18,7 @@ public class SystemsDto implements Serializable {
     @Schema(description = "Id del sistema", example = "1")
     public Long id;
 
-    @Schema(description = "Nombre del sistema", example = "Sistema de Gestion de la CEUNA")
+    @Schema(description = "Nombre del sistema", example = "Seguridad")
     public String name;
 
     @Schema(description = "Sistema modificado", example = "false")
@@ -25,8 +26,8 @@ public class SystemsDto implements Serializable {
 
     @Schema(description = "Version del sistema", example = "1")
     public Long version;
-
-    @Schema(description = "Roles del sistema", example = "Administrador")
+    
+    @JsonbTransient
     public List<RolesDto> roles;
 
     public SystemsDto() {

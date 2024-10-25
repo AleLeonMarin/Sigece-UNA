@@ -93,7 +93,6 @@ public class AdminSystemController extends Controller implements Initializable {
 
     @FXML
     void onActionBtnAccept(ActionEvent event) {
-
         if (tptSistemas.isSelected()) {
             try {
                 String valid = validarRequeridos();
@@ -111,27 +110,47 @@ public class AdminSystemController extends Controller implements Initializable {
                         bindSystems(false);
                         chargeSistems();
                         new Mensaje().showModal(AlertType.INFORMATION, "Guardar Sistema", getStage(),
-                                "Sistema y roles guardados correctamente.");
+                                "Sistema guardado correctamente.");
                     }
                 }
             } catch (Exception e) {
                 Logger.getLogger(AdminSystemController.class.getName()).log(Level.SEVERE,
-                        "Error guardando sistema y roles",
-                        e);
+                        "Error guardando sistema y roles", e);
                 new Mensaje().showModal(AlertType.ERROR, "Guardar Sistema", getStage(),
                         "Error guardando el Sistema y roles.");
             }
         }
-        if (tptRoles.isSelected()) {
 
+        // Manejo de roles si la pestaña de roles está seleccionada
+        if (tptRoles.isSelected()) {
             try {
                 String valid = validarRequeridos();
                 if (!valid.isEmpty()) {
                     new Mensaje().showModal(AlertType.WARNING, "Guardar", getStage(), valid);
                 } else {
-                    if (rol.getSystem() == null) {
-                        rol.setSystem(systems);
+                    if (txfID.getText() == null || txfID.getText().isBlank()) {
+                        new Mensaje().showModal(AlertType.WARNING, "Guardar Rol", getStage(),
+                                "Debe ingresar un ID de sistema válido.");
+                        return;
                     }
+
+                    // Cargar sistema asociado y validar que exista
+                    SystemsService systemsService = new SystemsService();
+                    Respuesta sistemaRes = systemsService.obtenerSystem(Long.valueOf(txfID.getText()));
+                    if (!sistemaRes.getEstado()) {
+                        new Mensaje().showModal(AlertType.ERROR, "Guardar Rol", getStage(),
+                                "No se pudo encontrar el sistema con el ID proporcionado.");
+                        return;
+                    }
+
+                    SystemsDto sistema = (SystemsDto) sistemaRes.getResultado("Sistema");
+
+                    // Si el rol no tiene un sistema, lo asociamos al sistema obtenido
+                    if (rol.getSystem() == null) {
+                        rol.setSystem(sistema);
+                    }
+
+                    // Guardar rol y verificar resultado
                     RolesService service = new RolesService();
                     Respuesta res = service.guardarRol(rol);
 
@@ -142,19 +161,17 @@ public class AdminSystemController extends Controller implements Initializable {
                         this.rol = (RolesDto) res.getResultado("Rol");
                         bindRoles(false);
                         chargeSistems();
-                        chargeSistem(Long.valueOf(txfID.getText()));
+                        chargeSistem(Long.valueOf(txfID.getText())); // Recarga el sistema actual
                         new Mensaje().showModal(AlertType.INFORMATION, "Guardar Rol", getStage(),
-                                "Rol guardados correctamente.");
+                                "Rol guardado correctamente.");
                     }
                 }
             } catch (Exception e) {
                 Logger.getLogger(AdminSystemController.class.getName()).log(Level.SEVERE,
-                        "Error guardando el rol",
-                        e);
+                        "Error guardando el rol", e);
                 new Mensaje().showModal(AlertType.ERROR, "Guardar Rol", getStage(),
-                        "Error guardando el rol");
+                        "Error guardando el rol.");
             }
-
         }
     }
 
@@ -265,7 +282,7 @@ public class AdminSystemController extends Controller implements Initializable {
     private void createColumnsSystems() {
 
         TableColumn<SystemsDto, String> colID = new TableColumn<>("ID");
-       colID.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getId().toString()));
+        colID.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getId().toString()));
         tbvSistemas.getColumns().add(colID);
 
         TableColumn<SystemsDto, String> colName = new TableColumn<>("Nombre");

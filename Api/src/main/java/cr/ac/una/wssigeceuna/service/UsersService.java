@@ -117,11 +117,11 @@ public class UsersService {
                     }
                 }
 
-                UsersDto usuario = new UsersDto();
-
-                usuario.setUser(usersDto.getUser());
-                usuario.setEmail(usersDto.getEmail());
-                mail.activationMail(usuario);
+//                UsersDto usuario = new UsersDto();
+//
+//                usuario.setUser(usersDto.getUser());
+//                usuario.setEmail(usersDto.getEmail());
+//                mail.activationMail(usuario);
             }
 
             // Aseguramos que los cambios se confirmen en la base de datos

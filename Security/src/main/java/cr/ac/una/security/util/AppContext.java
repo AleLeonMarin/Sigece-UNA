@@ -36,11 +36,11 @@ public class AppContext {
         try {
             FileInputStream configFile;
 
-            File configFile1 = new File("classes/config/properties.ini");
+            File configFile1 = new File("Security\\config\\properties.ini");
             if (configFile1.exists()) {
                 configFile = new FileInputStream(configFile1);
             } else {
-                File configFile2 = new File("config/properties.ini");
+                File configFile2 = new File("config\\properties.ini");
                 if (configFile2.exists()) {
                     configFile = new FileInputStream(configFile2);
                 } else {

@@ -29,27 +29,48 @@ public class RolesService {
     public Respuesta saveRol(RolesDto rolesDto) {
         try {
             Roles roles;
+
+            // Validación inicial de system en rolesDto
+            if (rolesDto.getSystem() == null || rolesDto.getSystem().getId() == null) {
+                return new Respuesta(false, CodigoRespuesta.ERROR_CLIENTE,
+                        "Debe asociar un sistema válido al rol.", "saveRol NullPointerException");
+            }
+
+            // Verificar si estamos en modo de actualización o creación
             if (rolesDto.getId() != null && rolesDto.getId() > 0) {
+                // Modo actualización
                 roles = em.find(Roles.class, rolesDto.getId());
                 if (roles == null) {
                     return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
                             "No se encontró el rol a modificar.", "saveRol NoResultException");
                 }
-                roles.update(rolesDto);
+
+                roles.update(rolesDto); // Actualizar datos del rol desde DTO
                 roles = em.merge(roles);
             } else {
+                // Modo creación
                 roles = new Roles(rolesDto);
                 em.persist(roles);
-                // Update the system's roles collection
-                Systems sistema = em.find(Systems.class, rolesDto.getSystem().getId());
-                sistema.getRoles().add(roles);
-                em.merge(sistema);
             }
+
+            // Validación y asociación de sistema al rol
+            Systems sistemaEntity = em.find(Systems.class, rolesDto.getSystem().getId());
+            if (sistemaEntity == null) {
+                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
+                        "No se encontró el sistema asociado al rol.", "saveRol NoResultException");
+            }
+
+            // Verificar que el rol esté asociado al sistema
+            if (!sistemaEntity.getRoles().contains(roles)) {
+                sistemaEntity.getRoles().add(roles); // Asociar rol al sistema
+                em.merge(sistemaEntity); // Guardar cambios en el sistema
+            }
+
             em.flush();
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Rol", new RolesDto(roles));
         } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Ocurrio un error al guardar el rol.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al guardar el rol.",
+            LOG.log(Level.SEVERE, "Ocurrió un error al guardar el rol.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al guardar el rol.",
                     "saveRol " + ex.getMessage());
         }
     }
