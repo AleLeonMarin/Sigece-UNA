@@ -297,7 +297,7 @@ public class AdminNotificationController extends Controller implements Initializ
         }
 
         String htmlContent = plantillaCode.getText();
-        boolean allVariablesPresent = true;//Bandera
+        boolean allVariablesPresent = true;
 
         for (VariablesDto variable : tbvVariables.getItems()) {
             String variablePattern = "[" + variable.getName() + "]";
@@ -311,24 +311,18 @@ public class AdminNotificationController extends Controller implements Initializ
             return;
         }
 
+        // Configurar notificación seleccionada
         NotificationsDto notificacion = notificacionSeleccionada != null ? notificacionSeleccionada : new NotificationsDto();
         notificacion.setName(txtNombre.getText());
         notificacion.setHtml(htmlContent);
 
-        if (notificacionSeleccionada == null) {
-            ArrayList<VariablesDto> variables = new ArrayList<>(tbvVariables.getItems());
-            for (VariablesDto variable : variables) {
-                if (variable.getType().equals("Por defecto")) {
-                    variable.setType("P");
-                } else if (variable.getType().equals("Condicional")) {
-                    variable.setType("C");
-                }
-            }
-            notificacion.setVariables(variables);
-        } else {
-            List<VariablesDto> listaActualizada = new ArrayList<>(tbvVariables.getItems());
-            notificacion.setVariables(listaActualizada);
+        // Asigna las variables nuevas y actualiza las existentes
+        List<VariablesDto> listaActualizada = new ArrayList<>(tbvVariables.getItems());
+        for (VariablesDto variable : listaActualizada) {
+            variable.setNotification(notificacion);
         }
+        notificacion.setVariables(listaActualizada);
+
 
         Respuesta respuesta = notificacionService.guardarNotificacion(notificacion);
 
@@ -341,6 +335,7 @@ public class AdminNotificationController extends Controller implements Initializ
             mensaje.show(Alert.AlertType.ERROR, "Error", "Error al guardar la notificación: " + respuesta.getMensaje());
         }
     }
+
 
 
 

@@ -9,6 +9,8 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
@@ -16,6 +18,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -50,6 +53,8 @@ public class Variables implements Serializable {
     @Id
     @Basic(optional = false)
     @Column(name = "VAR_ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sis_variables_seq")
+    @SequenceGenerator(name = "sis_variables_seq", sequenceName = "SIS_VARIABLES_SEQ01", allocationSize = 1)
     private Long id;
 
     @Basic(optional = false)
@@ -82,12 +87,10 @@ public class Variables implements Serializable {
     private List<MultimediaVariables> multimediaVariables;
 
     public Variables() {
-        conditionalVariables = new ArrayList<>();
-        multimediaVariables = new ArrayList<>();
+
     }
 
     public Variables(Long id) {
-        this();
         this.id = id;
     }
 

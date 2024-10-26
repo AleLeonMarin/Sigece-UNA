@@ -59,70 +59,83 @@ public class NotificationService {
             Notifications notification;
 
             if (notificationDto.getId() != null && notificationDto.getId() > 0) {
+                // Buscar la notificación existente
                 notification = em.find(Notifications.class, notificationDto.getId());
-                if (notification != null) {
-                    notification.update(notificationDto);
-
-                    List<Variables> currentVariables = notification.getVariables();
-                    List<Variables> updatedVariables = new ArrayList<>();
-
-                    for (VariablesDto variableDto : notificationDto.getVariables()) {
-                        if (variableDto.getName() == null || variableDto.getName().isEmpty()) {
-                            LOG.log(Level.SEVERE, "Variable name is null or empty. Skipping variable with ID: {0}", variableDto.getId());
-                            continue; // Ignora la variable si no tiene nombre
-                        }
-
-                        Variables variable;
-                        if (variableDto.getId() != null) {
-                            variable = em.find(Variables.class, variableDto.getId());
-                            if (variable != null) {
-                                variable.update(variableDto);
-                                variable.setNotifications(notification); // Asegura la relación
-                                em.merge(variable);
-                                updatedVariables.add(variable);
-                            }
-                        } else {
-                            variable = new Variables(variableDto);
-                            variable.setNotifications(notification); // Asigna la notificación al crear la variable
-                            em.persist(variable);
-                            updatedVariables.add(variable);
-                        }
-                    }
-
-                    // Eliminar variables obsoletas
-                    currentVariables.stream()
-                            .filter(var -> updatedVariables.stream().noneMatch(updVar -> updVar.getId().equals(var.getId())))
-                            .forEach(var -> em.remove(var));
-
-                    notification.setVariables(updatedVariables);
-                    notification = em.merge(notification);
-                } else {
+                if (notification == null) {
                     return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
-                            "No se encontró la notificación a actualizar.", "saveNotification NoResultException");
+                            "No se encontró la notificación a modificar.", "saveNotification NoResultException");
                 }
-            } else {
-                notification = new Notifications(notificationDto);
-                List<Variables> variablesList = new ArrayList<>();
-                for (VariablesDto variableDto : notificationDto.getVariables()) {
-                    if (variableDto.getName() == null || variableDto.getName().isEmpty()) {
-                        LOG.log(Level.SEVERE, "Variable name is null or empty. Skipping variable with ID: {0}", variableDto.getId());
-                        continue; // Ignora la variable si no tiene nombre
+
+                // Actualizar la notificación con datos nuevos
+                notification.update(notificationDto);
+
+                // Eliminar variables
+                /*
+                for (VariablesDto varDto : notificationDto.getEliminatedVariables()) {
+                    Variables variable = em.find(Variables.class, varDto.getId());
+                    if (variable != null) {
+                        variable.setNotifications(null);
+                        notification.getVariables().remove(variable);
+                        em.remove(variable);
                     }
-
-                    Variables variable = new Variables(variableDto);
-                    variable.setNotifications(notification); // Asigna la notificación al crear la variable
-                    em.persist(variable);
-                    variablesList.add(variable);
+                    LOG.log(Level.INFO, "Variable eliminada: {0}", varDto.getId());
                 }
-                notification.setVariables(variablesList);
-                em.persist(notification);
-            }
-            em.flush();
+                 */
+                // Agregar o actualizar variables
+                for (VariablesDto varDto : notificationDto.getVariables()) {
+                    Variables variable;
 
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Notificacion", new NotificationsDto(notification));
+                    if (varDto.getId() != null && varDto.getId() > 0) {
+                        // Si existe el ID, intenta obtener la variable de la base de datos
+                        variable = em.find(Variables.class, varDto.getId());
+                        if (variable == null) {
+                            LOG.log(Level.WARNING, "La variable con ID {0} no se encontró y no se puede actualizar", varDto.getId());
+                            continue; // Saltar si no se encuentra
+                        }
+                        variable.update(varDto); // Actualiza si existe
+                        em.merge(variable);
+                    } else {
+                        // Si no tiene ID, es una nueva variable
+                        variable = new Variables(varDto);
+                        variable.setNotifications(notification);
+                        em.persist(variable);
+                        notification.getVariables().add(variable);
+                    }
+                    LOG.log(Level.INFO, "Variable procesada con ID: {0}", variable.getId());
+                }
+
+                // Confirmar la actualización de la notificación en la base de datos
+                notification = em.merge(notification);
+            } else {
+                // Crear una nueva notificación
+                notification = new Notifications(notificationDto);
+                em.persist(notification);
+
+                // Asociar y guardar nuevas variables
+                for (VariablesDto varDto : notificationDto.getVariables()) {
+                    Variables variable = new Variables(varDto);
+                    variable.setNotifications(notification);
+                    em.persist(variable);
+                    notification.getVariables().add(variable);
+                }
+            }
+
+            // Confirmar todos los cambios en la base de datos
+            em.flush();
+            LOG.log(Level.INFO, "Notificación guardada correctamente: {0}", notification);
+
+            // Retornar respuesta exitosa
+            return new Respuesta(true, CodigoRespuesta.CORRECTO,
+                    "La notificación se guardó correctamente", "", "Notification",
+                    new NotificationsDto(notification));
+        } catch (NoResultException ex) {
+            LOG.log(Level.SEVERE, "Notificación no encontrada.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
+                    "No se encontró la notificación a modificar.", "saveNotification " + ex.getMessage());
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrió un error al guardar la notificación.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al guardar la notificación.", "guardarNotificacion " + ex.getMessage());
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
+                    "Ocurrió un error al guardar la notificación.", "saveNotification " + ex.getMessage());
         }
     }
 

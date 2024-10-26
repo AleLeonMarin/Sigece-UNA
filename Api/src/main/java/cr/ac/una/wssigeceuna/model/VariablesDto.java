@@ -49,6 +49,7 @@ public class VariablesDto implements Serializable {
     }
 
     public VariablesDto(Variables variables) {
+        this();
         this.id = variables.getId();
         this.name = variables.getName();
         this.type = variables.getType();

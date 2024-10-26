@@ -1,5 +1,6 @@
 package cr.ac.una.mails.model;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -13,17 +14,17 @@ public class VariablesDto {
     public SimpleStringProperty type;
     public SimpleStringProperty value;
     public SimpleLongProperty version;
+    @JsonbTransient
     public NotificationsDto notification;
     public List<ConditionalVariablesDto> conditionalVariables;
     public List<MultimediaVariablesDto> multimediaVariables;
 
     public VariablesDto() {
-        this.id = new SimpleLongProperty(0L);
+        this.id = new SimpleLongProperty();
         this.name = new SimpleStringProperty("");
         this.type = new SimpleStringProperty("");
         this.value = new SimpleStringProperty("");
         this.version = new SimpleLongProperty(1L);
-        this.notification = new NotificationsDto();
         this.conditionalVariables = FXCollections.observableArrayList();
         this.multimediaVariables = FXCollections.observableArrayList();
     }
@@ -35,6 +36,7 @@ public class VariablesDto {
             return null;
         }
     }
+
 
     public void setId(Long id) {
         this.id.set(id);
@@ -104,7 +106,6 @@ public class VariablesDto {
                 ", type='" + type.get() + '\'' +
                 ", value='" + value.get() + '\'' +
                 ", version=" + version.get() +
-                ", notification=" + notification +
                 '}';
     }
 }
