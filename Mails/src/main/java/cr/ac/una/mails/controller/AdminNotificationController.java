@@ -131,14 +131,14 @@ public class AdminNotificationController extends Controller implements Initializ
         variablesService = new VariablesService();
         mensaje = new Mensaje();
 
-        tbcId.setCellValueFactory(new PropertyValueFactory<>("notId"));
-        tbcNombre.setCellValueFactory(new PropertyValueFactory<>("notNombre"));
-        tbcVarName.setCellValueFactory(new PropertyValueFactory<>("varNombre"));
-        tbcContent.setCellValueFactory(new PropertyValueFactory<>("varValor"));
-        tbcType.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+        tbcId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        tbcNombre.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tbcVarName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tbcContent.setCellValueFactory(new PropertyValueFactory<>("value"));
+        tbcType.setCellValueFactory(new PropertyValueFactory<>("type"));
 
-        tbcVariables2.setCellValueFactory(new PropertyValueFactory<>("varNombre"));
-        tbcVariablesTipo2.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+        tbcVariables2.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tbcVariablesTipo2.setCellValueFactory(new PropertyValueFactory<>("type"));
 
         setupDoubleClickForVariables();
 
@@ -216,6 +216,8 @@ public class AdminNotificationController extends Controller implements Initializ
                 ObservableList<VariablesDto> variablesObservableList = FXCollections.observableArrayList(variablesList);
                 tbvVariables.setItems(variablesObservableList);
                 tbvVariables2.setItems(FXCollections.observableArrayList(variablesList));
+                tbvVariables.refresh(); // Forzar actualización visual
+                tbvVariables2.refresh();
             } else {
                 mensaje.show(Alert.AlertType.ERROR, "Error", "Error al cargar las variables: " + respuesta.getMensaje());
             }
@@ -238,6 +240,7 @@ public class AdminNotificationController extends Controller implements Initializ
             List<NotificationsDto> notificaciones = (List<NotificationsDto>) respuesta.getResultado("Notificaciones");
             tbvProcesosNotificacion.getItems().clear();
             tbvProcesosNotificacion.getItems().addAll(notificaciones);
+            tbvProcesosNotificacion.refresh();
             tbvVariables.getItems().clear();
         } else {
             mensaje.show(Alert.AlertType.ERROR, "Error", "Error al cargar las notificaciones: " + respuesta.getMensaje());
@@ -284,6 +287,7 @@ public class AdminNotificationController extends Controller implements Initializ
         tbvProcesosNotificacion.getSelectionModel().clearSelection();
         btnSave.setDisable(false);
     }
+
 
     @FXML
     void onActionBtnSave(ActionEvent event) {
@@ -339,6 +343,8 @@ public class AdminNotificationController extends Controller implements Initializ
     }
 
 
+
+
     @FXML
     void onActionBtnSaveVar(ActionEvent event) {
         if (txtVarNombre.getText().isEmpty() || txtVarTipo.getValue() == null || txtVarTipo.getValue().isEmpty()) {
@@ -379,6 +385,7 @@ public class AdminNotificationController extends Controller implements Initializ
         }
 
         tbvVariables2.setItems(FXCollections.observableArrayList(tbvVariables.getItems()));
+        tbvVariables2.refresh();
 
         tbvVariables.getSelectionModel().clearSelection();
         tbvVariables2.getSelectionModel().clearSelection();

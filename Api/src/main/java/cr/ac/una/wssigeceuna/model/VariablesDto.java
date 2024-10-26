@@ -45,8 +45,7 @@ public class VariablesDto implements Serializable {
     List<MultimediaVariablesDto> multimediaVariables;
 
     public VariablesDto() {
-        conditionalVariables = new ArrayList<>();
-        multimediaVariables = new ArrayList<>();
+      
     }
 
     public VariablesDto(Variables variables) {
@@ -55,7 +54,6 @@ public class VariablesDto implements Serializable {
         this.type = variables.getType();
         this.value = variables.getValue();
         this.version = variables.getVersion();
-        this.notification = new NotificationsDto(variables.getNotifications());
     }
 
     public Long getId() {

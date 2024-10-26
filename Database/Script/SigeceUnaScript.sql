@@ -724,7 +724,7 @@ color: #7a7a7a; } .footer p { margin: 0; } .footer a { color: #0D47A1; text-deco
 .spacer { height: 40px; } </style> </head> <body> <div class="container"> <div class="header"> <img src="https://i.ibb.co/qdw7zmV/Logo-White.png" 
 alt="Logo SigeceUna"> <h2>Bienvenido a SigeceUna</h2> </div> <div class="content"> <h1>¡Activa tu cuenta ahora!</h1> 
 <p>Estimado/a [user],</p> <p>Nos alegra que te hayas registrado en SigeceUna. Para activar tu cuenta y empezar a disfrutar de nuestros servicios, 
-haz clic en el boton de abajo:</p> <div class="cta"> <a href="http://localhost:8080/web/ws/UsersController/activateUser/[user]" 
+haz clic en el boton de abajo:</p> <div class="cta"> <a href="http://localhost:8080/Api/ws/UsersController/activateUser/[user]" 
 target="_blank">Activar Cuenta</a> </div> <p>Si no solicitaste esta activacion, puedes ignorar este correo. Tu cuenta estara segura.</p> </div> 
 <div class="spacer"></div> <div class="footer"> <p>&copy; 2024 SigeceUna. Todos los derechos reservados.</p> 
 <p><a href="#">Politica de Privacidad</a> | <a href="#">Terminos y Condiciones</a></p> </div> </div> </body> </html>', 1);

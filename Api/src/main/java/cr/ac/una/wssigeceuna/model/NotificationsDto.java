@@ -24,16 +24,11 @@ public class NotificationsDto implements Serializable{
     @Schema(description = "Version de la notificacion", example = "1.0")
     private Long version;
 
-    @JsonbTransient
-    List<VariablesDto> variables;
 
-    @JsonbTransient
+    List<VariablesDto> variables;
     List<MailsDto> mails;
 
     public NotificationsDto() {
-
-        variables = new ArrayList<>();
-        mails = new ArrayList<>();
     }
 
     public NotificationsDto(Notifications notifications) {
@@ -43,6 +38,13 @@ public class NotificationsDto implements Serializable{
         this.name = notifications.getName();
         this.html = notifications.getHtml();
         this.version = notifications.getVersion();
+        
+           if (notifications.getVariables() != null) {
+        this.variables = new ArrayList<>();
+        for (Variables var : notifications.getVariables()) {
+            this.variables.add(new VariablesDto(var));
+        }
+    }
 
     }
 

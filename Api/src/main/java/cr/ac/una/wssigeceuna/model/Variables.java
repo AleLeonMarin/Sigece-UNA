@@ -4,6 +4,7 @@
  */
 package cr.ac.una.wssigeceuna.model;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -30,10 +31,8 @@ import java.util.List;
 @Table(name = "SIS_VARIABLES")
 @XmlRootElement
 @NamedQueries({
-        @NamedQuery(name = "Variables.findAll", query = "SELECT s FROM Variables s"),
-        @NamedQuery(name = "Variables.findByVarId", query = "SELECT s FROM Variables s WHERE s.id = :id"),
-
-/*
+    @NamedQuery(name = "Variables.findAll", query = "SELECT s FROM Variables s"),
+    @NamedQuery(name = "Variables.findByVarId", query = "SELECT s FROM Variables s WHERE s.id = :id"), /*
  * @NamedQuery(name = "SisVariables.findByVarNombre", query =
  * "SELECT s FROM SisVariables s WHERE s.varNombre = :varNombre"),
  * 
@@ -42,7 +41,7 @@ import java.util.List;
  * 
  * @NamedQuery(name = "SisVariables.findByVarVersion", query =
  * "SELECT s FROM SisVariables s WHERE s.varVersion = :varVersion")
- */ })
+ */})
 public class Variables implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -71,12 +70,15 @@ public class Variables implements Serializable {
 
     @JoinColumn(name = "VAR_NOT_ID", referencedColumnName = "NOT_ID")
     @ManyToOne(optional = false)
+    @JsonbTransient
     private Notifications notifications;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "variable")
+    @JsonbTransient
     private List<ConditionalVariables> conditionalVariables;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "variables")
+    @JsonbTransient
     private List<MultimediaVariables> multimediaVariables;
 
     public Variables() {
@@ -92,6 +94,7 @@ public class Variables implements Serializable {
     public Variables(VariablesDto variablesDto) {
         this();
         this.id = variablesDto.getId();
+        update(variablesDto);
     }
 
     public void update(VariablesDto variablesDto) {
@@ -99,6 +102,13 @@ public class Variables implements Serializable {
         this.type = variablesDto.getType();
         this.value = variablesDto.getValue();
         this.version = variablesDto.getVersion();
+
+        // Verificar si la notificación no es nula antes de acceder a su ID
+        if (variablesDto.getNotification() != null && variablesDto.getNotification().getId() != null) {
+            Notifications notificacion = new Notifications();
+            notificacion.setId(variablesDto.getNotification().getId());
+            this.notifications = notificacion;
+        }
     }
 
     public Long getId() {

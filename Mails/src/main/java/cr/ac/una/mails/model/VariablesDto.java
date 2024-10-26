@@ -18,7 +18,7 @@ public class VariablesDto {
     public List<MultimediaVariablesDto> multimediaVariables;
 
     public VariablesDto() {
-        this.id = new SimpleLongProperty();
+        this.id = new SimpleLongProperty(0L);
         this.name = new SimpleStringProperty("");
         this.type = new SimpleStringProperty("");
         this.value = new SimpleStringProperty("");
@@ -29,7 +29,11 @@ public class VariablesDto {
     }
 
     public Long getId() {
-        return id.get();
+        if (this.id != null && !this.id.equals(0L)) {
+            return this.id.get();
+        } else {
+            return null;
+        }
     }
 
     public void setId(Long id) {

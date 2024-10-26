@@ -14,6 +14,7 @@ import cr.ac.una.wssigeceuna.model.Variables;
 import cr.ac.una.wssigeceuna.model.VariablesDto;
 import cr.ac.una.wssigeceuna.util.CodigoRespuesta;
 import cr.ac.una.wssigeceuna.util.Respuesta;
+import java.util.stream.Collectors;
 
 @Stateless
 @LocalBean
@@ -26,7 +27,7 @@ public class VariablesService {
 
     public Respuesta getVarible(Long id) {
         try {
-            Query qryVariable = em.createNamedQuery("Variables.findById", Variables.class);
+            Query qryVariable = em.createNamedQuery("Variables.findByVarId", Variables.class);
             qryVariable.setParameter("id", id);
 
             Variables variable = (Variables) qryVariable.getSingleResult();
@@ -71,18 +72,21 @@ public class VariablesService {
 
     public Respuesta getByNotification(Long id) {
         try {
-            Query qryVariables = em.createQuery("SELECT v FROM Variables v WHERE v.notifications.id = :id",
-                    Variables.class);
+            Query qryVariables = em.createQuery("SELECT v FROM Variables v WHERE v.notifications.id = :id", Variables.class);
             qryVariables.setParameter("id", id);
 
             List<Variables> variables = qryVariables.getResultList();
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Variables", variables);
+            List<VariablesDto> variablesDtoList = variables.stream()
+                    .map(VariablesDto::new)
+                    .collect(Collectors.toList());
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Variables", variablesDtoList);
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrió un error al consultar las variables.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error al consultar las variables.",
                     "getByNotification " + ex.getMessage());
         }
     }
+
 
     public Respuesta deleteVariable(Long id) {
         try {

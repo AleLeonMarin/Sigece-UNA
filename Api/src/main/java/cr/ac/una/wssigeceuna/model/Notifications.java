@@ -71,12 +71,9 @@ public class Notifications implements Serializable {
     private List<Mails> mails;
 
     public Notifications() {
-        variables = new ArrayList<>();
-        mails = new ArrayList<>();
     }
 
     public Notifications(Long id) {
-        this();
         this.id = id;
     }
 
