@@ -117,11 +117,11 @@ public class UsersService {
                     }
                 }
 
-//                UsersDto usuario = new UsersDto();
-//
-//                usuario.setUser(usersDto.getUser());
-//                usuario.setEmail(usersDto.getEmail());
-//                mail.activationMail(usuario);
+                   UsersDto usuario = new UsersDto();
+
+                   usuario.setUser(usersDto.getUser());
+                   usuario.setEmail(usersDto.getEmail());
+                   mail.activationMail(usuario);
             }
 
             // Aseguramos que los cambios se confirmen en la base de datos
@@ -244,5 +244,22 @@ public class UsersService {
                     "activarUsuario " + ex.getMessage());
         }
     }
+    
+       public Respuesta actualizarEstadoUsuario(UsersDto usuarioDto) {
+        try {
+            Users usuario = em.find(Users.class, usuarioDto.getId());
+            if (usuario == null) {
+                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el usuario.", "actualizarEstadoUsuario NoResultException");
+            }
+
+            usuario.setStatus(usuarioDto.getStatus());
+            em.merge(usuario);
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Usuario", new UsersDto(usuario));
+        } catch (Exception ex) {
+            Logger.getLogger(UsersService.class.getName()).log(Level.SEVERE, "Error actualizando el estado del usuario.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error actualizando el estado del usuario.", "actualizarEstadoUsuario " + ex.getMessage());
+        }
+    }
+
 
 }
