@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import cr.ac.una.wssigeceuna.model.RolesDto;
 import cr.ac.una.wssigeceuna.model.SystemsDto;
 import cr.ac.una.wssigeceuna.model.UsersDto;
 import cr.ac.una.wssigeceuna.service.SystemsService;
@@ -17,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -43,9 +45,8 @@ public class SystemsController {
             if (!res.getEstado()) {
                 return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
             }
-
-            List<SystemsDto> systemsDto = (List<SystemsDto>) res.getResultado("Sistemas");
-            return Response.ok(systemsDto).build();
+            return Response.ok(new GenericEntity<List<SystemsDto>>((List<SystemsDto>) res.getResultado("Sistemas")) {
+            }).build();
         } catch (Exception ex) {
             Logger.getLogger(SystemsController.class.getName()).log(Level.SEVERE,
                     "Ocurrió un error al obtener los sistemas.", ex);
@@ -124,8 +125,12 @@ public class SystemsController {
             if (!res.getEstado()) {
                 return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
             }
-
             SystemsDto systemDto = (SystemsDto) res.getResultado("Sistema");
+            System.out.println("Sistema ID: " + systemDto.getId());
+            System.out.println("Roles en el sistema: " + systemDto.getRoles().size());
+            for (RolesDto role : systemDto.getRoles()) {
+                System.out.println("Rol ID: " + role.getId() + ", Nombre: " + role.getName());
+            }
             return Response.ok(systemDto).build();
         } catch (Exception ex) {
             Logger.getLogger(SystemsController.class.getName()).log(Level.SEVERE,

@@ -2,9 +2,11 @@ package cr.ac.una.wssigeceuna.controller;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import cr.ac.una.wssigeceuna.model.Users;
 import cr.ac.una.wssigeceuna.model.UsersDto;
 import cr.ac.una.wssigeceuna.service.UsersService;
 import cr.ac.una.wssigeceuna.util.CodigoRespuesta;
@@ -19,6 +21,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.Response;
 
 @Path("/UsersController")
@@ -151,8 +154,8 @@ public class UsersController {
             if (!res.getEstado()) {
                 return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
             }
-
-            return Response.ok(res.getResultado("Usuarios")).build();
+            return Response.ok(new GenericEntity<List<UsersDto>>((List<UsersDto>) res.getResultado("Usuarios")) {
+            }).build();
         } catch (Exception ex) {
             Logger.getLogger(UsersController.class.getName()).log(Level.SEVERE,
                     "Ocurrió un error al consultar los usuarios.", ex);
@@ -282,5 +285,54 @@ public class UsersController {
                     .build();
         }
     }
+
+    /*
+     * @GET
+     * 
+     * @Path("/getUsers")
+     * 
+     * @Produces(MediaType.APPLICATION_JSON)
+     * 
+     * @Operation(description = "Obtiene usuarios por nombre, cédula y apellidos")
+     * 
+     * @ApiResponses({
+     * 
+     * @ApiResponse(responseCode = "200", description = "Usuarios encontrados",
+     * content = @Content(mediaType = MediaType.APPLICATION_JSON, schema
+     * = @Schema(implementation = UsersDto.class))),
+     * 
+     * @ApiResponse(responseCode = "404", description = "Usuarios no encontrados",
+     * content = @Content(mediaType = MediaType.TEXT_PLAIN)),
+     * 
+     * @ApiResponse(responseCode = "500", description =
+     * "Error interno durante la obtención de usuarios", content
+     * = @Content(mediaType = MediaType.TEXT_PLAIN))
+     * })
+     * public Response getUsers(
+     * 
+     * @QueryParam("name") String name,
+     * 
+     * @QueryParam("idCard") String idCard,
+     * 
+     * @QueryParam("lastNames") String lastNames) {
+     * try {
+     * Respuesta res = usersService.filterUsers(name, idCard, lastNames);
+     * if (!res.getEstado()) {
+     * return
+     * Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje())
+     * .build();
+     * }
+     * 
+     * return Response.ok(new GenericEntity<List<UsersDto>>((List<UsersDto>)
+     * res.getResultado("Usuarios")) {
+     * }).build();
+     * } catch (Exception ex) {
+     * Logger.getLogger(UsersController.class.getName()).log(Level.SEVERE,
+     * "Ocurrió un error al consultar los usuarios.", ex);
+     * return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue())
+     * .entity("Ocurrió un error al consultar los usuarios.").build();
+     * }
+     * }
+     */
 
 }

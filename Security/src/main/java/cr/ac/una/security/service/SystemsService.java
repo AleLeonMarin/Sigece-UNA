@@ -1,6 +1,7 @@
 package cr.ac.una.security.service;
 
 import cr.ac.una.security.model.SystemsDto;
+import cr.ac.una.security.model.UsersDto;
 import cr.ac.una.security.util.Request;
 import cr.ac.una.security.util.Respuesta;
 import jakarta.ws.rs.core.GenericType;
@@ -40,7 +41,8 @@ public class SystemsService {
                 return new Respuesta(false, request.getError(), "");
             }
 
-            List<SystemsDto> systems = (List<SystemsDto>) request.readEntity(new GenericType<List<SystemsDto>>() {});
+            List<SystemsDto> systems = (List<SystemsDto>) request.readEntity(new GenericType<List<SystemsDto>>() {
+            });
             return new Respuesta(true, "", "", "Sistemas", systems);
 
         } catch (Exception ex) {

@@ -1,40 +1,35 @@
 package cr.ac.una.security.model;
 
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+
+import javafx.beans.property.SimpleStringProperty;
 
 public class RolesDto implements Serializable {
 
     public SimpleStringProperty id;
     public SimpleStringProperty name;
-    public SimpleStringProperty version;
-    private SystemsDto system;
-    public SimpleBooleanProperty modificado;
-    public List<UsersDto> usuariosDto;
+    public Long version;
+    public SystemsDto system;
+    List<UsersDto> users = new ArrayList<>();
 
     public RolesDto() {
         this.id = new SimpleStringProperty("");
         this.name = new SimpleStringProperty("");
-        this.version = new SimpleStringProperty("1");
-        this.system = new SystemsDto();
-        this.modificado = new SimpleBooleanProperty(false);
-        this.usuariosDto = FXCollections.observableArrayList();
+        users = new ArrayList<>();
     }
 
     public Long getId() {
-        if (this.id.get() != null && !this.id.get().isEmpty()) {
-            return Long.valueOf(this.id.get());
+        if (id != null && id.get() != null && !id.get().isEmpty()) {
+            return Long.valueOf(id.get());
         } else {
             return null;
         }
     }
 
-    public void setId(String id) {
-        this.id.set(id);
+    public void setId(Long id) {
+        this.id.set(id.toString());
     }
 
     public String getName() {
@@ -45,12 +40,12 @@ public class RolesDto implements Serializable {
         this.name.set(name);
     }
 
-    public String getVersion() {
-        return version.get();
+    public Long getVersion() {
+        return version;
     }
 
-    public void setVersion(String version) {
-        this.version.set(version);
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public SystemsDto getSystem() {
@@ -61,28 +56,20 @@ public class RolesDto implements Serializable {
         this.system = system;
     }
 
-    public Boolean isModified() {
-        return modificado.get();
+    public List<UsersDto> getUsers() {
+        return users;
     }
 
-    public void setModified(Boolean modificado) {
-        this.modificado.set(modificado);
-    }
-
-    public List<UsersDto> getUsuariosDto() {
-        return usuariosDto;
-    }
-
-    public void setUsuariosDto(List<UsersDto> usuariosDto) {
-        this.usuariosDto = usuariosDto;
+    public void setUsers(List<UsersDto> users) {
+        this.users = users;
     }
 
     @Override
     public String toString() {
         return "RolesDto{" +
-                "id=" + id.get() +
-                ", name='" + name.get() + '\'' +
-                ", version=" + version.get() +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", version=" + version +
                 ", system=" + system +
                 '}';
     }

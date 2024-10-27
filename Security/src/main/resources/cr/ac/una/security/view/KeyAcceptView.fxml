@@ -2,14 +2,16 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="681.0" prefWidth="514.0" styleClass="stack-personal-pane1" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.security.controller.KeyAcceptController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="514.0" styleClass="stack-personal-pane1" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.security.controller.KeyAcceptController">
     <children>
         <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="351.0" prefWidth="475.0" styleClass="stack-personal-pane">
             <StackPane.margin>
@@ -25,8 +27,12 @@
                   </Label>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                      <children>
-                        <MFXTextField fx:id="txtMail" floatMode="BORDER" floatingText="Correo electrónico " prefHeight="40.0" prefWidth="280.0" />
-                        <MFXButton fx:id="btnAcceptMail" onAction="#onActionBtnAcceptMail" prefHeight="35.0" prefWidth="70.0" styleClass="button-Register" text="Aceptar">
+                        <MFXTextField fx:id="txtMail" floatMode="BORDER" floatingText="Correo electrónico " prefHeight="40.0" prefWidth="280.0">
+                           <styleClass>
+                              <String fx:value="jfx-txfs-security" />
+                              <String fx:value="jfx-txfs-security-container" />
+                           </styleClass></MFXTextField>
+                        <MFXButton fx:id="btnAcceptMail" onAction="#onActionBtnAcceptMail" prefHeight="35.0" prefWidth="70.0" styleClass="jfx-btn-save" text="Aceptar">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
@@ -35,8 +41,12 @@
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                      <children>
-                        <MFXTextField fx:id="txtKey" floatMode="BORDER" floatingText="Clave" prefHeight="40.0" prefWidth="280.0" />
-                        <MFXButton fx:id="btnAcceptKey" onAction="#onActionBtnAcceptKey" prefHeight="35.0" prefWidth="70.0" styleClass="button-Register" text="Aceptar">
+                        <MFXTextField fx:id="txtKey" floatMode="BORDER" floatingText="Clave" prefHeight="40.0" prefWidth="280.0">
+                           <styleClass>
+                              <String fx:value="jfx-txfs-security" />
+                              <String fx:value="jfx-txfs-security-container" />
+                           </styleClass></MFXTextField>
+                        <MFXButton fx:id="btnAcceptKey" onAction="#onActionBtnAcceptKey" prefHeight="35.0" prefWidth="70.0" styleClass="jfx-btn-save" text="Aceptar">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
@@ -47,6 +57,9 @@
             </VBox>
          </children>
         </StackPane>
-        <MFXButton fx:id="btnGoBack" ellipsisString="" onAction="#onActionBtnGoBack" prefHeight="31.0" prefWidth="78.0" styleClass="button-ForgetPass" text="Regresar" translateX="-170.0" translateY="230.0" />
+        <MFXButton fx:id="btnGoBack" ellipsisString="" onAction="#onActionBtnGoBack" prefHeight="50.0" prefWidth="120.0" styleClass="jfx-btn-log-out" text="Regresar" translateY="215.0">
+         <graphic>
+            <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+         </graphic></MFXButton>
     </children>
 </StackPane>

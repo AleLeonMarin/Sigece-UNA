@@ -20,6 +20,7 @@ import cr.ac.una.wssigeceuna.util.CodigoRespuesta;
 import cr.ac.una.wssigeceuna.util.Respuesta;
 import jakarta.ejb.EJB;
 import jakarta.ejb.LocalBean;
+import java.util.stream.Collectors;
 
 @Stateless
 @LocalBean
@@ -50,7 +51,7 @@ public class UsersService {
             Users user = users.get(0);
             UsersDto userDto = new UsersDto(user);
             for (Roles role : user.getRoles()) {
-                 userDto.getRoles().add(new RolesDto(role));
+                userDto.getRoles().add(new RolesDto(role));
             }
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Usuario", userDto);
 
@@ -117,11 +118,11 @@ public class UsersService {
                     }
                 }
 
-//                UsersDto usuario = new UsersDto();
-//
-//                usuario.setUser(usersDto.getUser());
-//                usuario.setEmail(usersDto.getEmail());
-//                mail.activationMail(usuario);
+                // UsersDto usuario = new UsersDto();
+                //
+                // usuario.setUser(usersDto.getUser());
+                // usuario.setEmail(usersDto.getEmail());
+                // mail.activationMail(usuario);
             }
 
             // Aseguramos que los cambios se confirmen en la base de datos
@@ -242,6 +243,42 @@ public class UsersService {
             LOG.log(Level.SEVERE, "Ocurrio un error al activar el usuario.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al activar el usuario.",
                     "activarUsuario " + ex.getMessage());
+        }
+    }
+
+    public Respuesta filterUsers(String name, String idCard, String lastNames) {
+        try {
+            StringBuilder jpql = new StringBuilder("SELECT u FROM Users u WHERE 1=1");
+
+            if (name != null && !name.trim().isEmpty()) {
+                jpql.append(" AND u.name LIKE :name");
+            }
+            if (idCard != null && !idCard.trim().isEmpty()) {
+                jpql.append(" AND u.idCard LIKE :idCard");
+            }
+            if (lastNames != null && !lastNames.trim().isEmpty()) {
+                jpql.append(" AND u.lastNames LIKE :lastNames");
+            }
+
+            Query query = em.createQuery(jpql.toString(), Users.class);
+
+            if (name != null && !name.trim().isEmpty()) {
+                query.setParameter("name", "%" + name + "%");
+            }
+            if (idCard != null && !idCard.trim().isEmpty()) {
+                query.setParameter("idCard", "%" + idCard + "%");
+            }
+            if (lastNames != null && !lastNames.trim().isEmpty()) {
+                query.setParameter("lastNames", "%" + lastNames + "%");
+            }
+
+            List<Users> users = query.getResultList();
+            List<UsersDto> usersDto = users.stream().map(UsersDto::new).collect(Collectors.toList());
+
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "Usuarios", usersDto);
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Error filtrando los usuarios.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error filtrando los usuarios.", "filterUsers " + ex.getMessage());
         }
     }
 

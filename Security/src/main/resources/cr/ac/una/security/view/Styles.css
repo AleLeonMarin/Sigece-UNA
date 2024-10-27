@@ -26,11 +26,12 @@
     -fx-faint-focus-color: transparent;
 }
 
-.button-Register {
+/* Botón de Register - Azul Claro */
+.jfx-btn-newUser {
     -fx-background-repeat: no-repeat;
     -fx-background-size: contain;
     -fx-background-position: center;
-    -fx-background-color: #070F2B;
+    -fx-background-color: #4A6FA5; /* Azul claro */
     -fx-border-color: transparent;
     -fx-padding: 0;
     -fx-background-radius: 10;
@@ -42,36 +43,20 @@
     -fx-font-family: "Segoe UI", sans-serif;
     -fx-font-size: 14px;
     -fx-font-weight: normal;
-
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
 }
 
-.button-SignIn {
-    -fx-background-repeat: no-repeat;
-    -fx-background-size: contain;
-    -fx-background-position: center;
-    -fx-background-color: #1b1a54;
-    -fx-border-color: transparent;
-    -fx-padding: 0;
-    -fx-background-radius: 10;
-
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
-
+.jfx-btn-newUser:pressed, .jfx-btn-newUser:hover, .jfx-btn-newUser:armed, .jfx-btn-newUser:focused {
+    -fx-background-color: #3A5C8F; /* Azul claro más oscuro al interactuar */
     -fx-text-fill: white;
-
-    -fx-font-family: "Segoe UI", sans-serif;
-    -fx-font-size: 14px;
-    -fx-font-weight: normal;
-
 }
 
-.button-ForgetPass {
+
+/* Botón de Sign In - Azul Claro */
+.jfx-btn-log {
     -fx-background-repeat: no-repeat;
     -fx-background-size: contain;
     -fx-background-position: center;
-    -fx-background-color: #525b90;
+    -fx-background-color: #A3CEF1; /* Azul claro */
     -fx-border-color: transparent;
     -fx-padding: 0;
     -fx-background-radius: 10;
@@ -84,23 +69,39 @@
     -fx-font-family: "Segoe UI", sans-serif;
     -fx-font-size: 14px;
     -fx-font-weight: normal;
-
 }
 
-.button-SignIn:pressed, .button-SignIn:hover, .button-SignIn:armed, .button-SignIn:focused {
-    -fx-background-color: #0A1B42;
+.jfx-btn-log:pressed, .jfx-btn-log:hover, .jfx-btn-log:armed, .jfx-btn-log:focused {
+    -fx-background-color: #87B7D9; /* Azul claro más oscuro al interactuar */
     -fx-text-fill: white;
 }
 
-.button-Register:pressed, .button-Register:hover, .button-Register:armed, .button-Register:focused {
-    -fx-background-color: #070f2b;
+
+/* Botón de Forget Password - Azul Lavanda Pastel */
+.jfx-btn-change {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #7F91C1; /* Azul lavanda pastel */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jfx-btn-change:pressed, .jfx-btn-change:hover, .jfx-btn-change:armed, .jfx-btn-change:focused {
+    -fx-background-color: #6D7BA9; /* Azul lavanda más oscuro al interactuar */
     -fx-text-fill: white;
 }
 
-.button-ForgetPass:pressed, .button-ForgetPass:hover, .button-ForgetPass:armed, .button-ForgetPass:focused {
-    -fx-background-color: #525b90;
-    -fx-text-fill: white;
-}
 
 .image-button {
     -fx-background-image: url("../resources/go-home.png");
@@ -130,34 +131,7 @@
     -fx-faint-focus-color: transparent;
 }
 
-.image-LogOut-button {
-    -fx-background-image: url("../resources/logout-512.png");
-    -fx-background-repeat: no-repeat;
-    -fx-background-size: contain;
-    -fx-background-position: center;
-    -fx-background-color: #525b90;
-    -fx-border-color: transparent;
-    -fx-padding: 0;
-    -fx-background-radius: 10;
 
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
-
-
-}
-
-.image-LogOut-button:hover, .image-LogOut-button:pressed, .image-LogOut-button:armed, .image-LogOut-button:focused {
-    -fx-background-image: url("../resources/logout-512.png");
-    -fx-background-color: rgba(28, 34, 73, 0.68);
-    -fx-background-repeat: no-repeat;
-    -fx-background-size: contain;
-    -fx-background-position: center;
-    -fx-border-color: transparent;
-    -fx-padding: 0;
-    -fx-background-radius: 10;
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
-}
 
 .jfx-btn-add > ImageView {-fx-image: url("../resources/add-user.png");}
 
@@ -204,12 +178,22 @@
 .jfx-btn-save > ImageView {-fx-image: url("../resources/save.png");}
 .jfx-btn-delete > ImageView {-fx-image: url("../resources/delete.png");}
 .jfx-btn-new > ImageView {-fx-image: url("../resources/add.png");}
+.jfx-btn-search > ImageView {-fx-image: url("../resources/search.png");}
+.jfx-btn-users > ImageView {-fx-image: url("../resources/users.png");}
+.jfx-btn-systems > ImageView {-fx-image: url("../resources/systems.png");}
+.jfx-btn-log-out > ImageView {-fx-image: url("../resources/logout.png");}
+.jfx-btn-log > ImageView {-fx-image: url("../resources/log.png");}
+.jfx-btn-newUser > ImageView {-fx-image: url("../resources/new.png");}
+.jfx-btn-change > ImageView {-fx-image: url("../resources/change.png");}
+.jfx-btn-load > ImageView {-fx-image: url("../resources/load.png");}
+.jfx-btn-filter > ImageView {-fx-image: url("../resources/filter.png");}
 
+/* Botón de Guardar - Verde Pastel Oscuro */
 .jfx-btn-save {
     -fx-background-repeat: no-repeat;
     -fx-background-size: contain;
     -fx-background-position: center;
-    -fx-background-color: #1b1a54;
+    -fx-background-color: #6ABF69; /* Verde pastel oscuro */
     -fx-border-color: transparent;
     -fx-padding: 0;
     -fx-background-radius: 10;
@@ -222,19 +206,19 @@
     -fx-font-family: "Segoe UI", sans-serif;
     -fx-font-size: 14px;
     -fx-font-weight: normal;
-
 }
 
 .jfx-btn-save:pressed, .jfx-btn-save:hover, .jfx-btn-save:armed, .jfx-btn-save:focused {
-    -fx-background-color: #0A1B42;
+    -fx-background-color: #5CA862; /* Color de fondo al interactuar */
     -fx-text-fill: white;
 }
 
+/* Botón de Borrar - Rojo Pastel */
 .jfx-btn-delete {
     -fx-background-repeat: no-repeat;
     -fx-background-size: contain;
     -fx-background-position: center;
-    -fx-background-color: #1b1a54;
+    -fx-background-color: #FF6B6B; /* Rojo pastel */
     -fx-border-color: transparent;
     -fx-padding: 0;
     -fx-background-radius: 10;
@@ -247,19 +231,19 @@
     -fx-font-family: "Segoe UI", sans-serif;
     -fx-font-size: 14px;
     -fx-font-weight: normal;
-
 }
 
 .jfx-btn-delete:pressed, .jfx-btn-delete:hover, .jfx-btn-delete:armed, .jfx-btn-delete:focused {
-    -fx-background-color: #0A1B42;
+    -fx-background-color: #E86464; /* Color de fondo al interactuar */
     -fx-text-fill: white;
 }
 
+/* Botón de Nuevo - Verde Pastel Claro */
 .jfx-btn-new {
     -fx-background-repeat: no-repeat;
     -fx-background-size: contain;
     -fx-background-position: center;
-    -fx-background-color: #1b1a54;
+    -fx-background-color: #A2D5A2; /* Verde pastel claro */
     -fx-border-color: transparent;
     -fx-padding: 0;
     -fx-background-radius: 10;
@@ -272,13 +256,167 @@
     -fx-font-family: "Segoe UI", sans-serif;
     -fx-font-size: 14px;
     -fx-font-weight: normal;
-
 }
 
 .jfx-btn-new:pressed, .jfx-btn-new:hover, .jfx-btn-new:armed, .jfx-btn-new:focused {
-    -fx-background-color: #0A1B42;
+    -fx-background-color: #92C892; /* Color de fondo al interactuar */
     -fx-text-fill: white;
 }
+
+/* Botón de Buscar - Azul Pastel */
+.jfx-btn-search {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #89CFF0; /* Azul pastel */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jfx-btn-search:pressed, .jfx-btn-search:hover, .jfx-btn-search:armed, .jfx-btn-search:focused {
+    -fx-background-color: #79B5D7; /* Color de fondo al interactuar */
+    -fx-text-fill: white;
+}
+
+/* Botón de Users - Morado Pastel */
+.jfx-btn-users {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #D3A4F7; /* Morado pastel */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jfx-btn-users:pressed, .jfx-btn-users:hover, .jfx-btn-users:armed, .jfx-btn-users:focused {
+    -fx-background-color: #C28AE8; /* Color de fondo al interactuar */
+    -fx-text-fill: white;
+}
+
+/* Botón de Systems - Azul Intermedio */
+.jfx-btn-systems {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #6EA8DA; /* Azul intermedio */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jfx-btn-systems:pressed, .jfx-btn-systems:hover, .jfx-btn-systems:armed, .jfx-btn-systems:focused {
+    -fx-background-color: #5E96C5; /* Color de fondo al interactuar */
+    -fx-text-fill: white;
+}
+
+/* Botón de Log Out - Azul Grisáceo Pastel */
+.jfx-btn-log-out {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #A0AEC0; /* Azul grisáceo pastel */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jfx-btn-log-out:pressed, .jfx-btn-log-out:hover, .jfx-btn-log-out:armed, .jfx-btn-log-out:focused {
+    -fx-background-color: #718096; /* Color de fondo al interactuar, un azul grisáceo más oscuro */
+    -fx-text-fill: white;
+}
+
+/* Botón de Apply Filter - Verde Pastel */
+.jfx-btn-filter {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #A3D9A5; /* Verde pastel */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jfx-btn-filter:pressed, .jfx-btn-filter:hover, .jfx-btn-filter:armed, .jfx-btn-filter:focused {
+    -fx-background-color: #8FCF92; /* Verde pastel más oscuro al interactuar */
+    -fx-text-fill: white;
+}
+
+/* Botón de Load - Azul Cielo Pastel */
+.jfx-btn-load {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #B3DAF1; /* Azul cielo pastel */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jfx-btn-load:pressed, .jfx-btn-load:hover, .jfx-btn-load:armed, .jfx-btn-load:focused {
+    -fx-background-color: #A1CBE4; /* Azul cielo ligeramente más oscuro al interactuar */
+    -fx-text-fill: white;
+}
+
+
+
+
+
 
 .jfx-tbvUser-btnDelete{
 

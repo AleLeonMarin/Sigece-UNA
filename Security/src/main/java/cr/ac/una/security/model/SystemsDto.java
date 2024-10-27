@@ -1,37 +1,35 @@
 package cr.ac.una.security.model;
 
-import javafx.beans.property.SimpleBooleanProperty;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
-public class SystemsDto {
+public class SystemsDto implements Serializable {
 
     public SimpleStringProperty id;
     public SimpleStringProperty name;
-    public SimpleBooleanProperty modified;
-    public SimpleStringProperty version;
-    public ObservableList<RolesDto> rolesDto;
+    public Boolean modified;
+    public Long version;
+    List<RolesDto> roles;
 
     public SystemsDto() {
         this.id = new SimpleStringProperty("");
         this.name = new SimpleStringProperty("");
-        this.modified = new SimpleBooleanProperty(false);
-        this.version = new SimpleStringProperty("1");
-        this.rolesDto = FXCollections.observableArrayList();
+        roles = new ArrayList<>();
+        this.modified = false;
     }
 
     public Long getId() {
-        if (this.id.get() != null && !this.id.get().isEmpty()) {
-            return Long.valueOf(this.id.get());
+        if (id != null && id.get() != null && !id.get().isEmpty()) {
+            return Long.valueOf(id.get());
         } else {
             return null;
         }
     }
 
-    public void setId(String id) {
-        this.id.set(id);
+    public void setId(Long id) {
+        this.id.set(id.toString());
     }
 
     public String getName() {
@@ -42,37 +40,27 @@ public class SystemsDto {
         this.name.set(name);
     }
 
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
     public Boolean getModified() {
-        return modified.get();
+        return modified;
     }
 
     public void setModified(Boolean modified) {
-        this.modified.set(modified);
+        this.modified = modified;
     }
 
-    public String getVersion() {
-        return version.get();
+    public List<RolesDto> getRoles() {
+        return roles;
     }
 
-    public void setVersion(String version) {
-        this.version.set(version);
-    }
-
-    public ObservableList<RolesDto> getRolesDto() {
-        return rolesDto;
-    }
-
-    public void setRolesDto(ObservableList<RolesDto> rolesDto) {
-        this.rolesDto = rolesDto;
-    }
-
-    @Override
-    public String toString() {
-        return "SystemsDto{" +
-                "id=" + id.get() +
-                ", name='" + name.get() + '\'' +
-                ", modified=" + modified.get() +
-                ", version=" + version.get() +
-                '}';
+    public void setRoles(List<RolesDto> roles) {
+        this.roles = roles;
     }
 }

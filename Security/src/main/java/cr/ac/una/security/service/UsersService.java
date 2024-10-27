@@ -129,4 +129,67 @@ public class UsersService {
         }
     }
 
+    /*
+     * public Respuesta filterUsers(String name, String idCard, String lastNames) {
+     * try {
+     * // Construir el mapa de parámetros con valores opcionales
+     * Map<String, Object> valores = new HashMap<>();
+     * 
+     * if (name != null && !name.trim().isEmpty()) {
+     * valores.put("name", name);
+     * }
+     * if (idCard != null && !idCard.trim().isEmpty()) {
+     * valores.put("idCard", idCard);
+     * }
+     * if (lastNames != null && !lastNames.trim().isEmpty()) {
+     * valores.put("lastNames", lastNames);
+     * }
+     * 
+     * // Configurar los parámetros como una cadena vacía ya que usaremos
+     * QueryParams
+     * String parametros = "";
+     * 
+     * // Crear la solicitud con los parámetros
+     * Request request = new Request("UsersController/getUsers", parametros,
+     * valores);
+     * request.get();
+     * 
+     * // Verificar si ocurrió un error en la solicitud
+     * if (request.isError()) {
+     * return new Respuesta(false, request.getError(), "");
+     * }
+     * 
+     * // Leer y convertir la respuesta a una lista de UsersDto
+     * List<UsersDto> users = (List<UsersDto>) request.readEntity(new
+     * GenericType<List<UsersDto>>() {
+     * });
+     * return new Respuesta(true, "", "", "Usuarios", users);
+     * 
+     * } catch (Exception ex) {
+     * LOG.log(Level.SEVERE, "Error filtrando los usuarios.", ex);
+     * return new Respuesta(false, "Error filtrando los usuarios.", "filterUsers " +
+     * ex.getMessage());
+     * }
+     * }
+     */
+
+    public Respuesta getUsers() {
+        try {
+            Request request = new Request("UsersController/users");
+            request.get();
+
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+
+            List<UsersDto> users = (List<UsersDto>) request.readEntity(new GenericType<List<UsersDto>>() {
+            });
+            return new Respuesta(true, "", "", "Usuarios", users);
+
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Error obteniendo los usuarios.", ex);
+            return new Respuesta(false, "Error obteniendo los usuarios.", "getUsers " + ex.getMessage());
+        }
+    }
+
 }

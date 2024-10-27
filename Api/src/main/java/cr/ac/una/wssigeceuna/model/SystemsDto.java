@@ -3,36 +3,32 @@ package cr.ac.una.wssigeceuna.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
-import jakarta.json.bind.annotation.JsonbTransient;
 
-@JsonbPropertyOrder({
-        "id", "name", "version", "modified", "roles"
-})
-
+@JsonbPropertyOrder({ "id", "name", "version", "modified", "roles" })
 @Schema(description = "Clase que contiene la informacion de los sistemas")
 public class SystemsDto implements Serializable {
 
     @Schema(description = "Id del sistema", example = "1")
-    public Long id;
+    private Long id;
 
     @Schema(description = "Nombre del sistema", example = "Seguridad")
-    public String name;
+    private String name;
 
     @Schema(description = "Sistema modificado", example = "false")
-    public Boolean modified;
+    private Boolean modified;
 
     @Schema(description = "Version del sistema", example = "1")
-    public Long version;
-    
-    @JsonbTransient
-    public List<RolesDto> roles;
+    private Long version;
+
+    @Schema(description = "Roles del sistema")
+    List<RolesDto> roles;
 
     public SystemsDto() {
-        this.modified = false;
+
         roles = new ArrayList<>();
+        this.modified = false;
     }
 
     public SystemsDto(Systems systems) {
@@ -81,5 +77,4 @@ public class SystemsDto implements Serializable {
     public void setRoles(List<RolesDto> roles) {
         this.roles = roles;
     }
-
 }

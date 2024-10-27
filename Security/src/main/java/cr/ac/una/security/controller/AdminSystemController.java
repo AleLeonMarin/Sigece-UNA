@@ -452,7 +452,7 @@ public class AdminSystemController extends Controller implements Initializable {
                 bindSystems(false);
 
                 // Limpiar y cargar los roles del sistema actual
-                ObservableList<RolesDto> rolesDelSistema = FXCollections.observableArrayList(systems.getRolesDto());
+                ObservableList<RolesDto> rolesDelSistema = FXCollections.observableArrayList(systems.getRoles());
                 tbvRoles.setItems(rolesDelSistema);
 
                 System.out.println("Roles del sistema: " + rolesDelSistema.toString());

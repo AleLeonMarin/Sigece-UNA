@@ -76,6 +76,9 @@ public class AdminUsersController extends Controller implements Initializable {
     private MFXButton btnSave;
 
     @FXML
+    private MFXButton btnSearch;
+
+    @FXML
     private MFXComboBox<String> cmbLan;
 
     @FXML
@@ -94,19 +97,16 @@ public class AdminUsersController extends Controller implements Initializable {
     private TableColumn<RolesDto, String> tbcRolNombre;
 
     @FXML
-    private TableColumn<RolesDto, String> tbcSistemaNombre;
-
-    @FXML
     private TableView<RolesDto> tbvRoles;
 
     @FXML
     private TableView<SystemsDto> tbvUsers;
 
     @FXML
-    private Tab tptMantenimiento;
+    public Tab tptMantenimiento;
 
     @FXML
-    private Tab tptRoles;
+    public Tab tptRoles;
 
     @FXML
     private TabPane tbpUsuarios;
@@ -203,10 +203,8 @@ public class AdminUsersController extends Controller implements Initializable {
 
         );
 
-
         cmbLan.getItems().clear();
-        cmbLan.getItems().addAll("Español", "Inglés", "Francés", "Alemán");  // Idiomas esperados
-
+        cmbLan.getItems().addAll("Español", "Inglés", "Francés", "Alemán"); // Idiomas esperados
 
     }
 
@@ -224,7 +222,7 @@ public class AdminUsersController extends Controller implements Initializable {
 
     private void bindUser(boolean newUser) {
         if (!newUser) {
-       txfID.textProperty().bind(new SimpleStringProperty(String.valueOf(usuariosDto.getId())));
+            txfID.textProperty().bind(new SimpleStringProperty(String.valueOf(usuariosDto.getId())));
         }
         txfNombre.textProperty().bindBidirectional(usuariosDto.name);
         txfLasts.textProperty().bindBidirectional(usuariosDto.lastNames);
@@ -240,21 +238,22 @@ public class AdminUsersController extends Controller implements Initializable {
             imgViewUser.setImage(byteToImage(usuariosDto.getPhoto()));
         }
     }
-public void unbindUser() {
-    // Unbind text fields
-    txfID.textProperty().unbind();
-    txfNombre.textProperty().unbindBidirectional(usuariosDto.name);
-    txfLasts.textProperty().unbindBidirectional(usuariosDto.lastNames);
-    txfCed.textProperty().unbindBidirectional(usuariosDto.idCard);
-    txfMail.textProperty().unbindBidirectional(usuariosDto.email);
-    txfTel.textProperty().unbindBidirectional(usuariosDto.phone);
-    txfCel.textProperty().unbindBidirectional(usuariosDto.cellPhone);
-    cmbLan.valueProperty().unbindBidirectional(usuariosDto.language);
-    txfUser.textProperty().unbindBidirectional(usuariosDto.user);
-    txfPassword.textProperty().unbindBidirectional(usuariosDto.password);
-    txfStatus.textProperty().unbindBidirectional(usuariosDto.status);
-    // imgViewUser.setImage(new Image("../resources/add-photo.jpg"));
-}
+
+    public void unbindUser() {
+        // Unbind text fields
+        txfID.textProperty().unbind();
+        txfNombre.textProperty().unbindBidirectional(usuariosDto.name);
+        txfLasts.textProperty().unbindBidirectional(usuariosDto.lastNames);
+        txfCed.textProperty().unbindBidirectional(usuariosDto.idCard);
+        txfMail.textProperty().unbindBidirectional(usuariosDto.email);
+        txfTel.textProperty().unbindBidirectional(usuariosDto.phone);
+        txfCel.textProperty().unbindBidirectional(usuariosDto.cellPhone);
+        cmbLan.valueProperty().unbindBidirectional(usuariosDto.language);
+        txfUser.textProperty().unbindBidirectional(usuariosDto.user);
+        txfPassword.textProperty().unbindBidirectional(usuariosDto.password);
+        txfStatus.textProperty().unbindBidirectional(usuariosDto.status);
+        // imgViewUser.setImage(new Image("../resources/add-photo.jpg"));
+    }
 
     private void bindSystems(boolean newSystem) {
         if (!newSystem) {
@@ -273,8 +272,8 @@ public void unbindUser() {
             }
         });
 
-        if (this.systems.getRolesDto() != null) {
-            cmbRoles.setItems(FXCollections.observableArrayList(this.systems.getRolesDto()));
+        if (this.systems.getRoles() != null) {
+            cmbRoles.setItems(FXCollections.observableArrayList(this.systems.getRoles()));
         }
     }
 
@@ -372,19 +371,8 @@ public void unbindUser() {
     public void chargeRoles() {
         tbvRoles.getItems().clear();
         tbvRoles.setItems(FXCollections.observableArrayList(this.usuariosDto.getRoles()));
-
-        // Obtiene el sistema asociado al rol
-        SystemsDto sistema = rol.getSystem(); // Asumiendo que es un solo sistema y no una lista
-
-        if (sistema != null) {
-            tbcSistemaNombre.setCellValueFactory(cd -> new SimpleStringProperty(sistema.getName()));
-        } else {
-            tbcSistemaNombre.setCellValueFactory(cd -> new SimpleStringProperty("Sin sistema"));
-        }
-
         tbvRoles.refresh();
     }
-
 
     private void chargeUser(Long id) {
         try {
@@ -409,7 +397,6 @@ public void unbindUser() {
             new Mensaje().showModal(AlertType.ERROR, "Buscar Usuario", getStage(), "Error buscando el usuario.");
         }
     }
-
 
     private void chargeSistem(Long id) {
         try {
@@ -493,7 +480,8 @@ public void unbindUser() {
                         "Debe seleccionar un usuario.");
                 tbpUsuarios.getSelectionModel().select(tptMantenimiento);
             } else {
-                new Mensaje().showModal(AlertType.INFORMATION, "Inclusion", getStage(), "Solo puede agregar un rol de un sistema a la vez.");
+                new Mensaje().showModal(AlertType.INFORMATION, "Inclusion", getStage(),
+                        "Solo puede agregar un rol de un sistema a la vez.");
                 tbvUsers.getItems().clear();
                 tbvUsers.getColumns().clear();
                 if (tbvUsers.getColumns().isEmpty()) {
@@ -561,6 +549,39 @@ public void unbindUser() {
     }
 
     @FXML
+    void onActionBtnSearch(ActionEvent event) {
+        // Obtén el controlador de la vista SearchView
+        SearchViewController controller = (SearchViewController) FlowController.getInstance()
+                .getController("SearchView");
+
+        // Configura los tabs según la selección actual
+        if (tptMantenimiento.isSelected()) {
+            controller.tptSystems.setDisable(true);
+            controller.tptUsers.setDisable(false);
+        } else if (tptRoles.isSelected()) {
+            controller.tptUsers.setDisable(true);
+            controller.tptSystems.setDisable(false);
+        }
+
+        // Abre la vista SearchView en modo modal
+        FlowController.getInstance().goViewInWindowModal("SearchView", getStage(), false);
+
+        // Procesa el resultado después de cerrar la vista modal
+        Object result = controller.getResult();
+        if (tptMantenimiento.isSelected() && result instanceof UsersDto) {
+            UsersDto user = (UsersDto) result;
+            if (user != null) {
+                chargeUser(user.getId());
+            }
+        } else if (tptRoles.isSelected() && result instanceof SystemsDto) {
+            SystemsDto system = (SystemsDto) result;
+            if (system != null) {
+                chargeSistem(system.getId());
+            }
+        }
+    }
+
+    @FXML
     void onActionBtnSave(ActionEvent event) {
         try {
             String validation = validarRequeridos();
@@ -576,7 +597,6 @@ public void unbindUser() {
                 for (SystemsDto sistema : tbvUsers.getItems()) {
                     RolesDto selectedRole = (RolesDto) tbcRol.getCellData(sistema); // Get the RolesDto from the cell
                     if (selectedRole != null) {
-                        selectedRole.setModified(true);
                         rolesList.add(selectedRole);
                     }
                 }
@@ -667,7 +687,7 @@ public void unbindUser() {
                 RolesDto rol = (RolesDto) ButtonCell.this.getTableView().getItems().get(ButtonCell.this.getIndex());
                 usuariosDto.getRolesEliminados().add(rol);
                 usuariosDto.getRoles().remove(rol);
-                rol.getUsuariosDto().remove(usuariosDto);
+                rol.getUsers().remove(usuariosDto);
                 tbvRoles.getItems().remove(rol);
                 tbvRoles.refresh();
             });

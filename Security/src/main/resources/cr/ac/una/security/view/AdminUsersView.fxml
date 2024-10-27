@@ -19,11 +19,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" onMouseMoved="#onActionRoot" prefHeight="700.0" prefWidth="900.0" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.security.controller.AdminUsersController">
+<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" onMouseMoved="#onActionRoot" prefHeight="700.0" prefWidth="900.0" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.security.controller.AdminUsersController">
    <children>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
          <children>
-            <Label prefHeight="24.0" prefWidth="400.0" text="Personalización De Usuario" textFill="#0000006b">
+            <Label prefHeight="24.0" prefWidth="257.0" text="Personalización De Usuario" textFill="#0000006b">
                <font>
                   <Font name="Segoe UI" size="20.0" />
                </font>
@@ -144,7 +144,6 @@
                                              <columns>
                                                 <TableColumn fx:id="tbcIdRol" prefWidth="75.0" text="ID" />
                                                 <TableColumn fx:id="tbcRolNombre" prefWidth="75.0" text="ROL" />
-                                                <TableColumn fx:id="tbcSistemaNombre" prefWidth="150.0" text="Sistema" />
                                              </columns>
                                              <VBox.margin>
                                                 <Insets left="30.0" right="30.0" />
@@ -195,14 +194,28 @@
                 </Tab>
               </tabs>
             </TabPane>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0" VBox.vgrow="ALWAYS">
                <children>
-                  <MFXButton fx:id="btnSave" onAction="#onActionBtnSave" prefHeight="25.0" prefWidth="65.0" styleClass="button-SignIn" text="Guardar" />
-                  <MFXButton fx:id="btnDelete" onAction="#onActionBtnDelete" prefHeight="25.0" prefWidth="65.0" styleClass="button-SignIn" text="Eliminar" />
-                  <MFXButton fx:id="btnNew" ellipsisString="" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnNew" prefHeight="25.0" prefWidth="65.0" styleClass="button-SignIn" text="Nuevo">
+                  <MFXButton fx:id="btnSave" onAction="#onActionBtnSave" prefHeight="40.0" prefWidth="120.0" styleClass="jfx-btn-save" text="Guardar">
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic></MFXButton>
+                  <MFXButton fx:id="btnSeacrh" onAction="#onActionBtnSearch" prefHeight="40.0" prefWidth="120.0" styleClass="jfx-btn-search" text="Buscar">
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
+                  </MFXButton>
+                  <MFXButton fx:id="btnDelete" onAction="#onActionBtnDelete" prefHeight="40.0" prefWidth="120.0" styleClass="jfx-btn-delete" text="Eliminar">
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic></MFXButton>
+                  <MFXButton fx:id="btnNew" ellipsisString="" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnNew" prefHeight="40.0" prefWidth="120.0" styleClass="jfx-btn-new" text="Nuevo">
                      <HBox.margin>
-                        <Insets right="20.0" />
+                        <Insets />
                      </HBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
                   </MFXButton>
                </children>
             </HBox>
