@@ -117,7 +117,12 @@ public class Mails implements Serializable {
         this.state = mailsDto.getState();
         this.date = mailsDto.getDate();
         this.version = mailsDto.getVersion();
-        this.notification = mailsDto.getNotification();
+
+         if (mailsDto.getNotification()!= null) {
+        Notifications notificacion = new Notifications();
+        notificacion.setId(mailsDto.getNotification().getId());
+        this.notification = notificacion;
+    }
     }
 
     public Long getId() {

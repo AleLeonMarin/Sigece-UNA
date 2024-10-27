@@ -39,7 +39,7 @@ public class MailsDto implements Serializable {
     @Schema(description = "Fecha del correo", example = "2021-09-01")
     private Date date;
 
-    @JsonbTransient
+
     @Schema(description = "Notificacion a la que pertenece el correo")
     private Notifications notification;
 

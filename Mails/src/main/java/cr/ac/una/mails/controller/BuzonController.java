@@ -89,10 +89,10 @@ public class BuzonController extends Controller implements Initializable {
     }
 
     private void configurarTabla() {
-        tbcDestinatario.setCellValueFactory(new PropertyValueFactory<>("corDestinatario"));
-        tbcEstado.setCellValueFactory(new PropertyValueFactory<>("corEstado"));
-        tbcFecha.setCellValueFactory(new PropertyValueFactory<>("corFecha"));
-        tbcId.setCellValueFactory(new PropertyValueFactory<>("corId"));
+        tbcDestinatario.setCellValueFactory(new PropertyValueFactory<>("destinatary"));
+        tbcEstado.setCellValueFactory(new PropertyValueFactory<>("state"));
+        tbcFecha.setCellValueFactory(new PropertyValueFactory<>("date"));
+        tbcId.setCellValueFactory(new PropertyValueFactory<>("id"));
 
         tbvMails.setItems(correosList);
     }

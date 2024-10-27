@@ -37,20 +37,42 @@ public class MailsController {
         @ApiResponse(responseCode = "200", description = "Correos guardados correctamente"),
         @ApiResponse(responseCode = "400", description = "Error al guardar los correos")
     })
-    public Response saveMails(MailsDto mailsDto) {
-        try {
-            Respuesta res = mailsService.saveMails(mailsDto);
-            if (!res.getEstado()) {
-                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
-            }
-            return Response.ok(res).build();
-        } catch (Exception ex) {
-            LOG.severe("Ocurrió un error al guardar los correos.");
-            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue())
-                    .entity("Ocurrió un error al guardar los correos.")
-                    .build();
+  public Response saveMails(MailsDto mailsDto) {
+    try {
+        // Print para ver el contenido de mailsDto
+        System.out.println("Debug - MailsDto recibido:");
+        System.out.println("ID: " + mailsDto.getId());
+        System.out.println("Asunto: " + mailsDto.getSubject());
+        System.out.println("Destinatario: " + mailsDto.getDestinatary());
+        System.out.println("Resultado: " + mailsDto.getResult());
+        System.out.println("Estado: " + mailsDto.getState());
+        System.out.println("Fecha: " + mailsDto.getDate());
+        System.out.println("Versión: " + mailsDto.getVersion());
+
+        // Verificar si la notificación está presente en mailsDto
+        if (mailsDto.getNotification() != null) {
+            System.out.println("Debug - Notificación en MailsDto:");
+            System.out.println("Notificación ID: " + mailsDto.getNotification().getId());
+            System.out.println("Notificación Nombre: " + mailsDto.getNotification().getName());
+            System.out.println("Notificación HTML: " + mailsDto.getNotification().getHtml());
+            System.out.println("Notificación Versión: " + mailsDto.getNotification().getVersion());
+        } else {
+            System.out.println("Debug - MailsDto no contiene una notificación asignada.");
         }
+
+        Respuesta res = mailsService.saveMails(mailsDto);
+        if (!res.getEstado()) {
+            return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+        }
+        return Response.ok(res).build();
+    } catch (Exception ex) {
+        LOG.severe("Ocurrió un error al guardar los correos.");
+        return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue())
+                .entity("Ocurrió un error al guardar los correos.")
+                .build();
     }
+}
+
 
     @GET
     @Path("/get/{id}")
