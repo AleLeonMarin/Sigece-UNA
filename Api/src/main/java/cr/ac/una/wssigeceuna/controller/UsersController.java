@@ -285,6 +285,28 @@ public class UsersController {
                     .build();
         }
     }
+    
+    
+        @PUT
+    @Path("/actualizarEstado")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response actualizarEstado(UsersDto usuarioDto) {
+        try {
+            Respuesta respuesta = usersService.actualizarEstadoUsuario(usuarioDto);
+            if (!respuesta.getEstado()) {
+                return Response.status(Response.Status.NOT_FOUND).entity(respuesta.getMensaje()).build();
+            }
+            return Response.ok(respuesta).build();
+        } catch (Exception e) {
+            Logger.getLogger(UsersController.class.getName()).log(Level.SEVERE, "Error actualizando el estado del usuario.", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\": \"Error actualizando el estado: " + e.getMessage() + "\"}")
+                    .build();
+        }
+    }
+    
+    
 
     /*
      * @GET

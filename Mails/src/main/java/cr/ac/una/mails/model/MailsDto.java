@@ -21,9 +21,10 @@ public class MailsDto {
         this.subject = new SimpleStringProperty("");
         this.destinatary = new SimpleStringProperty("");
         this.result = new SimpleStringProperty("");
-        this.state = new SimpleStringProperty("");
+        this.state = new SimpleStringProperty("P");
         this.date = new SimpleObjectProperty<>(new Date());
-        this.version = new SimpleLongProperty(1L);
+        this.notification = new NotificationsDto();
+        this.version = new SimpleLongProperty(0L);
         this.notification = new NotificationsDto();
     }
 

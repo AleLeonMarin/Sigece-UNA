@@ -65,18 +65,15 @@ public class Notifications implements Serializable {
     @Column(name = "NOT_VERSION")
     private Long version;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "notifications")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "notifications", orphanRemoval = true)
     private List<Variables> variables;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "notification")
     private List<Mails> mails;
 
     public Notifications() {
-        variables = new ArrayList<>();
-        mails = new ArrayList<>();
     }
 
     public Notifications(Long id) {
-        this();
         this.id = id;
     }
 

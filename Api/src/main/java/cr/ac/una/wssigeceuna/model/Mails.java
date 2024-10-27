@@ -4,6 +4,7 @@
  */
 package cr.ac.una.wssigeceuna.model;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -92,6 +93,7 @@ public class Mails implements Serializable {
 
     @JoinColumn(name = "COR_NOT_ID", referencedColumnName = "NOT_ID")
     @ManyToOne(optional = false)
+    @JsonbTransient 
     private Notifications notification;
 
     public Mails() {
@@ -115,7 +117,12 @@ public class Mails implements Serializable {
         this.state = mailsDto.getState();
         this.date = mailsDto.getDate();
         this.version = mailsDto.getVersion();
-        this.notification = mailsDto.getNotification();
+
+         if (mailsDto.getNotification()!= null) {
+        Notifications notificacion = new Notifications();
+        notificacion.setId(mailsDto.getNotification().getId());
+        this.notification = notificacion;
+    }
     }
 
     public Long getId() {

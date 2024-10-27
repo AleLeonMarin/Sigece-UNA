@@ -28,7 +28,11 @@ public class VariablesService {
                 return new Respuesta(false, request.getError(), "");
             }
 
+
             List<VariablesDto> variables = (List<VariablesDto>) request.readEntity(new GenericType<List<VariablesDto>>() {});
+            if (variables == null) {
+                return new Respuesta(false, "No se encontraron variables.", "");
+            }
             return new Respuesta(true, "", "", "Variables", variables);
 
         } catch (Exception ex) {

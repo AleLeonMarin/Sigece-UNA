@@ -4,10 +4,13 @@
  */
 package cr.ac.una.wssigeceuna.model;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
@@ -15,6 +18,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -30,10 +34,8 @@ import java.util.List;
 @Table(name = "SIS_VARIABLES")
 @XmlRootElement
 @NamedQueries({
-        @NamedQuery(name = "Variables.findAll", query = "SELECT s FROM Variables s"),
-        @NamedQuery(name = "Variables.findByVarId", query = "SELECT s FROM Variables s WHERE s.id = :id"),
-
-/*
+    @NamedQuery(name = "Variables.findAll", query = "SELECT s FROM Variables s"),
+    @NamedQuery(name = "Variables.findByVarId", query = "SELECT s FROM Variables s WHERE s.id = :id"), /*
  * @NamedQuery(name = "SisVariables.findByVarNombre", query =
  * "SELECT s FROM SisVariables s WHERE s.varNombre = :varNombre"),
  * 
@@ -42,7 +44,7 @@ import java.util.List;
  * 
  * @NamedQuery(name = "SisVariables.findByVarVersion", query =
  * "SELECT s FROM SisVariables s WHERE s.varVersion = :varVersion")
- */ })
+ */})
 public class Variables implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -51,6 +53,8 @@ public class Variables implements Serializable {
     @Id
     @Basic(optional = false)
     @Column(name = "VAR_ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sis_variables_seq")
+    @SequenceGenerator(name = "sis_variables_seq", sequenceName = "SIS_VARIABLES_SEQ01", allocationSize = 1)
     private Long id;
 
     @Basic(optional = false)
@@ -71,27 +75,29 @@ public class Variables implements Serializable {
 
     @JoinColumn(name = "VAR_NOT_ID", referencedColumnName = "NOT_ID")
     @ManyToOne(optional = false)
+    @JsonbTransient
     private Notifications notifications;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "variable")
+    @JsonbTransient
     private List<ConditionalVariables> conditionalVariables;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "variables")
+    @JsonbTransient
     private List<MultimediaVariables> multimediaVariables;
 
     public Variables() {
-        conditionalVariables = new ArrayList<>();
-        multimediaVariables = new ArrayList<>();
+
     }
 
     public Variables(Long id) {
-        this();
         this.id = id;
     }
 
     public Variables(VariablesDto variablesDto) {
         this();
         this.id = variablesDto.getId();
+        update(variablesDto);
     }
 
     public void update(VariablesDto variablesDto) {
@@ -99,6 +105,13 @@ public class Variables implements Serializable {
         this.type = variablesDto.getType();
         this.value = variablesDto.getValue();
         this.version = variablesDto.getVersion();
+
+        // Verificar si la notificación no es nula antes de acceder a su ID
+        if (variablesDto.getNotification() != null && variablesDto.getNotification().getId() != null) {
+            Notifications notificacion = new Notifications();
+            notificacion.setId(variablesDto.getNotification().getId());
+            this.notifications = notificacion;
+        }
     }
 
     public Long getId() {

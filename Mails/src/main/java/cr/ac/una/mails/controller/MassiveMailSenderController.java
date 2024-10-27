@@ -76,7 +76,7 @@ public class MassiveMailSenderController extends Controller implements Initializ
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        tbcNotifications.setCellValueFactory(new PropertyValueFactory<>("notNombre"));
+        tbcNotifications.setCellValueFactory(new PropertyValueFactory<>("name"));
 
 
         configurarSeleccionNotificacion();
@@ -85,9 +85,9 @@ public class MassiveMailSenderController extends Controller implements Initializ
         cargarNotificaciones();
 
 
-        tbcDestinatario.setCellValueFactory(new PropertyValueFactory<>("corDestinatario"));
-        tbcEstado.setCellValueFactory(new PropertyValueFactory<>("corEstado"));
-        tbcPlantilla.setCellValueFactory(new PropertyValueFactory<>("corResultado"));
+        tbcDestinatario.setCellValueFactory(new PropertyValueFactory<>("destinatary"));
+        tbcEstado.setCellValueFactory(new PropertyValueFactory<>("state"));
+        tbcPlantilla.setCellValueFactory(new PropertyValueFactory<>("result"));
     }
 
     @Override

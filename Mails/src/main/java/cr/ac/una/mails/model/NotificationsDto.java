@@ -4,11 +4,12 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationsDto {
 
-    public SimpleLongProperty id;
+    public SimpleStringProperty id;
     public SimpleStringProperty name;
     public SimpleStringProperty html;
     public SimpleLongProperty version;
@@ -16,28 +17,25 @@ public class NotificationsDto {
     public List<MailsDto> mails;
 
     public NotificationsDto() {
-        this.id = new SimpleLongProperty();
+        this.id = new SimpleStringProperty("");
         this.name = new SimpleStringProperty("");
         this.html = new SimpleStringProperty("");
-        this.version = new SimpleLongProperty(1L);
-        this.variables = FXCollections.observableArrayList();
-        this.mails = FXCollections.observableArrayList();
+        this.version = new SimpleLongProperty(0L);
+        this.variables =new ArrayList<>();
+        this.mails = new ArrayList<>();
     }
 
-    public NotificationsDto(Long id, String name, String html, Long version) {
-        this();
-        this.id.set(id);
-        this.name.set(name);
-        this.html.set(html);
-        this.version.set(version);
-    }
 
     public Long getId() {
-        return id.get();
+        if (this.id.get() != null && !this.id.get().isEmpty()) {
+            return Long.valueOf(this.id.get());
+        } else {
+            return null;
+        }
     }
 
     public void setId(Long id) {
-        this.id.set(id);
+        this.id.set(id.toString());
     }
 
     public String getName() {

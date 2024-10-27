@@ -21,7 +21,7 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         FlowController.getInstance().InitializeFlow(stage, null);
         FlowController.getInstance().goMain("LoginView");
-        stage.getIcons().add(new Image("cr/ac/una/mails/resources/logo2.png"));
+        //stage.getIcons().add(new Image("cr/ac/una/mails/resources/logo2.png"));
         stage.setTitle("SigeceUna");
     }
 
