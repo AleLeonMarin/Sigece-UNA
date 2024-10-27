@@ -358,16 +358,20 @@ public class AdminNotificationController extends Controller implements Initializ
         }
 
         if (variableSeleccionada != null) {
+            // Editar variable existente
             variableSeleccionada.setName(txtVarNombre.getText());
-            variableSeleccionada.setType(txtVarTipo.getValue());
+            variableSeleccionada.setType(txtVarTipo.getValue()); // Establece el tipo seleccionado
             variableSeleccionada.setValue(txtVarTipo.getValue().equals("Condicional") ? "" : txtVarValor.getText());
             tbvVariables.refresh();
             tbvVariables2.refresh();
         } else {
+            // Crear nueva variable
             VariablesDto nuevaVariable = new VariablesDto();
             nuevaVariable.setName(txtVarNombre.getText());
+            nuevaVariable.setType(txtVarTipo.getValue()); // Establece el tipo seleccionado
             nuevaVariable.setValue(txtVarTipo.getValue().equals("Condicional") ? "" : txtVarValor.getText());
 
+            // Verifica si la variable ya existe
             boolean variableYaExiste = tbvVariables.getItems().stream()
                     .anyMatch(var -> var.getName().equalsIgnoreCase(nuevaVariable.getName()));
 
@@ -379,14 +383,17 @@ public class AdminNotificationController extends Controller implements Initializ
             tbvVariables.getItems().add(nuevaVariable);
         }
 
+        // Actualiza tbvVariables2 con los cambios
         tbvVariables2.setItems(FXCollections.observableArrayList(tbvVariables.getItems()));
         tbvVariables2.refresh();
 
+        // Limpia selección y formulario
         tbvVariables.getSelectionModel().clearSelection();
         tbvVariables2.getSelectionModel().clearSelection();
         variableSeleccionada = null;
         limpiarFormularioVar();
     }
+
 
 
     @FXML
@@ -400,6 +407,7 @@ public class AdminNotificationController extends Controller implements Initializ
                 tbvVariables.getItems().remove(variableToDelete);
 
                 tbvVariables2.setItems(FXCollections.observableArrayList(tbvVariables.getItems()));
+                variablesService.eliminarVariable(variableToDelete.getId());
                 limpiarFormularioVar();
             }
         } else {
@@ -466,6 +474,8 @@ public class AdminNotificationController extends Controller implements Initializ
     void onActionBtnMax(ActionEvent event) {
         String htmlContent = plantillaCode.getText();
         AppContext.getInstance().set("htmlContent", htmlContent);
+        AppContext.getInstance().set("variables", new ArrayList<>(tbvVariables.getItems())); // Guarda las variables
+
         FlowController.getInstance().goViewInWindowModal("MaxViewHTML", this.getStage(), Boolean.TRUE);
     }
 

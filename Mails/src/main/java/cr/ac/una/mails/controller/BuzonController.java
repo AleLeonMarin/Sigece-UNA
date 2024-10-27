@@ -4,16 +4,21 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import cr.ac.una.mails.model.MailsDto;
+import cr.ac.una.mails.model.ParamethersDto;
 import cr.ac.una.mails.service.CorreosService;
+import cr.ac.una.mails.service.ParametrosService;
 import cr.ac.una.mails.util.AppContext;
 import cr.ac.una.mails.util.FlowController;
 import cr.ac.una.mails.util.Mensaje;
 import cr.ac.una.mails.util.Respuesta;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
+import io.github.palexdev.materialfx.controls.MFXSpinner;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import io.github.palexdev.materialfx.controls.models.spinner.IntegerSpinnerModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -73,13 +78,29 @@ public class BuzonController extends Controller implements Initializable {
 
     private Mensaje mensaje;
 
+    @FXML
+    private Button btnSaveMailXHora;
+
+    @FXML
+    private MFXSpinner<Integer> spinnerCorreosXhora;
+
+
+    private ParametrosService parametrosService;
+    private ParamethersDto parametros;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        parametrosService = new ParametrosService();
         correosService = new CorreosService();
         mensaje = new Mensaje();
         correosList = FXCollections.observableArrayList();
         configurarTabla();
+
+        IntegerSpinnerModel spinnerModel = new IntegerSpinnerModel(); // Rango: 1 a 1000, valor inicial: 100
+        spinnerCorreosXhora.setSpinnerModel(spinnerModel);
+
+
+        cargarParametros();
 
         actualizarCorreos();
 
@@ -88,6 +109,20 @@ public class BuzonController extends Controller implements Initializable {
 
     }
 
+    private void cargarParametros() {
+        Respuesta respuesta = parametrosService.getParametros();
+        if (respuesta.getEstado()) {
+            parametros = (ParamethersDto) respuesta.getResultado("Parametros");
+            if (parametros != null) {
+                spinnerCorreosXhora.setValue(parametros.getTimeout().intValue()); // Establece el valor inicial en el spinner
+            }
+        } else {
+            mensaje.show(Alert.AlertType.ERROR, "Error", "Error al cargar los parámetros: " + respuesta.getMensaje());
+        }
+    }
+
+
+
     private void configurarTabla() {
         tbcDestinatario.setCellValueFactory(new PropertyValueFactory<>("destinatary"));
         tbcEstado.setCellValueFactory(new PropertyValueFactory<>("state"));
@@ -95,6 +130,12 @@ public class BuzonController extends Controller implements Initializable {
         tbcId.setCellValueFactory(new PropertyValueFactory<>("id"));
 
         tbvMails.setItems(correosList);
+
+        ParametrosService parametrosService = new ParametrosService();
+
+        Respuesta respuesta = parametrosService.getParametros();
+
+
     }
 
 
@@ -201,5 +242,21 @@ public class BuzonController extends Controller implements Initializable {
         FlowController.getInstance().goViewInWindow("EnvioCorreoView");
     }
 
+
+    @FXML
+    void clickbtnSaveCMailXHora(ActionEvent event) {
+
+        if (parametros != null) {
+            parametros.setTimeout(spinnerCorreosXhora.getValue().longValue()); // Actualiza solo el timeout
+            Respuesta respuesta = parametrosService.guardarParametros(parametros);
+            if (respuesta.getEstado()) {
+                mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "Parámetro de timeout actualizado correctamente.");
+            } else {
+                mensaje.show(Alert.AlertType.ERROR, "Error", "Error al actualizar el parámetro de timeout: " + respuesta.getMensaje());
+            }
+        } else {
+            mensaje.show(Alert.AlertType.ERROR, "Error", "No se encontraron parámetros para actualizar.");
+        }
+    }
 
 }
