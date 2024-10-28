@@ -37,6 +37,8 @@ import java.util.List;
         @NamedQuery(name = "Users.findAll", query = "SELECT s FROM Users s"),
         @NamedQuery(name = "Users.findByUserPass", query = "SELECT s FROM Users s LEFT JOIN FETCH s.roles WHERE s.user = :user AND s.password = :password", hints = @QueryHint(name = "eclipselink.refresh", value = "true")),
         @NamedQuery(name = "Users.findById", query = "SELECT s FROM Users s WHERE s.id = :id"),
+        @NamedQuery(name = "Users.findByMail", query = "SELECT s FROM Users s WHERE s.email = :mail"),
+        @NamedQuery(name = "Users.findByPass", query = "SELECT s FROM Users s WHERE s.password = :password", hints = @QueryHint(name = "eclipselink.refresh", value = "true")),
 
 /*
  * @NamedQuery(name = "SisUsuarios.findByUserApellidos", query =
@@ -45,8 +47,7 @@ import java.util.List;
  * @NamedQuery(name = "SisUsuarios.findByUserCedula", query =
  * "SELECT s FROM SisUsuarios s WHERE s.userCedula = :userCedula"),
  * 
- * @NamedQuery(name = "SisUsuarios.findByUserCorreo", query =
- * "SELECT s FROM SisUsuarios s WHERE s.userCorreo = :userCorreo"),
+ * 
  * 
  * @NamedQuery(name = "SisUsuarios.findByUserTelefono", query =
  * "SELECT s FROM SisUsuarios s WHERE s.userTelefono = :userTelefono"),
@@ -183,13 +184,13 @@ public class Users implements Serializable {
         this.id = id;
     }
 
-    public Users(UsersDto usersDto){
+    public Users(UsersDto usersDto) {
         this();
         this.id = usersDto.getId();
         update(usersDto);
     }
 
-    public void update(UsersDto usersDto){
+    public void update(UsersDto usersDto) {
         this.name = usersDto.getName();
         this.lastNames = usersDto.getLastNames();
         this.idCard = usersDto.getIdCard();

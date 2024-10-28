@@ -7,6 +7,7 @@ import jakarta.persistence.NonUniqueResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -32,7 +33,7 @@ public class UsersService {
     private EntityManager em;
 
     @EJB
-    MailsService mail;
+    MailsService mails;
 
     public Respuesta validateUser(String username, String password) {
 
@@ -118,11 +119,11 @@ public class UsersService {
                     }
                 }
 
-                   UsersDto usuario = new UsersDto();
+                UsersDto usuario = new UsersDto();
 
-                   usuario.setUser(usersDto.getUser());
-                   usuario.setEmail(usersDto.getEmail());
-                   mail.activationMail(usuario);
+                usuario.setUser(usersDto.getUser());
+                usuario.setEmail(usersDto.getEmail());
+                mails.activationMail(usuario);
             }
 
             // Aseguramos que los cambios se confirmen en la base de datos
@@ -245,23 +246,25 @@ public class UsersService {
                     "activarUsuario " + ex.getMessage());
         }
     }
-    
-       public Respuesta actualizarEstadoUsuario(UsersDto usuarioDto) {
+
+    public Respuesta actualizarEstadoUsuario(UsersDto usuarioDto) {
         try {
             Users usuario = em.find(Users.class, usuarioDto.getId());
             if (usuario == null) {
-                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el usuario.", "actualizarEstadoUsuario NoResultException");
+                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el usuario.",
+                        "actualizarEstadoUsuario NoResultException");
             }
 
             usuario.setStatus(usuarioDto.getStatus());
             em.merge(usuario);
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Usuario", new UsersDto(usuario));
         } catch (Exception ex) {
-            Logger.getLogger(UsersService.class.getName()).log(Level.SEVERE, "Error actualizando el estado del usuario.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error actualizando el estado del usuario.", "actualizarEstadoUsuario " + ex.getMessage());
+            Logger.getLogger(UsersService.class.getName()).log(Level.SEVERE,
+                    "Error actualizando el estado del usuario.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error actualizando el estado del usuario.",
+                    "actualizarEstadoUsuario " + ex.getMessage());
         }
     }
-
 
     public Respuesta filterUsers(String name, String idCard, String lastNames) {
         try {
@@ -295,10 +298,110 @@ public class UsersService {
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "Usuarios", usersDto);
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Error filtrando los usuarios.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error filtrando los usuarios.", "filterUsers " + ex.getMessage());
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error filtrando los usuarios.",
+                    "filterUsers " + ex.getMessage());
         }
     }
 
-    
+    public Respuesta getUserByMail(String mail) {
+        try {
+            Query query = em.createNamedQuery("Users.findByMail", Users.class);
+            query.setParameter("mail", mail);
+            Users usuarios = (Users) query.getSingleResult();
+            UsersDto usuarioDto = new UsersDto(usuarios);
+
+            // Generar una contraseña aleatoria
+            String nuevaContrasena = generarContrasenaAleatoria();
+            usuarios.setPassword(nuevaContrasena); // Asigna la nueva contraseña al usuario
+
+            em.merge(usuarios); // Guarda los cambios en la base de datos
+
+            // Enviar un correo con la nueva contraseña
+            UsersDto u = new UsersDto();
+            u.setUser(usuarioDto.getUser());
+            u.setEmail(usuarioDto.getEmail());
+            u.setPassword(nuevaContrasena);
+            mails.sendPasswordResetMail(u);
+
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Usuario", usuarioDto);
+        } catch (NoResultException ex) {
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
+                    "No existe un usuario con el correo ingresado.", "getUserByMail NoResultException");
+        } catch (NonUniqueResultException ex) {
+            LOG.log(Level.SEVERE, "Ocurrió un error al consultar el usuario.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al consultar el usuario.",
+                    "getUserByMail NonUniqueResultException");
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrió un error al consultar el usuario.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al consultar el usuario.",
+                    "getUserByMail " + ex.getMessage());
+        }
+    }
+
+    public Respuesta getByPass(String password) {
+        try {
+            Query query = em.createNamedQuery("Users.findByPass", Users.class);
+            query.setParameter("password", password);
+
+            Users user = (Users) query.getSingleResult();
+            UsersDto userDto = new UsersDto(user);
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Usuarios", userDto);
+        } catch (NoResultException ex) {
+            LOG.log(Level.WARNING, "No se encontró un usuario con la contraseña especificada.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
+                    "No se encontró un usuario con la contraseña especificada.", "getByPass NoResultException");
+        } catch (NonUniqueResultException ex) {
+            LOG.log(Level.SEVERE, "Se encontró más de un usuario con la misma contraseña.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
+                    "Se encontró más de un usuario con la misma contraseña.", "getByPass NonUniqueResultException");
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrió un error al consultar los usuarios.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
+                    "Ocurrió un error al consultar los usuarios.", "getByPass " + ex.getMessage());
+        }
+    }
+
+    // Método para generar una contraseña aleatoria
+    private String generarContrasenaAleatoria() {
+        int longitud = 12; // Longitud de la contraseña
+        String caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
+
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder(longitud);
+
+        for (int i = 0; i < longitud; i++) {
+            int index = random.nextInt(caracteres.length());
+            sb.append(caracteres.charAt(index));
+        }
+
+        return sb.toString();
+    }
+
+    public Respuesta updatePasswordByEmail(String email, String newPassword) {
+        try {
+            // Buscar el usuario por el correo
+            Query query = em.createNamedQuery("Users.findByMail", Users.class);
+            query.setParameter("mail", email);
+            Users user = (Users) query.getSingleResult();
+
+            // Actualizar la contraseña del usuario con la nueva proporcionada
+            user.setPassword(newPassword);
+            em.merge(user); // Guarda los cambios en la base de datos
+
+            // Convertir el usuario a DTO para la respuesta
+            UsersDto userDto = new UsersDto(user);
+
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "Contraseña actualizada correctamente.", "",
+                    "Usuarios", userDto);
+        } catch (NoResultException ex) {
+            LOG.log(Level.WARNING, "No se encontró un usuario con el correo especificado.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
+                    "No se encontró un usuario con el correo especificado.",
+                    "updatePasswordByEmail NoResultException");
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrió un error al actualizar la contraseña.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error actualizando la contraseña.", "updatePasswordByEmail " + ex.getMessage());
+        }
+    }
 
 }

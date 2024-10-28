@@ -274,6 +274,58 @@ public class MailsService {
         }
     }
 
+    public Respuesta sendPasswordResetMail(UsersDto user) {
+        try {
+            // Buscar la notificación de cambio de contraseña (por ejemplo, ID 3L)
+            Notifications notification = em.find(Notifications.class, 3L);
+            if (notification == null) {
+                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
+                        "No se encontró la notificación de recuperación de contraseña.",
+                        "sendPasswordResetMail NoResultException");
+            }
+
+            // Reemplazar los placeholders en el HTML con los datos del usuario y la
+            // contraseña temporal
+            String content = notification.getHtml()
+                    .replace("[user]", user.getUser())
+                    .replace("[contraseña_temporal]", user.getPassword());
+
+            // Crear el correo a persistir
+            MailsDto mail = new MailsDto();
+            mail.setSubject("Recuperación de contraseña SigeceUNA");
+            mail.setDestinatary(user.getEmail());
+            mail.setResult(content);
+            mail.setNotification(notification);
+            mail.setState("E");
+            mail.setDate(new Date());
+            mail.setVersion(Long.MIN_VALUE);
+
+            Respuesta saveMail = saveMails(mail);
+            if (!saveMail.getEstado()) {
+                return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
+                        "Error al guardar el correo de recuperación de contraseña.",
+                        "sendPasswordResetMail " + saveMail.getMensaje());
+            }
+
+            // Enviar el correo utilizando el servicio de email
+            String result = emailsService.sendMail(mail.getDestinatary(), mail.getSubject(), content);
+            if (result.contains("exitosamente")) {
+                return new Respuesta(true, CodigoRespuesta.CORRECTO,
+                        "Correo de recuperación de contraseña enviado exitosamente.", "",
+                        "Correo", mail);
+            } else {
+                return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
+                        "Error enviando el correo de recuperación de contraseña: " + result, "sendPasswordResetMail");
+            }
+
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrió un error al enviar el correo de recuperación de contraseña.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
+                    "Ocurrió un error al enviar el correo de recuperación de contraseña.",
+                    "sendPasswordResetMail " + ex.getMessage());
+        }
+    }
+
     public Respuesta deleteMail(Long id) {
         try {
             Mails mail = em.find(Mails.class, id);

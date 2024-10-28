@@ -10,7 +10,6 @@ import jakarta.ws.rs.core.*;
 
 import java.util.Map;
 
-
 /**
  *
  * @author ccarranza
@@ -34,7 +33,8 @@ public class Request {
 
     public Request(String target, String parametros, Map<String, Object> valores) {
         this();
-        this.webTarget = client.target(AppContext.getInstance().get("resturl") + target).path(parametros).resolveTemplates(valores);
+        this.webTarget = client.target(AppContext.getInstance().get("resturl") + target).path(parametros)
+                .resolveTemplates(valores);
         this.builder = webTarget.request(MediaType.APPLICATION_JSON);
         MultivaluedMap<String, Object> headers = new MultivaluedHashMap<>();
         headers.add("Content-Type", "application/json; charset=UTF-8");
@@ -74,23 +74,28 @@ public class Request {
         response = builder.get();
     }
 
-    //TODO
+    // TODO
 
     public void post(Object clazz) {
-        //TODO
-            Entity<?> entity = Entity.entity(clazz, "application/json; charset=UTF-8");
-            response = builder.post(entity);
+        // TODO
+        Entity<?> entity = Entity.entity(clazz, "application/json; charset=UTF-8");
+        response = builder.post(entity);
     }
 
     public void put(Object clazz) {
-        // TODO
-            Entity<?> entity = Entity.entity(clazz, "application/json; charset=UTF-8");
+        if (clazz != null) {
+            // Convertir el objeto en una entidad JSON para enviar en el cuerpo
+            Entity<?> entity = Entity.entity(clazz, MediaType.APPLICATION_JSON_TYPE);
             response = builder.put(entity);
+        } else {
+            // Si no hay cuerpo, solo realiza la solicitud PUT sin entidad
+            response = builder.put(Entity.text(""));
+        }
     }
 
     public void delete() {
         // TODO
-            response = builder.delete();
+        response = builder.delete();
     }
 
     public int getStatus() {

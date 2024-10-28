@@ -729,6 +729,28 @@ target="_blank">Activar Cuenta</a> </div> <p>Si no solicitaste esta activacion, 
 <div class="spacer"></div> <div class="footer"> <p>&copy; 2024 SigeceUna. Todos los derechos reservados.</p> 
 <p><a href="#">Politica de Privacidad</a> | <a href="#">Terminos y Condiciones</a></p> </div> </div> </body> </html>', 1);
 
+INSERT INTO sis_notificacion (not_nombre, not_plantilla, not_version)
+VALUES ('Recuperacion de Clave',
+'<!DOCTYPE html> <html lang="es"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+<title>Recuperación de Contraseña</title> <style> body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #f9f9f9; 
+margin: 0; padding: 0; } .container { max-width: 650px; margin: 30px auto; background-color: #ffffff; border-radius: 10px; overflow: hidden; 
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); border: 1px solid #e0e0e0; } .header { background-color: #0D47A1; padding: 30px 20px; text-align: center; 
+color: white; } .header img { width: 200px; height: auto; margin-bottom: 15px; } .header h2 { font-size: 26px; margin: 0; font-weight: normal; } 
+.content { padding: 40px 30px; text-align: left; } .content h1 { font-size: 24px; color: #0D47A1; margin-bottom: 15px; } .content p { font-size: 16px; 
+color: #5f6368; margin-bottom: 20px; line-height: 1.6; } .password-box { background-color: #e0f2f1; color: #004d40; font-size: 18px; font-weight: bold; 
+padding: 10px 20px; text-align: center; border-radius: 6px; margin: 20px 0; } .note { font-size: 14px; color: #5f6368; margin-top: 10px; 
+line-height: 1.4; text-align: center; } .footer { background-color: #f1f1f1; padding: 20px; text-align: center; font-size: 14px; color: #7a7a7a; } 
+.footer p { margin: 0; } .footer a { color: #0D47A1; text-decoration: none; } .footer a:hover { text-decoration: underline; } 
+.spacer { height: 40px; } </style> </head> <body> <div class="container"> <div class="header"> 
+<img src="https://i.ibb.co/qdw7zmV/Logo-White.png" alt="Logo SigeceUna"> <h2>Recuperación de Contraseña - SigeceUna</h2> </div> 
+<div class="content"> <h1>Se ha generado una nueva contraseña</h1> <p>Estimado/a [user],</p> <p>Has solicitado recuperar tu contraseña. 
+A continuación, encontrarás una contraseña temporal para acceder a tu cuenta en SigeceUna.</p> 
+<div class="password-box">[contraseña_temporal]</div> <p>Para cambiar tu contraseña, ingresa a la configuración de tu cuenta después de iniciar sesión.</p> 
+<p>Si no solicitaste este cambio de contraseña, por favor ignora este correo o contáctanos de inmediato.</p> <div class="note"> 
+<p><strong>Nota:</strong> Esta contraseña es temporal y debe ser cambiada para proteger tu cuenta.</p> </div> </div> 
+<div class="spacer"></div> <div class="footer"> <p>&copy; 2024 SigeceUna. Todos los derechos reservados.</p> 
+<p><a href="#">Política de Privacidad</a> | <a href="#">Términos y Condiciones</a></p> </div> </div> </body> </html>', 1);
+
 -- Inserciones para sis_sistemas
 INSERT INTO sis_sistemas (sis_nombre, sis_version)
 VALUES ('Seguridad', 1);
