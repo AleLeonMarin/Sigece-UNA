@@ -18,21 +18,36 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.web.WebView;
+import javafx.stage.FileChooser;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.ResourceBundle;
-
+import java.util.Base64;
 public class AdminNotificationController extends Controller implements Initializable {
 
     @FXML
     private AnchorPane root;
+
+    @FXML
+    private Button btnAttachImage;
 
     @FXML
     private Button btnDelete;
@@ -63,6 +78,14 @@ public class AdminNotificationController extends Controller implements Initializ
 
     @FXML
     private MFXTextField txtVarValor;
+
+    private File currentTempFile;
+
+
+    byte[] multimediaSeleccionada;
+
+    @FXML
+    private ToggleButton btnMultimediaActive;
 
     @FXML
     private TableView<NotificationsDto> tbvProcesosNotificacion;
@@ -113,6 +136,14 @@ public class AdminNotificationController extends Controller implements Initializ
     private Tab tabConfigVariables;
 
     private ObservableList<VariablesDto> variablesTemporales = FXCollections.observableArrayList();
+
+    @FXML
+    private ImageView imageView;
+
+    @FXML
+    private MediaView mediaView;
+
+    private MediaPlayer mediaPlayer;  // Declarar mediaPlayer a nivel de clase
 
 
     @FXML
@@ -175,10 +206,19 @@ public class AdminNotificationController extends Controller implements Initializ
             }
         });
 
-        ObservableList<String> opciones = FXCollections.observableArrayList("Por defecto", "Condicional", null);
+        ObservableList<String> opciones = FXCollections.observableArrayList("Por defecto", "Condicional", "Multimedia", null);
         txtVarTipo.setItems(opciones);
 
         plantillaCode.setOnKeyReleased(event -> updatePreview());
+
+        btnMultimediaActive.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+            btnAttachImage.setDisable(!isSelected);
+            if (isSelected) {
+                txtVarTipo.setValue("Multimedia");
+            }
+        });
+
+        btnAttachImage.setDisable(true);
     }
 
 
@@ -225,14 +265,59 @@ public class AdminNotificationController extends Controller implements Initializ
     }
 
 
-
     private void cargarVariableSeleccionada() {
+        // Limpiar visualizadores y archivo temporal antes de cargar nuevo contenido
+        limpiarVisualizadores();
+
         if (variableSeleccionada != null) {
             txtVarNombre.setText(variableSeleccionada.getName());
             txtVarValor.setText(variableSeleccionada.getValue());
             txtVarTipo.setValue(variableSeleccionada.getType() != null ? variableSeleccionada.getType() : "");
         }
+
+        if (variableSeleccionada != null && "Multimedia".equals(variableSeleccionada.getType()) && variableSeleccionada.getVarMultimedia() != null) {
+            try {
+                String fileExtension = ".jpg"; // Asumimos imagen por defecto
+
+                // Determinamos la extensión del archivo basándonos en el tipo o el contenido de la variable
+                if (variableSeleccionada.getValue() != null && variableSeleccionada.getValue().contains("mp4")) {
+                    fileExtension = ".mp4";
+                } else if (variableSeleccionada.getValue() != null && variableSeleccionada.getValue().contains("png")) {
+                    fileExtension = ".png";
+                }
+
+                // Mostrar multimedia con el contenido y la extensión
+                mostrarMultimedia(variableSeleccionada.getVarMultimedia(), fileExtension);
+            } catch (Exception e) {
+                mensaje.show(Alert.AlertType.ERROR, "Error", "Error al cargar el contenido multimedia desde la base de datos: " + e.getMessage());
+            }
+        }
     }
+
+    private void limpiarVisualizadores() {
+
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.dispose();
+            mediaPlayer = null;
+        }
+        mediaView.setVisible(false);
+
+
+        imageView.setImage(null);
+        imageView.setVisible(false);
+
+
+        if (currentTempFile != null && currentTempFile.exists()) {
+            if (currentTempFile.delete()) {
+                System.out.println("Archivo temporal eliminado: " + currentTempFile.getAbsolutePath());
+            } else {
+                System.err.println("Error al eliminar el archivo temporal: " + currentTempFile.getAbsolutePath());
+            }
+            currentTempFile = null;
+        }
+    }
+
 
     private void cargarNotificaciones() {
         Respuesta respuesta = notificacionService.obtenerNotificaciones();
@@ -286,6 +371,8 @@ public class AdminNotificationController extends Controller implements Initializ
         tbvVariables.getItems().clear();
         tbvProcesosNotificacion.getSelectionModel().clearSelection();
         btnSave.setDisable(false);
+
+        limpiarVisualizadores();
     }
 
 
@@ -311,18 +398,15 @@ public class AdminNotificationController extends Controller implements Initializ
             return;
         }
 
-        // Configurar notificación seleccionada
         NotificationsDto notificacion = notificacionSeleccionada != null ? notificacionSeleccionada : new NotificationsDto();
         notificacion.setName(txtNombre.getText());
         notificacion.setHtml(htmlContent);
 
-        // Asigna las variables nuevas y actualiza las existentes
         List<VariablesDto> listaActualizada = new ArrayList<>(tbvVariables.getItems());
         for (VariablesDto variable : listaActualizada) {
             variable.setNotification(notificacion);
         }
         notificacion.setVariables(listaActualizada);
-
 
         Respuesta respuesta = notificacionService.guardarNotificacion(notificacion);
 
@@ -337,9 +421,6 @@ public class AdminNotificationController extends Controller implements Initializ
     }
 
 
-
-
-
     @FXML
     void onActionBtnSaveVar(ActionEvent event) {
         if (txtVarNombre.getText().isEmpty() || txtVarTipo.getValue() == null || txtVarTipo.getValue().isEmpty()) {
@@ -347,31 +428,45 @@ public class AdminNotificationController extends Controller implements Initializ
             return;
         }
 
-        if (txtVarTipo.getValue().equals("Condicional") && !txtVarValor.getText().isEmpty()) {
+        if ("Condicional".equals(txtVarTipo.getValue()) && !txtVarValor.getText().isEmpty()) {
             mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Las variables condicionales no deben tener contenido en el campo de valor.");
             return;
         }
 
-        if (txtVarTipo.getValue().equals("Por defecto") && txtVarValor.getText().isEmpty()) {
+        if ("Por defecto".equals(txtVarTipo.getValue()) && txtVarValor.getText().isEmpty()) {
             mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Las variables por defecto deben tener contenido en el campo de valor.");
             return;
         }
 
         if (variableSeleccionada != null) {
-            // Editar variable existente
             variableSeleccionada.setName(txtVarNombre.getText());
-            variableSeleccionada.setType(txtVarTipo.getValue()); // Establece el tipo seleccionado
-            variableSeleccionada.setValue(txtVarTipo.getValue().equals("Condicional") ? "" : txtVarValor.getText());
+            variableSeleccionada.setType(txtVarTipo.getValue());
+
+            // Guardar contenido multimedia solo en multimediaSeleccionada
+            if ("Multimedia".equals(txtVarTipo.getValue())) {
+                variableSeleccionada.setVarMultimedia(multimediaSeleccionada);
+                variableSeleccionada.setValue(txtVarValor.getText()); // Aquí puedes almacenar la referencia, no la Base64
+            } else {
+                variableSeleccionada.setValue(txtVarValor.getText());
+                variableSeleccionada.setVarMultimedia(null);
+            }
+
             tbvVariables.refresh();
             tbvVariables2.refresh();
         } else {
-            // Crear nueva variable
             VariablesDto nuevaVariable = new VariablesDto();
             nuevaVariable.setName(txtVarNombre.getText());
-            nuevaVariable.setType(txtVarTipo.getValue()); // Establece el tipo seleccionado
-            nuevaVariable.setValue(txtVarTipo.getValue().equals("Condicional") ? "" : txtVarValor.getText());
+            nuevaVariable.setType(txtVarTipo.getValue());
 
-            // Verifica si la variable ya existe
+            // Nueva variable multimedia, asignando solo multimediaSeleccionada a Base64
+            if ("Multimedia".equals(txtVarTipo.getValue())) {
+                nuevaVariable.setVarMultimedia(multimediaSeleccionada);
+                nuevaVariable.setValue(txtVarValor.getText());
+            } else {
+                nuevaVariable.setValue(txtVarValor.getText());
+                nuevaVariable.setVarMultimedia(null);
+            }
+
             boolean variableYaExiste = tbvVariables.getItems().stream()
                     .anyMatch(var -> var.getName().equalsIgnoreCase(nuevaVariable.getName()));
 
@@ -383,17 +478,15 @@ public class AdminNotificationController extends Controller implements Initializ
             tbvVariables.getItems().add(nuevaVariable);
         }
 
-        // Actualiza tbvVariables2 con los cambios
         tbvVariables2.setItems(FXCollections.observableArrayList(tbvVariables.getItems()));
         tbvVariables2.refresh();
 
-        // Limpia selección y formulario
         tbvVariables.getSelectionModel().clearSelection();
         tbvVariables2.getSelectionModel().clearSelection();
         variableSeleccionada = null;
         limpiarFormularioVar();
+        limpiarVisualizadores();
     }
-
 
 
     @FXML
@@ -416,13 +509,12 @@ public class AdminNotificationController extends Controller implements Initializ
     }
 
 
-
-
     @FXML
     void onActionBtnNewVar(ActionEvent event) {
         txtVarNombre.requestFocus();
         tbvVariables.getSelectionModel().clearSelection();
         limpiarFormularioVar();
+        limpiarVisualizadores();
     }
 
     private void limpiarFormulario() {
@@ -446,6 +538,7 @@ public class AdminNotificationController extends Controller implements Initializ
             }
         });
     }
+
     private void setupDoubleClickForVariables() {
         tbvVariables2.setRowFactory(tv -> {
             TableRow<VariablesDto> row = new TableRow<>();
@@ -463,7 +556,7 @@ public class AdminNotificationController extends Controller implements Initializ
         String currentHTML = plantillaCode.getText();
         int cursorPosition = plantillaCode.getCaretPosition();
 
-        String updatedHTML = currentHTML.substring(0, cursorPosition) + "["+variable+"]" + currentHTML.substring(cursorPosition);
+        String updatedHTML = currentHTML.substring(0, cursorPosition) + "[" + variable + "]" + currentHTML.substring(cursorPosition);
 
         plantillaCode.setText(updatedHTML);
         plantillaCode.positionCaret(cursorPosition + variable.length());
@@ -488,6 +581,102 @@ public class AdminNotificationController extends Controller implements Initializ
             mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una notificación antes de ver la información.");
         }
     }
+
+    @FXML
+    void clickBtnMultimedia(ActionEvent event) {
+
+    }
+
+    private byte[] obtenerBytesDeArchivo(File file) throws IOException {
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            return fileInputStream.readAllBytes();
+        }
+    }
+
+
+    @FXML
+    void clickBtnAttachImage(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Seleccionar imagen o video");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos multimedia", "*.png", "*.mp4"));
+
+        File selectedFile = fileChooser.showOpenDialog(root.getScene().getWindow());
+        if (selectedFile != null) {
+            try {
+                byte[] fileBytes = obtenerBytesDeArchivo(selectedFile);
+                String extension = getFileExtension(selectedFile);
+
+                // Mostrar multimedia en el componente adecuado
+                mostrarMultimedia(fileBytes, extension);
+
+                // Si es un video, setea el valor del tipo como ".mp4"
+                if (extension.equals(".mp4")) {
+                    txtVarTipo.setValue("Multimedia");
+                    txtVarValor.setText(".mp4");
+                } else {
+                    txtVarTipo.setValue("Multimedia");
+                    txtVarValor.setText(".png");
+                }
+
+                // Asigna el byte[] a la variable
+                multimediaSeleccionada = fileBytes;
+                txtVarTipo.setValue("Multimedia");
+
+            } catch (IOException e) {
+                mensaje.show(Alert.AlertType.ERROR, "Error", "No se pudo cargar el archivo seleccionado.");
+            }
+        }
+    }
+
+
+
+    /**
+     * Obtiene la extensión del archivo.
+     */
+    private String getFileExtension(File file) {
+        String fileName = file.getName();
+        return fileName.substring(fileName.lastIndexOf('.')).toLowerCase();
+    }
+
+
+
+    private void mostrarMultimedia(byte[] fileBytes, String fileExtension) {
+        // Limpiar cualquier contenido previo
+        limpiarVisualizadores();
+
+        try {
+            // Crear archivo temporal a partir de byte[]
+            currentTempFile = File.createTempFile("tempMedia", fileExtension);
+            try (FileOutputStream fos = new FileOutputStream(currentTempFile)) {
+                fos.write(fileBytes);
+            }
+
+            // Mostrar multimedia en el componente adecuado
+            if (fileExtension.equalsIgnoreCase(".mp4")) {
+                imageView.setVisible(false);
+                mediaView.setVisible(true);
+
+                Media media = new Media(currentTempFile.toURI().toString());
+                mediaPlayer = new MediaPlayer(media);
+                mediaView.setMediaPlayer(mediaPlayer);
+                mediaPlayer.setAutoPlay(true);
+
+                mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.dispose());
+
+            } else {
+                mediaView.setVisible(false);
+                imageView.setVisible(true);
+
+                Image image = new Image(currentTempFile.toURI().toString());
+                imageView.setImage(image);
+            }
+
+        } catch (IOException e) {
+            mensaje.show(Alert.AlertType.ERROR, "Error", "Error al cargar el contenido multimedia: " + e.getMessage());
+        }
+    }
+
+
 
 
 

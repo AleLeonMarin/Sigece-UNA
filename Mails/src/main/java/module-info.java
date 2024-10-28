@@ -17,6 +17,8 @@ module cr.ac.una.mails {
     requires org.apache.poi.ooxml;
     requires javafx.swing;
     requires webcam.capture;
+    requires javafx.media;
+    requires org.apache.commons.codec;
 
     opens cr.ac.una.mails.model;
 
