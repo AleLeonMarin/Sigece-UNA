@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane prefHeight="548.0" prefWidth="820.0" styleClass="stack-personal-pane" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.admin.controller.PrincipalController">
+   <children>
+      <VBox prefHeight="200.0" prefWidth="100.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="748.0" spacing="15.0">
+               <children>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <ImageView fitHeight="36.0" fitWidth="169.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/Logo.png" />
+                           </image>
+                           <VBox.margin>
+                              <Insets left="10.0" top="5.0" />
+                           </VBox.margin>
+                        </ImageView>
+                     </children>
+                  </VBox>
+                  <Separator orientation="VERTICAL" prefHeight="200.0" />
+                  <Button mnemonicParsing="false" prefHeight="56.0" prefWidth="118.0" styleClass="button-transparent" text="Button" />
+                  <Separator orientation="VERTICAL" prefHeight="200.0" />
+                  <Button mnemonicParsing="false" prefHeight="56.0" prefWidth="118.0" styleClass="button-transparent" text="Button" />
+                  <Separator orientation="VERTICAL" prefHeight="200.0" />
+                  <Button mnemonicParsing="false" prefHeight="56.0" prefWidth="118.0" styleClass="button-transparent" text="Button" />
+                  <Separator orientation="VERTICAL" prefHeight="200.0" />
+                  <Button mnemonicParsing="false" prefHeight="56.0" prefWidth="118.0" styleClass="button-transparent" text="Button" />
+               </children>
+            </HBox>
+            <Separator prefWidth="200.0" />
+            <StackPane alignment="TOP_CENTER" prefHeight="423.0" prefWidth="748.0">
+               <children>
+                  <VBox alignment="TOP_CENTER" prefHeight="340.0" prefWidth="816.0" spacing="20.0">
+                     <children>
+                        <HBox prefHeight="58.0" prefWidth="816.0">
+                           <children>
+                              <ImageView fx:id="imvTiempo" fitHeight="44.0" fitWidth="47.0" opacity="0.91" pickOnBounds="true" preserveRatio="true">
+                                 <HBox.margin>
+                                    <Insets left="10.0" top="5.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <Label fx:id="labelTime" prefHeight="56.0" prefWidth="313.0">
+                                 <font>
+                                    <Font name="Segoe UI" size="21.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="249.0" prefWidth="816.0" spacing="20.0" VBox.vgrow="NEVER">
+                           <children>
+                              <StackPane prefHeight="274.0" prefWidth="246.0" styleClass="stack-personal-pane">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="269.0" prefWidth="242.0" spacing="30.0">
+                                       <children>
+                                          <StackPane alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="55.0" prefWidth="217.0" styleClass="stackpane-blue">
+                                             <children>
+                                                <VBox alignment="TOP_CENTER" prefHeight="87.0" prefWidth="148.0">
+                                                   <children>
+                                                      <Label prefHeight="46.0" prefWidth="198.0" styleClass="stackpane-label" text="Gestiones Pendientes:" textFill="WHITE">
+                                                         <font>
+                                                            <Font name="Segoe UI Black" size="9.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label fx:id="gestPendientesLabel" styleClass="stackpane-label" text="Label" />
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </StackPane>
+                                          <StackPane alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="55.0" prefWidth="217.0" styleClass="stackpane-red">
+                                             <children>
+                                                <VBox alignment="TOP_CENTER" prefHeight="87.0" prefWidth="148.0">
+                                                   <children>
+                                                      <Label prefHeight="46.0" prefWidth="198.0" styleClass="stackpane-label" text="Gestiones en curso:" textFill="WHITE">
+                                                         <font>
+                                                            <Font name="Segoe UI Black" size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label fx:id="gestEnCursoLabel" styleClass="stackpane-label" text="Label" />
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </StackPane>
+                                          <StackPane alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="55.0" prefWidth="217.0" styleClass="stackpane-green">
+                                             <children>
+                                                <VBox alignment="TOP_CENTER" prefHeight="87.0" prefWidth="148.0">
+                                                   <children>
+                                                      <Label prefHeight="46.0" prefWidth="198.0" styleClass="stackpane-label" text="Gestiones Completadas:" textFill="WHITE">
+                                                         <font>
+                                                            <Font name="Segoe UI Black" size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label fx:id="gestCompletadasLabel" styleClass="stackpane-label" text="Label" />
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </StackPane>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                                 <HBox.margin>
+                                    <Insets left="20.0" />
+                                 </HBox.margin>
+                              </StackPane>
+                              <StackPane prefHeight="274.0" prefWidth="246.0" styleClass="stack-personal-pane">
+                                 <children>
+                                    <PieChart fx:id="ChartGestiones" prefHeight="221.0" prefWidth="151.0" />
+                                 </children>
+                              </StackPane>
+                              <StackPane prefHeight="321.0" prefWidth="252.0" styleClass="stack-personal-pane">
+                                 <children>
+                                    <VBox prefHeight="317.0" prefWidth="251.0">
+                                       <children>
+                                          <Label styleClass="stackpane-label-black" text="Tabla de Gestiones" textFill="#1e0000">
+                                             <VBox.margin>
+                                                <Insets left="10.0" top="10.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                          <TableView fx:id="tbvGestionesSimp" prefHeight="267.0" prefWidth="222.0">
+                                             <VBox.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </VBox.margin>
+                                             <columns>
+                                                <TableColumn fx:id="tbcGest" prefWidth="227.0" text="Gestiones" />
+                                             </columns>
+                                          </TableView>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </StackPane>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </StackPane>
+            <HBox alignment="CENTER" prefHeight="256.0" prefWidth="816.0" spacing="10.0">
+               <children>
+                  <StackPane prefHeight="147.0" prefWidth="193.0" styleClass="stack-personal-pane">
+                     <HBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                     </HBox.margin>
+                  </StackPane>
+                  <StackPane prefHeight="127.0" prefWidth="396.0" styleClass="stack-personal-pane">
+                     <HBox.margin>
+                        <Insets bottom="20.0" top="20.0" />
+                     </HBox.margin>
+                  </StackPane>
+                  <Button fx:id="btnNotificaciones" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#onActionBtnNotificaciones" prefHeight="39.0" prefWidth="49.0" text=".">
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</StackPane>
