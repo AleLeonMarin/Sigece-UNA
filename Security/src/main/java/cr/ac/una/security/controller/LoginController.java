@@ -1,4 +1,4 @@
-/*
+    /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
  */
@@ -81,13 +81,14 @@ public class LoginController extends Controller implements Initializable {
                 if (respuesta.getEstado()) {
 
                     UsersDto usuario = (UsersDto) respuesta.getResultado("Usuario");
-                    if (usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Admin")) && usuario.getState().equals("A")) {
+                    if (usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Admin"))
+                            && usuario.getState().equals("A")) {
                         FlowController.getInstance().goMain("SecurityAppView");
                         getStage().close();
                     } else {
                         new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
                                 "Usuario no tiene permisos para ingresar al sistema o no esta activo.");
-                   }
+                    }
                 } else {
                     new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
                             "Usuario o contraseña incorrecta.");

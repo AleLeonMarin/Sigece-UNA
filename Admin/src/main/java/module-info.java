@@ -1,4 +1,4 @@
-module cr.ac.una.gestiones {
+module cr.ac.una.admin {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.graphicsEmpty;

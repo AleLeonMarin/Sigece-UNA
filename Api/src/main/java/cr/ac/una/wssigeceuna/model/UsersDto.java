@@ -8,30 +8,29 @@ import jakarta.json.bind.annotation.JsonbPropertyOrder;
 import jakarta.json.bind.annotation.JsonbTransient;
 
 @JsonbPropertyOrder({
-        "id",
-        "name",
-        "lastNames",
-        "idCard",
-        "email",
-        "password",
-        "phone",
-        "cellPhone",
-        "language",
-        "photo",
-        "user",
-        "password",
-        "state",
-        "status",
-        "modified",
-        "version",
-        "role",
-        "area",
-        "chat",
-        "message",
-        "follows",
-        "Gestions",
-        "Approvals",
-})
+    "id",
+    "name",
+    "lastNames",
+    "idCard",
+    "email",
+    "password",
+    "phone",
+    "cellPhone",
+    "language",
+    "photo",
+    "user",
+    "password",
+    "state",
+    "status",
+    "modified",
+    "version",
+    "role",
+    "area",
+    "chat",
+    "message",
+    "follows",
+    "Gestions",
+    "Approvals",})
 
 @Schema(description = "Clase que contiene la informacion de los usuarios")
 public class UsersDto implements Serializable {
@@ -95,13 +94,10 @@ public class UsersDto implements Serializable {
     @JsonbTransient
     public List<MessagesDto> messages;
 
-    @JsonbTransient
     public List<FollowsDto> follows;
 
-    @JsonbTransient
     public List<GestionsDto> gestions;
 
-    @JsonbTransient
     public List<ApprovalsDto> approvals;
 
     public UsersDto() {

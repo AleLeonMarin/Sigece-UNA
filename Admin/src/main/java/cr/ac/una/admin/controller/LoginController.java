@@ -9,9 +9,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//import cr.ac.una.admin.model.UsuariosDto;
-//import cr.ac.una.gestiones.service.UsuariosService;
-//import cr.ac.una.gestiones.util.AppContext;
+import cr.ac.una.admin.model.UsersDto;
+import cr.ac.una.admin.service.UsersService;
 import cr.ac.una.admin.util.FlowController;
 import cr.ac.una.admin.util.Mensaje;
 import cr.ac.una.admin.util.Respuesta;
@@ -69,52 +68,48 @@ public class LoginController extends Controller implements Initializable {
 
     @FXML
     void onActionBtnLogIn(ActionEvent event) {
-//        try {
-//            if (textMail.getText().isEmpty() || textPassword.getText().isBlank()) {
-//                new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
-//                        "Es necesario digitar un usuario para ingresar al sistema.");
-//            } else if (textPassword.getText().isEmpty() || textPassword.getText().isBlank()) {
-//                new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
-//                        "Es necesario digitar una contraseña para ingresar al sistema.");
-//            } else {
-//                UsuariosService service = new UsuariosService();
-//                Respuesta respuesta = service.logIn(textMail.getText(), textPassword.getText());
-//                if (respuesta.getEstado()) {
-//
-//                    UsuariosDto usuario = (UsuariosDto) respuesta.getResultado("Usuario");
-//                    if (usuario.getRolesDto().stream()
-//                            .anyMatch(r -> r.getNombre().equals("Administrador de correos masivos"))
-//                            || usuario.getRolesDto().stream()
-//                                    .anyMatch(r -> r.getNombre().equals("Normal de Correos Masivos"))
-//                                    && usuario.getEstado().equals("A")) {
-//                        AppContext.getInstance().set("Usuario", usuario);
-//                        FlowController.getInstance().goMain("MailAppView");
-//                        getStage().close();
-//                    } else {
-//                        new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
-//                                "Usuario no tiene permisos para ingresar al sistema o no esta activo.");
-//                    }
-//                } else {
-//                    new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
-//                            "Usuario o contraseña incorrecta.");
-//                }
-//            }
-//        } catch (Exception e) {
-//            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, "Error al intentar ingresar al sistema",
-//                    e);
-//            new Mensaje().showModal(AlertType.ERROR, "LogIn", getStage(),
-//                    "Error al intentar ingresar al sistema.");
-//        }
+        try {
+            if (textMail.getText().isEmpty() || textPassword.getText().isBlank()) {
+                new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
+                        "Es necesario digitar un usuario para ingresar al sistema.");
+            } else if (textPassword.getText().isEmpty() || textPassword.getText().isBlank()) {
+                new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
+                        "Es necesario digitar una contraseña para ingresar al sistema.");
+            } else {
+                UsersService service = new UsersService();
+                Respuesta respuesta = service.logIn(textMail.getText(), textPassword.getText());
+                if (respuesta.getEstado()) {
 
-        FlowController.getInstance().goMain("PrincipalView");
+                    UsersDto usuario = (UsersDto) respuesta.getResultado("Usuario");
+                    if (usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Administrador"))
+                            || usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Solictante"))
+                            || usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Gestor"))
+                                    && usuario.getState().equals("A")) {
+                        FlowController.getInstance().goMain("PrincipalView");
+                        getStage().close();
+                    } else {
+                        new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
+                                "Usuario no tiene permisos para ingresar al sistema o no esta activo.");
+                    }
+                } else {
+                    new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
+                            "Usuario o contraseña incorrecta.");
+                }
+            }
+        } catch (Exception e) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, "Error al intentar ingresar al sistema",
+                    e);
+            new Mensaje().showModal(AlertType.ERROR, "LogIn", getStage(),
+                    "Error al intentar ingresar al sistema.");
+        }
 
     }
 
     @FXML
     void onActionBtnRegister(ActionEvent event) {
 
-//        FlowController.getInstance().goViewInWindow("RegisterView");
-//        getStage().close();
+        FlowController.getInstance().goViewInWindow("RegisterView");
+        getStage().close();
 
     }
 

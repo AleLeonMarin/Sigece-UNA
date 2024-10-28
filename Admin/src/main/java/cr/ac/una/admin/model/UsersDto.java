@@ -1,12 +1,10 @@
-package cr.ac.una.security.model;
+package cr.ac.una.admin.model;
 
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 public class UsersDto {
 
@@ -18,24 +16,18 @@ public class UsersDto {
     public SimpleStringProperty phone;
     public SimpleStringProperty cellPhone;
     public SimpleStringProperty language;
-    public SimpleObjectProperty<byte[]> photo;
+    public ObjectProperty<byte[]> photo;
     public SimpleStringProperty user;
     public SimpleStringProperty password;
     public SimpleStringProperty state;
     public SimpleStringProperty status;
-    public SimpleLongProperty version;
-    public SimpleBooleanProperty modified;
+    public Boolean modified;
+    public Long version;
     public List<RolesDto> roles;
-    public List<RolesDto> rolesDtoEliminados;
     public AreasDto areas;
-
-
-    //
-    // public List<FollowsDto> follows;
-    //
-    // public List<GestionsDto> gestions;
-    //
-    // public List<ApprovalsDto> approvals;
+    public List<FollowsDto> follows;
+    public List<GestionsDto> gestions;
+    public List<ApprovalsDto> approvals;
 
     public UsersDto() {
         this.id = new SimpleStringProperty("");
@@ -51,17 +43,16 @@ public class UsersDto {
         this.password = new SimpleStringProperty("");
         this.state = new SimpleStringProperty("");
         this.status = new SimpleStringProperty("");
-        this.version = new SimpleLongProperty(1L);
-        this.modified = new SimpleBooleanProperty(false);
-        
-        this.areas = new AreasDto();
-        this.roles = FXCollections.observableArrayList();
-        this.rolesDtoEliminados = FXCollections.observableArrayList();
+        this.modified = false;
+        this.roles = new ArrayList<>();
+        this.follows = new ArrayList<>();
+        this.gestions = new ArrayList<>();
+        this.approvals = new ArrayList<>();
     }
 
     public Long getId() {
-        if (this.id.get() != null && !this.id.get().isEmpty()) {
-            return Long.valueOf(this.id.get());
+        if (id != null && id.get() != null && !id.get().isEmpty()) {
+            return Long.valueOf(id.get());
         } else {
             return null;
         }
@@ -167,20 +158,20 @@ public class UsersDto {
         this.status.set(status);
     }
 
-    public Long getVersion() {
-        return version.get();
-    }
-
-    public void setVersion(Long version) {
-        this.version.set(version);
-    }
-
     public Boolean getModified() {
-        return modified.get();
+        return modified;
     }
 
     public void setModified(Boolean modified) {
-        this.modified.set(modified);
+        this.modified = modified;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public List<RolesDto> getRoles() {
@@ -199,29 +190,28 @@ public class UsersDto {
         this.areas = areas;
     }
 
-    public List<RolesDto> getRolesEliminados() {
-        return rolesDtoEliminados;
+    public List<FollowsDto> getFollows() {
+        return follows;
     }
 
-    public void setRolesEliminados(List<RolesDto> rolesDtoEliminados) {
-        this.rolesDtoEliminados = rolesDtoEliminados;
+    public void setFollows(List<FollowsDto> follows) {
+        this.follows = follows;
     }
 
-    @Override
-    public String toString() {
-        return "UsersDto{" +
-                "id=" + id.get() +
-                ", name='" + name.get() + '\'' +
-                ", lastNames='" + lastNames.get() + '\'' +
-                ", idCard='" + idCard.get() + '\'' +
-                ", email='" + email.get() + '\'' +
-                ", phone='" + phone.get() + '\'' +
-                ", cellPhone='" + cellPhone.get() + '\'' +
-                ", language='" + language.get() + '\'' +
-                ", user='" + user.get() + '\'' +
-                ", state='" + state.get() + '\'' +
-                ", status='" + status.get() + '\'' +
-                ", version=" + version.get() +
-                '}';
+    public List<GestionsDto> getGestions() {
+        return gestions;
     }
+
+    public void setGestions(List<GestionsDto> gestions) {
+        this.gestions = gestions;
+    }
+
+    public List<ApprovalsDto> getApprovals() {
+        return approvals;
+    }
+
+    public void setApprovals(List<ApprovalsDto> approvals) {
+        this.approvals = approvals;
+    }
+
 }

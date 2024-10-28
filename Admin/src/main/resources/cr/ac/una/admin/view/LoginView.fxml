@@ -2,6 +2,7 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.Image?>
@@ -10,7 +11,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="622.0" styleClass="stack-personal-pane1" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.admin.controller.LoginController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="622.0" styleClass="stack-personal-pane1" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.admin.controller.LoginController">
    <children>
       <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="469.0" prefWidth="485.0" styleClass="stack-personal-pane">
          <StackPane.margin>
@@ -23,14 +24,22 @@
                      <image>
                         <Image url="@../resources/profileBlank.png" />
                      </image></ImageView>
-                  <MFXTextField fx:id="textMail" floatMode="BORDER" floatingText="Correo electrónico" prefHeight="32.0" prefWidth="266.0" />
+                  <MFXTextField fx:id="textMail" floatMode="BORDER" floatingText="Usuario" prefHeight="32.0" prefWidth="266.0">
+                     <styleClass>
+                        <String fx:value="jfx-txfs-security" />
+                        <String fx:value="jfx-txfs-security-container" />
+                     </styleClass></MFXTextField>
                   <MFXTextField fx:id="textPassword" floatMode="BORDER" floatingText="Contraseña" prefHeight="32.0" prefWidth="266.0">
                      <VBox.margin>
                         <Insets top="10.0" />
-                     </VBox.margin></MFXTextField>
+                     </VBox.margin>
+                     <styleClass>
+                        <String fx:value="jfx-txfs-security" />
+                        <String fx:value="jfx-txfs-security-container" />
+                     </styleClass></MFXTextField>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                      <children>
-                        <MFXButton fx:id="btnRegister" onAction="#onActionBtnRegister" prefHeight="40.0" prefWidth="135.0" styleClass="button-Register" text="Nuevo Usuario">
+                        <MFXButton fx:id="btnRegister" onAction="#onActionBtnRegister" prefHeight="50.0" prefWidth="140.0" styleClass="jfx-btn-newUser" text="Nuevo Usuario">
                            <HBox.margin>
                               <Insets bottom="20.0" top="20.0" />
                            </HBox.margin>
@@ -38,7 +47,7 @@
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                            </graphic>
                         </MFXButton>
-                        <MFXButton fx:id="btnLogIn" onAction="#onActionBtnLogIn" prefHeight="40.0" prefWidth="135.0" styleClass="button-SignIn" text="Ingresar">
+                        <MFXButton fx:id="btnLogIn" onAction="#onActionBtnLogIn" prefHeight="50.0" prefWidth="140.0" styleClass="jfx-btn-log" text="Ingresar">
                            <HBox.margin>
                               <Insets bottom="20.0" top="20.0" />
                            </HBox.margin>
@@ -49,10 +58,13 @@
                      </children>
                   </HBox>
                   <Separator prefHeight="0.0" prefWidth="272.0" />
-                  <MFXButton fx:id="btnChangePass" onAction="#onActionBtnChangePass" prefHeight="31.0" prefWidth="177.0" styleClass="button-ForgetPass" text="Olvidaste tu contraseña?">
+                  <MFXButton fx:id="btnChangePass" onAction="#onActionBtnChangePass" prefHeight="50.0" prefWidth="177.0" styleClass="jfx-btn-change" text="Olvidaste tu contraseña?" textAlignment="CENTER" wrapText="true">
                      <VBox.margin>
                         <Insets bottom="20.0" top="20.0" />
                      </VBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
                   </MFXButton>
                </children>
             </VBox>

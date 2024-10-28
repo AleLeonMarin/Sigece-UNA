@@ -34,7 +34,6 @@ public class PrincipalController extends Controller implements Initializable {
     @FXML
     private Button btnNotificaciones;
 
-
     @FXML
     private Label gestCompletadasLabel;
 
@@ -64,29 +63,27 @@ public class PrincipalController extends Controller implements Initializable {
     @FXML
     private PieChart ChartGestiones;
 
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         username = "Kendall";
         updateGreeting();
 
-        int gestionesPendientes = 10;  // Reemplazar con el valor real
+        int gestionesPendientes = 10; // Reemplazar con el valor real
         int gestionesEnCurso = 8;
         int gestionesCompletadas = 5;
 
         ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
                 new PieChart.Data("Pendientes", gestionesPendientes),
                 new PieChart.Data("En Curso", gestionesEnCurso),
-                new PieChart.Data("Completadas", gestionesCompletadas)
-        );
+                new PieChart.Data("Completadas", gestionesCompletadas));
 
         ChartGestiones.setData(pieChartData);
         ChartGestiones.setTitle("Distribución de Gestiones");
 
-    }    
-    
+    }
+
     @Override
-    public void initialize (){
+    public void initialize() {
 
     }
 
@@ -97,14 +94,17 @@ public class PrincipalController extends Controller implements Initializable {
 
         if (hour >= 6 && hour < 12) {
 
-            labelTime.setText(" Buenos Días, "+ username);
-            imvTiempo.setImage(new Image(getClass().getResource("/cr/ac/una/admin/resources/dia-nublado.png").toExternalForm()));
+            labelTime.setText(" Buenos Días, " + username);
+            imvTiempo.setImage(
+                    new Image(getClass().getResource("/cr/ac/una/admin/resources/dia-nublado.png").toExternalForm()));
         } else if (hour >= 12 && hour < 18) {
-            labelTime.setText(" Buenas Tardes, "+ username);
-            imvTiempo.setImage(new Image(getClass().getResource("/cr/ac/una/admin/resources/dom.png").toExternalForm()));
+            labelTime.setText(" Buenas Tardes, " + username);
+            imvTiempo
+                    .setImage(new Image(getClass().getResource("/cr/ac/una/admin/resources/dom.png").toExternalForm()));
         } else {
-            labelTime.setText(" Buenas Noches, "+ username);
-            imvTiempo.setImage(new Image(getClass().getResource("/cr/ac/una/admin/resources/luna.png").toExternalForm()));
+            labelTime.setText(" Buenas Noches, " + username);
+            imvTiempo.setImage(
+                    new Image(getClass().getResource("/cr/ac/una/admin/resources/luna.png").toExternalForm()));
         }
     }
 
@@ -112,6 +112,5 @@ public class PrincipalController extends Controller implements Initializable {
     void onActionBtnNotificaciones(ActionEvent event) {
 
     }
-    
-    
+
 }
