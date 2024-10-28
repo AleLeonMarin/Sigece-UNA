@@ -86,6 +86,12 @@ public class Variables implements Serializable {
     @JsonbTransient
     private List<MultimediaVariables> multimediaVariables;
 
+    
+    @Lob
+    @Basic(optional = false)
+    @Column(name = "VAR_VALOR_MULTIMEDIA")
+    private byte[] varMultimedia;
+
     public Variables() {
 
     }
@@ -103,10 +109,13 @@ public class Variables implements Serializable {
     public void update(VariablesDto variablesDto) {
         this.name = variablesDto.getName();
         this.type = variablesDto.getType();
-        this.value = variablesDto.getValue();
+        this.value= variablesDto.getValue();
+        this.varMultimedia = variablesDto.getMultimedia();
+     
+        
+
         this.version = variablesDto.getVersion();
 
-        // Verificar si la notificación no es nula antes de acceder a su ID
         if (variablesDto.getNotification() != null && variablesDto.getNotification().getId() != null) {
             Notifications notificacion = new Notifications();
             notificacion.setId(variablesDto.getNotification().getId());
@@ -160,6 +169,15 @@ public class Variables implements Serializable {
 
     public void setNotifications(Notifications notifications) {
         this.notifications = notifications;
+    }
+
+    // Métodos get/set para varMultimedia
+    public byte[] getMultimedia() {
+        return varMultimedia;
+    }
+
+    public void setMultimedia(byte[] varMultimedia) {
+        this.varMultimedia = varMultimedia;
     }
 
     public List<ConditionalVariables> getConditionalVariables() {

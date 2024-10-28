@@ -1,21 +1,22 @@
 package cr.ac.una.wssigeceuna.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ByteArraySerializer;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
 import jakarta.json.bind.annotation.JsonbTransient;
+import java.util.Base64;
 
 @JsonbPropertyOrder({
-        "id",
-        "name",
-        "type",
-        "value",
-        "version",
-        "notification",
-
-})
+    "id",
+    "name",
+    "type",
+    "value",
+    "version",
+    "notification",})
 
 @Schema(description = "Clase que contiene la informacion de las variables")
 public class VariablesDto implements Serializable {
@@ -44,8 +45,13 @@ public class VariablesDto implements Serializable {
     @JsonbTransient
     List<MultimediaVariablesDto> multimediaVariables;
 
+    @Schema(description = "Imagen codificada", example = "B64.")
+    @JsonSerialize(contentUsing = ByteArraySerializer.class)
+    public byte[] varMultimedia;
+
+
     public VariablesDto() {
-      
+
     }
 
     public VariablesDto(Variables variables) {
@@ -53,6 +59,7 @@ public class VariablesDto implements Serializable {
         this.id = variables.getId();
         this.name = variables.getName();
         this.type = variables.getType();
+        this.varMultimedia = variables.getMultimedia();
         this.value = variables.getValue();
         this.version = variables.getVersion();
     }
@@ -113,6 +120,16 @@ public class VariablesDto implements Serializable {
         this.conditionalVariables = conditionalVariables;
     }
 
+    public byte[] getMultimedia() {
+        return varMultimedia;
+    }
+
+    public void setMultimedia(byte[] varMultimedia) {
+
+        this.varMultimedia = varMultimedia;
+
+    }
+
     public List<MultimediaVariablesDto> getMultimediaVariables() {
         return multimediaVariables;
     }
@@ -120,5 +137,11 @@ public class VariablesDto implements Serializable {
     public void setMultimediaVariables(List<MultimediaVariablesDto> multimediaVariables) {
         this.multimediaVariables = multimediaVariables;
     }
+
+    public void setVarMultimedia(byte[] multimediaBytes) {
+        this.varMultimedia=multimediaBytes;
+    }
+
+
 
 }

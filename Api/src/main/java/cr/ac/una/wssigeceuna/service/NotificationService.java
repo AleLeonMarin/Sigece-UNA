@@ -88,9 +88,9 @@ public class NotificationService {
                         variable = em.find(Variables.class, varDto.getId());
                         if (variable == null) {
                             LOG.log(Level.WARNING, "La variable con ID {0} no se encontró y no se puede actualizar", varDto.getId());
-                            continue; // Saltar si no se encuentra
+                            continue; 
                         }
-                        variable.update(varDto); // Actualiza si existe
+                        variable.update(varDto); 
                         em.merge(variable);
                     } else {
                         // Si no tiene ID, es una nueva variable

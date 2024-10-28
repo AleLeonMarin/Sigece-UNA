@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 
+import java.util.Base64;
 import java.util.List;
 
 public class VariablesDto {
@@ -16,6 +17,7 @@ public class VariablesDto {
     public SimpleLongProperty version;
     @JsonbTransient
     public NotificationsDto notification;
+    public byte[] varMultimedia;
     public List<ConditionalVariablesDto> conditionalVariables;
     public List<MultimediaVariablesDto> multimediaVariables;
 
@@ -24,6 +26,7 @@ public class VariablesDto {
         this.name = new SimpleStringProperty("");
         this.type = new SimpleStringProperty("");
         this.value = new SimpleStringProperty("");
+        this.varMultimedia = null;
         this.version = new SimpleLongProperty(1L);
         this.conditionalVariables = FXCollections.observableArrayList();
         this.multimediaVariables = FXCollections.observableArrayList();
@@ -81,6 +84,18 @@ public class VariablesDto {
     public void setNotification(NotificationsDto notification) {
         this.notification = notification;
     }
+
+
+    public byte[] getVarMultimedia() {
+        return varMultimedia;
+    }
+
+    public void setVarMultimedia(byte[] multimediaContent) {
+        this.varMultimedia = multimediaContent;
+    }
+
+
+
 
     public List<ConditionalVariablesDto> getConditionalVariables() {
         return conditionalVariables;
