@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -86,7 +87,6 @@ public class FlowController {
         }
     }
 
-
     public void goView(String viewName) {
         goView(viewName, "Center", null);
     }
@@ -121,7 +121,8 @@ public class FlowController {
                 if (innerStackPane.getChildren().get(0) instanceof HBox) {
                     HBox hbox = (HBox) innerStackPane.getChildren().get(0);
 
-                    // Verifica si el tercer hijo del HBox es un StackPane (después del VBox y Separator)
+                    // Verifica si el tercer hijo del HBox es un StackPane (después del VBox y
+                    // Separator)
                     if (hbox.getChildren().get(2) instanceof StackPane) {
                         StackPane targetStackPane = (StackPane) hbox.getChildren().get(2);
 
@@ -135,19 +136,22 @@ public class FlowController {
                                 break;
                         }
                     } else {
-                        System.out.println("Third child of HBox is not a StackPane, it's a " + hbox.getChildren().get(2).getClass().getName());
+                        System.out.println("Third child of HBox is not a StackPane, it's a "
+                                + hbox.getChildren().get(2).getClass().getName());
                     }
                 } else {
-                    System.out.println("First child of inner StackPane is not an HBox, it's a " + innerStackPane.getChildren().get(0).getClass().getName());
+                    System.out.println("First child of inner StackPane is not an HBox, it's a "
+                            + innerStackPane.getChildren().get(0).getClass().getName());
                 }
             } else {
-                System.out.println("First child of main StackPane is not a StackPane, it's a " + mainStackPane.getChildren().get(0).getClass().getName());
+                System.out.println("First child of main StackPane is not a StackPane, it's a "
+                        + mainStackPane.getChildren().get(0).getClass().getName());
             }
         } else {
-            System.out.println("Root of the scene is not a StackPane, it's a " + stage.getScene().getRoot().getClass().getName());
+            System.out.println(
+                    "Root of the scene is not a StackPane, it's a " + stage.getScene().getRoot().getClass().getName());
         }
     }
-
 
     public void goViewInStage(String viewName, Stage stage) {
         FXMLLoader loader = getLoader(viewName);
@@ -163,6 +167,7 @@ public class FlowController {
         Controller controller = loader.getController();
         controller.initialize();
         Stage stage = new Stage();
+        stage.getIcons().add(new Image("cr/ac/una/security/resources/security.jpg"));
         stage.setOnHidden((WindowEvent event) -> {
             controller.getStage().getScene().setRoot(new Pane());
             controller.setStage(null);
@@ -181,6 +186,7 @@ public class FlowController {
         Controller controller = loader.getController();
         controller.initialize();
         Stage stage = new Stage();
+        stage.getIcons().add(new Image("cr/ac/una/security/resources/security.jpg"));
         stage.setResizable(resizable);
         stage.setOnHidden((WindowEvent event) -> {
             controller.getStage().getScene().setRoot(new Pane());
@@ -217,6 +223,5 @@ public class FlowController {
     public void salir() {
         this.mainStage.close();
     }
-
 
 }

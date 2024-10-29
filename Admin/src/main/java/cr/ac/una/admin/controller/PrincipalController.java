@@ -6,8 +6,10 @@ package cr.ac.una.admin.controller;
 
 import java.net.URL;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.concurrent.Flow;
+import java.time.LocalDateTime;
 
 import cr.ac.una.admin.util.FlowController;
 import javafx.animation.KeyFrame;
@@ -78,6 +80,9 @@ public class PrincipalController extends Controller implements Initializable {
     @FXML
     private Label userNameLabel;
 
+    @FXML
+    private Label clock;
+
     String username;
 
     @FXML
@@ -87,6 +92,7 @@ public class PrincipalController extends Controller implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         username = "Kendall";
         updateGreeting();
+        updateClock();
 
         int gestionesPendientes = 10; // Reemplazar con el valor real
         int gestionesEnCurso = 8;
@@ -128,6 +134,18 @@ public class PrincipalController extends Controller implements Initializable {
         }
     }
 
+    private void updateClock() {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+        Timeline clock = new Timeline(new KeyFrame(Duration.ZERO, e -> {
+            LocalTime currentTime = LocalTime.now();
+            this.clock.setText(currentTime.format(formatter));
+        }), new KeyFrame(Duration.seconds(1)));
+        clock.setCycleCount(Timeline.INDEFINITE);
+        clock.play();
+    }
+
     @FXML
     void onAcntionBtnApprovals(ActionEvent event) {
 
@@ -152,7 +170,7 @@ public class PrincipalController extends Controller implements Initializable {
     @FXML
     void onActionBtnGestions(ActionEvent event) {
 
-        FlowController.getInstance().goViewInWindow("GestionsView");
+        FlowController.getInstance().goViewInWindow("GestionView");
 
     }
 
