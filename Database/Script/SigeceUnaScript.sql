@@ -247,6 +247,7 @@ CREATE TABLE
         var_nombre VARCHAR2 (300) NOT NULL,
         tipo VARCHAR2 (300) NOT NULL,
         var_valor CLOB,
+        var_valor_multimedia BLOB,
         var_not_id NUMBER NOT NULL,
         var_version NUMBER DEFAULT 1 NOT NULL
     );
@@ -284,7 +285,8 @@ CREATE TABLE
         cor_estado VARCHAR2 (1) DEFAULT 'P' NOT NULL CONSTRAINT sis_correos_ck01 CHECK (cor_estado in ('E', 'P')),
         cor_fecha DATE NOT NULL,
         cor_not_id NUMBER NOT NULL,
-        cor_version NUMBER DEFAULT 1 NOT NULL
+        cor_version NUMBER DEFAULT 1 NOT NULL,
+        cor_adjuntos BLOB 
     );
 
 ALTER TABLE sis_correos ADD CONSTRAINT sis_correos_pk PRIMARY KEY (cor_id);

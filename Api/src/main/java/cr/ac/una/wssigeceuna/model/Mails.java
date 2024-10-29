@@ -24,6 +24,7 @@ import jakarta.persistence.Version;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -95,6 +96,11 @@ public class Mails implements Serializable {
     @ManyToOne(optional = false)
     @JsonbTransient 
     private Notifications notification;
+    
+    
+    @Lob
+    @Column(name = "COR_ADJUNTOS")
+    private List<byte[]> attachments;
 
     public Mails() {
     }
@@ -123,6 +129,8 @@ public class Mails implements Serializable {
         notificacion.setId(mailsDto.getNotification().getId());
         this.notification = notificacion;
     }
+         
+          this.attachments = mailsDto.getAttachments();
     }
 
     public Long getId() {
@@ -211,6 +219,14 @@ public class Mails implements Serializable {
     @Override
     public String toString() {
         return "Mails{" + "id=" + id + '}';
+    }
+    
+     public List<byte[]> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<byte[]> attachments) {
+        this.attachments = attachments;
     }
 
 }

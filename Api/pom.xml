@@ -59,6 +59,12 @@
             <version>6.1.13</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-multipart</artifactId>
+            <version>3.0.2</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
     <build>

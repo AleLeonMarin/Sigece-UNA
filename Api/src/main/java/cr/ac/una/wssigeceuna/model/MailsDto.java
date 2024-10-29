@@ -5,8 +5,10 @@ import java.io.Serializable;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
 import jakarta.json.bind.annotation.JsonbTransient;
+import java.util.ArrayList;
 
 import java.util.Date;
+import java.util.List;
 
 @JsonbPropertyOrder({
         "id",
@@ -45,6 +47,8 @@ public class MailsDto implements Serializable {
 
     @Schema(description = "Version del correo", example = "1")
     private Long version;
+    
+    private List<byte[]> attachments = new ArrayList<>();
 
     public MailsDto() {
     }
@@ -58,6 +62,7 @@ public class MailsDto implements Serializable {
         this.date = mails.getDate();
         this.notification = mails.getNotification();
         this.version = mails.getVersion();
+        this.attachments = mails.getAttachments();
     }
 
     public Long getId() {
@@ -122,6 +127,14 @@ public class MailsDto implements Serializable {
 
     public void setVersion(Long version) {
         this.version = version;
+    }
+    
+    public List<byte[]> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<byte[]> attachments) {
+        this.attachments = attachments;
     }
 
 }

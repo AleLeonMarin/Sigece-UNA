@@ -167,7 +167,7 @@ public class MailsService {
                 String destinatary = mailNotSend.getDestinatary();
                 String subject = mailNotSend.getSubject();
 
-                String resultMail = emailsService.sendMail(destinatary, subject, html);
+                String resultMail = emailsService.sendMail(destinatary, subject, html, null);
 
                 if (resultMail.contains("exitosamente")) {
                     mailNotSend.setState("E");
@@ -208,7 +208,7 @@ public class MailsService {
             }
 
             // Enviar el correo
-            String result = emailsService.sendMail(mail.getDestinatary(), mail.getSubject(), mail.getResult());
+            String result = emailsService.sendMail(mail.getDestinatary(), mail.getSubject(), mail.getResult(), null);
 
             // Verificar si el correo fue enviado correctamente
             if (result.contains("exitosamente")) {
@@ -258,7 +258,7 @@ public class MailsService {
 
             // Enviar el correo utilizando el servicio de email
             String result = emailsService.sendMail(mail.getDestinatary(), mail.getSubject(),
-                    content);
+                    content, null);
             if (result.contains("exitosamente")) {
                 return new Respuesta(true, CodigoRespuesta.CORRECTO, "Correo de activación enviado exitosamente.", "",
                         "Correo", mail);
@@ -308,7 +308,7 @@ public class MailsService {
             }
 
             // Enviar el correo utilizando el servicio de email
-            String result = emailsService.sendMail(mail.getDestinatary(), mail.getSubject(), content);
+            String result = emailsService.sendMail(mail.getDestinatary(), mail.getSubject(), content, null);
             if (result.contains("exitosamente")) {
                 return new Respuesta(true, CodigoRespuesta.CORRECTO,
                         "Correo de recuperación de contraseña enviado exitosamente.", "",
