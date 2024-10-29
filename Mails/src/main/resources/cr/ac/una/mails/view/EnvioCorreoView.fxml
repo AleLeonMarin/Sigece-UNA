@@ -3,6 +3,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -13,8 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="428.0" prefWidth="591.0" styleClass="stack-personal-pane2" stylesheets="@Styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/22" fx:controller="cr.ac.una.mails.controller.EnvioCorreoController">
+<AnchorPane id="AnchorPane" prefHeight="428.0" prefWidth="591.0" styleClass="stack-personal-pane2" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.mails.controller.EnvioCorreoController">
    <children>
       <StackPane layoutX="45.0" layoutY="55.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="333.0" prefWidth="522.0" styleClass="stack-personal-pane" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="45.0" AnchorPane.rightAnchor="33.0" AnchorPane.topAnchor="55.0">
          <children>
@@ -43,6 +43,18 @@
                         <Insets bottom="10.0" left="20.0" right="20.0" />
                      </VBox.margin>
                   </TextArea>
+                  <Button fx:id="btnAttach" mnemonicParsing="false" onAction="#clickBtnAttach" prefHeight="36.0" prefWidth="52.0" styleClass="button-blueStyle">
+                     <graphic>
+                        <ImageView fitHeight="44.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/clip-de-papel.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <VBox.margin>
+                        <Insets left="20.0" />
+                     </VBox.margin>
+                  </Button>
                   <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="15.0" VBox.vgrow="NEVER">
                      <children>
                         <MFXButton fx:id="btnCancelar" onAction="#onActionBtnCancelar" prefHeight="30.0" prefWidth="80.0" styleClass="button-redStyle" text="Cancelar" HBox.hgrow="NEVER" />

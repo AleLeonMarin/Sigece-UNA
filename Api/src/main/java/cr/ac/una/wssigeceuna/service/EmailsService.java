@@ -29,8 +29,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.util.zip.ZipInputStream;
 import org.apache.commons.lang3.tuple.Pair;
-
 
 @Stateless
 @LocalBean
@@ -45,12 +45,9 @@ public class EmailsService {
         return em.find(Paramethers.class, 1L);
     }
 
-   // Asegúrate de tener Apache Commons Lang para Pair
-
-    public String sendMail(String destinary, String subject, String text, List<Pair<byte[], String>> attachments) {
+    public String sendMail(String destinary, String subject, String text, List<byte[]> attachments) {
         try {
             Paramethers parametros = obtainParamethers();
-
             Properties props = new Properties();
             props.put("mail.smtp.host", parametros.getServer());
             props.put("mail.smtp.port", parametros.getPort());
@@ -74,25 +71,21 @@ public class EmailsService {
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(messageBodyPart);
 
-            // Agregar archivos adjuntos con nombre especifico y tipo MIME detectado
             if (attachments != null) {
-                for (Pair<byte[], String> fileDataPair : attachments) {
-                    byte[] fileData = fileDataPair.getLeft();
-                    String originalFileName = fileDataPair.getRight();
-
+                for (byte[] fileData : attachments) {
                     MimeBodyPart attachmentPart = new MimeBodyPart();
+
+                    // Detectar tipo MIME
                     String mimeType = detectMimeType(fileData);
+                    ByteArrayDataSource source = new ByteArrayDataSource(fileData, mimeType);
 
-                    DataSource source = new ByteArrayDataSource(fileData, mimeType);
                     attachmentPart.setDataHandler(new DataHandler(source));
-                    attachmentPart.setFileName(originalFileName); // Usa el nombre original del archivo
-
+                    attachmentPart.setFileName("adjunto_" + attachments.indexOf(fileData)); // Nombre de archivo temporal
                     multipart.addBodyPart(attachmentPart);
                 }
             }
 
             mail.setContent(multipart);
-
             Transport transport = session.getTransport("smtp");
             transport.connect(sender, password);
             transport.sendMessage(mail, mail.getAllRecipients());
@@ -186,13 +179,38 @@ public class EmailsService {
         }
     }
 
-    private String detectMimeType(byte[] fileData) {
+    public String detectMimeType(byte[] fileData) {
         try (InputStream is = new ByteArrayInputStream(fileData)) {
             String mimeType = URLConnection.guessContentTypeFromStream(is);
-            return mimeType != null ? mimeType : "application/octet-stream";
+
+            if (mimeType == null) {
+                // Verificar si es un archivo Office basado en el encabezado ZIP
+                try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(fileData))) {
+                    if (zis.getNextEntry() != null) {
+                        // Basado en la estructura de archivos de Office
+                        if (containsOfficeHeader(fileData, "[Content_Types].xml")) {
+                            return "application/vnd.openxmlformats-officedocument.wordprocessingml.document"; // .docx
+                        }
+                    }
+                }
+
+                // Fallbacks adicionales
+                if (fileData.length > 4 && fileData[0] == 0x25 && fileData[1] == 0x50 && fileData[2] == 0x44 && fileData[3] == 0x46) {
+                    mimeType = "application/pdf";
+                } else {
+                    mimeType = "application/octet-stream"; // Asignación genérica
+                }
+            }
+            return mimeType;
         } catch (IOException e) {
             return "application/octet-stream";
         }
     }
 
+    private boolean containsOfficeHeader(byte[] fileData, String header) {
+        String content = new String(fileData);
+        return content.contains(header);
+    }
 }
+
+

@@ -24,6 +24,8 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.validation.ConstraintViolationException;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.tuple.Pair;
 
 @LocalBean
 @Stateless
@@ -193,7 +195,6 @@ public class MailsService {
         try {
             Mails mail;
 
-            // Verificar si el correo ya existe en la base de datos
             if (mailsDto.getId() != null && mailsDto.getId() > 0) {
                 mail = em.find(Mails.class, mailsDto.getId());
                 if (mail == null) {
@@ -201,16 +202,14 @@ public class MailsService {
                             "No se encontró el correo a enviar.", "sendMailNow");
                 }
             } else {
-                // Si es un correo nuevo, lo creamos
                 mail = new Mails(mailsDto);
                 em.persist(mail); // Persistir el nuevo correo
                 em.flush();
             }
 
-            // Enviar el correo
-            String result = emailsService.sendMail(mail.getDestinatary(), mail.getSubject(), mail.getResult(), null);
+            // Ahora `mailsDto.getAttachments()` ya contiene la información como `List<Pair<byte[], String>>`
+            String result = emailsService.sendMail(mail.getDestinatary(), mail.getSubject(), mail.getResult(), mailsDto.getAttachments());
 
-            // Verificar si el correo fue enviado correctamente
             if (result.contains("exitosamente")) {
                 mail.setState("E"); // Cambiar el estado a 'Enviado'
                 em.merge(mail); // Guardar los cambios en la base de datos

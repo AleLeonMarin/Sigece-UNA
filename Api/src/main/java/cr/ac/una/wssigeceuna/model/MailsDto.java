@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import java.util.Date;
 import java.util.List;
+import org.apache.commons.lang3.tuple.Pair;
 
 @JsonbPropertyOrder({
         "id",
@@ -48,7 +49,7 @@ public class MailsDto implements Serializable {
     @Schema(description = "Version del correo", example = "1")
     private Long version;
     
-    private List<byte[]> attachments = new ArrayList<>();
+    private List<byte []> attachments;
 
     public MailsDto() {
     }
@@ -129,11 +130,11 @@ public class MailsDto implements Serializable {
         this.version = version;
     }
     
-    public List<byte[]> getAttachments() {
+    public List<byte []> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(List<byte[]> attachments) {
+    public void setAttachments(List<byte []> attachments) {
         this.attachments = attachments;
     }
 

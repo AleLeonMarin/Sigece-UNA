@@ -25,6 +25,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  *
@@ -100,7 +101,7 @@ public class Mails implements Serializable {
     
     @Lob
     @Column(name = "COR_ADJUNTOS")
-    private List<byte[]> attachments;
+    List<byte []> attachments;
 
     public Mails() {
     }
@@ -221,11 +222,11 @@ public class Mails implements Serializable {
         return "Mails{" + "id=" + id + '}';
     }
     
-     public List<byte[]> getAttachments() {
+     public List<byte []>  getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(List<byte[]> attachments) {
+    public void setAttachments(List<byte []> attachments) {
         this.attachments = attachments;
     }
 

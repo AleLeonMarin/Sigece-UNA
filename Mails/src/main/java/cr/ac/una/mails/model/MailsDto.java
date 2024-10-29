@@ -3,7 +3,11 @@ package cr.ac.una.mails.model;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.SimpleObjectProperty;
+
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class MailsDto {
 
@@ -15,6 +19,7 @@ public class MailsDto {
     public SimpleObjectProperty<Date> date;
     public SimpleLongProperty version;
     public NotificationsDto notification;
+    private List <byte[]> attachments;
 
     public MailsDto() {
         this.id = new SimpleLongProperty();
@@ -26,6 +31,7 @@ public class MailsDto {
         this.notification = new NotificationsDto();
         this.version = new SimpleLongProperty(0L);
         this.notification = new NotificationsDto();
+        this.attachments = new ArrayList<>();
     }
 
     public Long getId() {
@@ -90,6 +96,15 @@ public class MailsDto {
 
     public void setNotification(NotificationsDto notification) {
         this.notification = notification;
+    }
+
+
+    public List <byte[]> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List <byte[]> attachments) {
+        this.attachments = attachments;
     }
 
     @Override

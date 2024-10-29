@@ -62,25 +62,13 @@ public class EmailsController {
             @FormDataParam("to") String to,
             @FormDataParam("subject") String subject,
             @FormDataParam("body") String body,
-            @FormDataParam("attachments") List<FormDataBodyPart> attachments) {
+            @FormDataParam("attachments") List<byte[]> attachments) {
         try {
             // Convierte cada adjunto en un par de byte[] y nombre del archivo
-            List<Pair<byte[], String>> attachmentBytes = attachments.stream()
-                    .map(part -> {
-                        try {
-                            byte[] fileData = part.getValueAs(byte[].class);
-                            String fileName = part.getContentDisposition().getFileName();
-                            return Pair.of(fileData, fileName);
-                        } catch (Exception e) {
-                            LOG.severe("Error al procesar el archivo adjunto: " + e.getMessage());
-                            return null;
-                        }
-                    })
-                    .filter(pair -> pair != null)
-                    .collect(Collectors.toList());
+        
 
             // Llama al servicio con la lista de archivos adjuntos con nombre y bytes
-            String result = emailsService.sendMail(to, subject, body, attachmentBytes);
+            String result = emailsService.sendMail(to, subject, body, attachments);
             return Response.ok(result).build();
         } catch (Exception ex) {
             LOG.severe("Ocurrió un error al enviar el correo con adjuntos.");
