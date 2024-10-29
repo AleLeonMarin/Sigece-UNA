@@ -18,6 +18,7 @@ module cr.ac.una.admin {
     requires org.apache.poi.ooxml;
     requires javafx.swing;
     requires webcam.capture;
+    requires com.calendarfx.view;
 
 
     opens cr.ac.una.admin to javafx.fxml;

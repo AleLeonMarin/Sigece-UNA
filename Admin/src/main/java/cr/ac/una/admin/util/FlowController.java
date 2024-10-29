@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -94,6 +95,7 @@ public class FlowController {
     public void goView(String viewName, String accion) {
         goView(viewName, "Center", accion);
     }
+
     public void goView(String viewName, String location, String accion) {
         FXMLLoader loader = getLoader(viewName);
         Controller controller = loader.getController();
@@ -109,7 +111,8 @@ public class FlowController {
         StackPane stackPaneRoot = (StackPane) stage.getScene().lookup("#stackPaneRoot");
 
         // Obtener el VBox dentro del StackPane donde se cargarán las vistas
-        VBox vBox = (VBox) stackPaneRoot.getChildren().get(0);  // Asegúrate de que es el primer hijo o ajusta según corresponda
+        VBox vBox = (VBox) stackPaneRoot.getChildren().get(0); // Asegúrate de que es el primer hijo o ajusta según
+                                                               // corresponda
 
         // Limpiar el VBox antes de cargar la nueva vista
         vBox.getChildren().clear();
@@ -120,8 +123,6 @@ public class FlowController {
         // Agregar la nueva vista al VBox
         vBox.getChildren().add(newView);
     }
-
-
 
     public void goViewInStage(String viewName, Stage stage) {
         FXMLLoader loader = getLoader(viewName);
@@ -136,6 +137,7 @@ public class FlowController {
         Controller controller = loader.getController();
         controller.initialize();
         Stage stage = new Stage();
+        stage.getIcons().add(new Image("cr/ac/una/admin/resources/admin.jpg"));
         stage.setOnHidden((WindowEvent event) -> {
             controller.getStage().getScene().setRoot(new Pane());
             controller.setStage(null);
@@ -154,6 +156,7 @@ public class FlowController {
         Controller controller = loader.getController();
         controller.initialize();
         Stage stage = new Stage();
+        stage.getIcons().add(new Image("cr/ac/una/admin/resources/admin.jpg"));
         stage.setResizable(resizable);
         stage.setOnHidden((WindowEvent event) -> {
             controller.getStage().getScene().setRoot(new Pane());

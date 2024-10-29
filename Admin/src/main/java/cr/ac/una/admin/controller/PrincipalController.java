@@ -7,7 +7,9 @@ package cr.ac.una.admin.controller;
 import java.net.URL;
 import java.time.LocalTime;
 import java.util.ResourceBundle;
+import java.util.concurrent.Flow;
 
+import cr.ac.una.admin.util.FlowController;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
@@ -32,7 +34,25 @@ import javafx.util.Duration;
 public class PrincipalController extends Controller implements Initializable {
 
     @FXML
-    private Button btnNotificaciones;
+    private Button btnApprovals;
+
+    @FXML
+    private Button btnAreas;
+
+    @FXML
+    private Button btnFollows;
+
+    @FXML
+    private Button btnGestions;
+
+    @FXML
+    private Button btnSearch;
+
+    @FXML
+    private Button btnReports;
+
+    @FXML
+    private Button btnCalendar;
 
     @FXML
     private Label gestCompletadasLabel;
@@ -109,7 +129,51 @@ public class PrincipalController extends Controller implements Initializable {
     }
 
     @FXML
-    void onActionBtnNotificaciones(ActionEvent event) {
+    void onAcntionBtnApprovals(ActionEvent event) {
+
+        FlowController.getInstance().goViewInWindow("ApprovalsView");
+
+    }
+
+    @FXML
+    void onActionBtnAreas(ActionEvent event) {
+
+        FlowController.getInstance().goViewInWindow("AreasView");
+
+    }
+
+    @FXML
+    void onActionBtnFollows(ActionEvent event) {
+
+        FlowController.getInstance().goViewInWindow("FollowsView");
+
+    }
+
+    @FXML
+    void onActionBtnGestions(ActionEvent event) {
+
+        FlowController.getInstance().goViewInWindow("GestionsView");
+
+    }
+
+    @FXML
+    void onActionBtnSearch(ActionEvent event) {
+
+        FlowController.getInstance().goViewInWindow("SearchView");
+
+    }
+
+    @FXML
+    void onActionBtnReports(ActionEvent event) {
+
+        FlowController.getInstance().goViewInWindow("ReportsView");
+
+    }
+
+    @FXML
+    void onActionBtnCalendar(ActionEvent event) {
+
+        FlowController.getInstance().goViewInWindow("CalendarView");
 
     }
 
