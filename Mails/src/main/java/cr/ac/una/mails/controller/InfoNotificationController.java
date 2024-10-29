@@ -61,7 +61,7 @@ public class InfoNotificationController extends Controller implements Initializa
     public void initialize() {
         correosService = new CorreosService();
         cargarNotificacion();
-        tbcDestinatario.setCellValueFactory(new PropertyValueFactory<>("corDestinatario"));
+        tbcDestinatario.setCellValueFactory(new PropertyValueFactory<>("destinatary"));
     }
 
     private void cargarNotificacion() {

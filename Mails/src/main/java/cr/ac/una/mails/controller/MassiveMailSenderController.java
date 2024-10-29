@@ -4,7 +4,9 @@ import cr.ac.una.mails.model.MailsDto;
 import cr.ac.una.mails.model.NotificationsDto;
 import cr.ac.una.mails.model.VariablesDto;
 import cr.ac.una.mails.service.CorreosService;
+import cr.ac.una.mails.service.MultimediaService;
 import cr.ac.una.mails.service.NotificacionService;
+import cr.ac.una.mails.service.VariablesService;
 import cr.ac.una.mails.util.AppContext;
 import cr.ac.una.mails.util.FlowController;
 import cr.ac.una.mails.util.Mensaje;
@@ -67,6 +69,8 @@ public class MassiveMailSenderController extends Controller implements Initializ
 
     private NotificacionService notificacionService = new NotificacionService();
     private CorreosService correosService = new CorreosService();
+    private MultimediaService multimediaService = new MultimediaService();
+    private VariablesService variablesService = new VariablesService();
     private ObservableList<MailsDto> correosGenerados = FXCollections.observableArrayList();
     private ObservableList<NotificationsDto> notificaciones = FXCollections.observableArrayList();
     private NotificationsDto notificacionSeleccionada;
@@ -132,9 +136,13 @@ public class MassiveMailSenderController extends Controller implements Initializ
 
     private void cargarPlantillaHTML(NotificationsDto notificacion) {
         if (notificacion != null && notificacion.getHtml() != null) {
-            htmlPreview.getEngine().loadContent(notificacion.getHtml());
+            String htmlContent = notificacion.getHtml();
+            List<VariablesDto> variables = notificacion.getVariables();
+            String finalContent = replaceVariables(htmlContent, variables);
+            htmlPreview.getEngine().loadContent(finalContent);
         }
     }
+
 
 
     //NO funciona correctamente
@@ -148,9 +156,14 @@ public class MassiveMailSenderController extends Controller implements Initializ
 //        }
 //    }
 
+@FXML
+    private void onActionBtnUpload(ActionEvent event) {
+        // Validar que se haya seleccionado una notificación antes de continuar
+        if (notificacionSeleccionada == null) {
+            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una notificación antes de cargar el archivo Excel.");
+            return;
+        }
 
-    @FXML
-    void onActionBtnUpload(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Cargar archivo Excel");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos Excel", "*.xlsx"));
@@ -162,19 +175,19 @@ public class MassiveMailSenderController extends Controller implements Initializ
                 Sheet sheet = workbook.getSheetAt(0);
 
                 correosGenerados.clear();
+                Row headerRow = sheet.getRow(0);
 
                 for (Row row : sheet) {
                     if (row.getRowNum() == 0) continue;
 
-                    MailsDto correoDto = new MailsDto();
-
-                    Cell correoCell = row.getCell(0);
-                    if (correoCell != null) {
-                        correoDto.setDestinatary(correoCell.getStringCellValue());
-                    } else {
-                        mensaje.show(Alert.AlertType.WARNING, "Advertencia", "El archivo Excel tiene una fila sin correo.");
+                    Cell correoCell = row.getCell(0, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+                    if (correoCell == null || correoCell.getCellType() == CellType.BLANK || correoCell.getStringCellValue().trim().isEmpty()) {
+                        mensaje.show(Alert.AlertType.WARNING, "Advertencia", "La fila " + (row.getRowNum() + 1) + " no tiene un correo destinatario válido. Revisa tu Excel.");
                         continue;
                     }
+
+                    MailsDto correoDto = new MailsDto();
+                    correoDto.setDestinatary(correoCell.getStringCellValue().trim());
 
                     if (txtAsunto.getText() != null && !txtAsunto.getText().trim().isEmpty()) {
                         correoDto.setSubject(txtAsunto.getText());
@@ -184,10 +197,9 @@ public class MassiveMailSenderController extends Controller implements Initializ
 
                     correoDto.setNotification(notificacionSeleccionada);
 
-                    String contenidoHTML = generarContenidoConVariables(row);
+                    String contenidoHTML = generarContenidoConVariables(row, headerRow);
                     if (contenidoHTML == null) {
-                        mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Una variable condicional no tiene valor.");
-                        return;
+                        continue; // Si el contenido es nulo, omite esta fila
                     }
 
                     correoDto.setResult(contenidoHTML);
@@ -196,7 +208,6 @@ public class MassiveMailSenderController extends Controller implements Initializ
                 }
 
                 tbvCorreoGenerados.setItems(correosGenerados);
-
                 mensaje.show(Alert.AlertType.INFORMATION, "Carga exitosa", "El archivo Excel se ha procesado correctamente.");
 
             } catch (IOException e) {
@@ -204,6 +215,9 @@ public class MassiveMailSenderController extends Controller implements Initializ
             }
         }
     }
+
+
+
 
     @FXML
     void onActionBtnSend(ActionEvent event) {
@@ -218,11 +232,9 @@ public class MassiveMailSenderController extends Controller implements Initializ
         mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "Correos enviados a la base de datos, serán enviados automáticamente.");
     }
 
-    private String generarContenidoConVariables(Row row) {
+    private String generarContenidoConVariables(Row row, Row headerRow) {
         String plantillaHTML = notificacionSeleccionada.getHtml();
         String plantillaHTMLFinal = plantillaHTML;
-        Sheet sheet = row.getSheet();
-        Row headerRow = sheet.getRow(0);
         List<VariablesDto> variables = notificacionSeleccionada.getVariables();
 
         for (int i = 1; i < row.getLastCellNum(); i++) {
@@ -230,17 +242,16 @@ public class MassiveMailSenderController extends Controller implements Initializ
             if (headerCell != null) {
                 String columnName = headerCell.getStringCellValue();
                 String variable = "[" + columnName + "]";
-
-                Cell cell = row.getCell(i);
                 String valor = "";
 
+                Cell cell = row.getCell(i, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL); // Retorna null si la celda está vacía
                 if (cell != null) {
                     switch (cell.getCellType()) {
                         case STRING:
-                            valor = cell.getStringCellValue();
+                            valor = cell.getStringCellValue().trim();
                             break;
                         case NUMERIC:
-                            valor = String.valueOf(cell.getNumericCellValue());
+                            valor = String.valueOf((int) cell.getNumericCellValue());
                             break;
                         case BOOLEAN:
                             valor = String.valueOf(cell.getBooleanCellValue());
@@ -250,16 +261,18 @@ public class MassiveMailSenderController extends Controller implements Initializ
                     }
                 }
 
+                // Verificar si es una variable condicional y si está vacía
                 boolean isCondicional = esVariableCondicional(columnName, variables);
-
-                if (isCondicional && (valor == null || valor.trim().isEmpty())) {
-                    mensaje.show(Alert.AlertType.WARNING, "Advertencia", "La variable condicional '" + columnName + "' está vacía. Revisa la estructura de tu Excel.");
-                    return null;
+                if (isCondicional && (valor == null || valor.isEmpty())) {
+                    mensaje.show(Alert.AlertType.WARNING, "Advertencia", "La variable condicional '" + columnName + "' está vacía en la fila " + (row.getRowNum() + 1) + ". Revisa la estructura de tu Excel.");
+                    System.out.println("Variable condicional vacía: " + columnName + " en fila: " + (row.getRowNum() + 1));
+                    return null; // Cancela la generación de contenido para este correo
                 }
 
-                if (!isCondicional && (valor == null || valor.trim().isEmpty())) {
+                // Asignar valores por defecto si la variable no es condicional y está vacía
+                if (!isCondicional && (valor == null || valor.isEmpty())) {
                     valor = buscarValorPorDefecto(columnName, variables);
-                    if (valor == null || valor.trim().isEmpty()) {
+                    if (valor == null || valor.isEmpty()) {
                         continue;
                     }
                 }
@@ -268,10 +281,21 @@ public class MassiveMailSenderController extends Controller implements Initializ
             }
         }
 
-
+        // Reemplazo de variables multimedia y valores por defecto restantes
         for (VariablesDto variable : variables) {
             String variableName = "[" + variable.getName() + "]";
-            if (plantillaHTMLFinal.contains(variableName)) {
+            if ("Multimedia".equals(variable.getType()) && plantillaHTMLFinal.contains(variableName)) {
+                Respuesta respuesta = multimediaService.obtenerImagen(variable.getId());
+                String multimediaUrl = respuesta.getEstado() ? (String) respuesta.getResultado("ImagenUrl") : "Recurso no disponible";
+
+                if (variable.getValue() != null && variable.getValue().contains(".mp4")) {
+                    String multimediaHtml = "<video controls><source src='" /* + multimediaUrl */ + "' type='video/mp4'></video>";
+                    plantillaHTMLFinal = plantillaHTMLFinal.replace(variableName, multimediaHtml);
+                } else {
+                String multimediaHtml = "<img src='" + multimediaUrl + "' alt='Multimedia'>";
+                plantillaHTMLFinal = plantillaHTMLFinal.replace(variableName, multimediaHtml);
+                }
+            } else if (plantillaHTMLFinal.contains(variableName)) {
                 String defaultValue = variable.getValue() != null ? variable.getValue() : "Valor no encontrado";
                 plantillaHTMLFinal = plantillaHTMLFinal.replace(variableName, defaultValue);
             }
@@ -279,6 +303,11 @@ public class MassiveMailSenderController extends Controller implements Initializ
 
         return plantillaHTMLFinal;
     }
+
+
+
+
+
 
     private String buscarValorPorDefecto(String nombreVariable, List<VariablesDto> variables) {
         for (VariablesDto variable : variables) {
@@ -318,10 +347,12 @@ public class MassiveMailSenderController extends Controller implements Initializ
         Cell emailCell = headerRow.createCell(colIndex++);
         emailCell.setCellValue("Correo Destino");
 
-
+        // Excluir variables multimedia del Excel
         for (VariablesDto variable : variables) {
-            Cell cell = headerRow.createCell(colIndex++);
-            cell.setCellValue(variable.getName());
+            if (!"Multimedia".equals(variable.getType())) {
+                Cell cell = headerRow.createCell(colIndex++);
+                cell.setCellValue(variable.getName());
+            }
         }
 
         FileChooser fileChooser = new FileChooser();
@@ -341,16 +372,21 @@ public class MassiveMailSenderController extends Controller implements Initializ
     }
 
 
+
     @FXML
     void onActionBtnMaximize(ActionEvent event) {
         if (notificacionSeleccionada != null) {
             String htmlContent = notificacionSeleccionada.getHtml();
             AppContext.getInstance().set("htmlContent", htmlContent);
+            AppContext.getInstance().set("variables", notificacionSeleccionada.getVariables());
+            AppContext.getInstance().set("isPreviewMode", true); // Establece la bandera de modo vista previa
             FlowController.getInstance().goViewInWindowModal("MaxViewHTML", this.getStage(), Boolean.TRUE);
         } else {
             mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una notificación.");
         }
     }
+
+
 
 
     @FXML
@@ -362,5 +398,33 @@ public class MassiveMailSenderController extends Controller implements Initializ
         } else {
             mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una correo.");
         }
+    }
+
+    private String replaceVariables(String htmlContent, List<VariablesDto> variables) {
+        for (VariablesDto variable : variables) {
+            String placeholder = "[" + variable.getName() + "]";
+            String value = "";
+            if ("Condicional".equals(variable.getType())) {
+                value = "____________";
+            } else if ("Multimedia".equals(variable.getType())) {
+                // Obtener la URL de la imagen desde el MultimediaService
+                Respuesta respuesta = multimediaService.obtenerImagen(variable.getId());
+                if (respuesta.getEstado()) {
+                    String multimediaUrl = (String) respuesta.getResultado("ImagenUrl");
+                    // Detectar si es imagen o video según la extensión en el valor de la variable
+                    if (variable.getValue() != null && variable.getValue().contains(".mp4")) {
+                        value = "<video controls><source src='" + "visualizador no soporta viedos"+ "' type='video/mp4'></video>";
+                    } else {
+                        value = "<img src='" + multimediaUrl + "' alt='Multimedia'>";
+                    }
+                } else {
+                    value = "Recurso multimedia no disponible";
+                }
+            } else {
+                value = variable.getValue() != null ? variable.getValue() : "";
+            }
+            htmlContent = htmlContent.replace(placeholder, value);
+        }
+        return htmlContent;
     }
 }

@@ -2,6 +2,7 @@ package cr.ac.una.mails.controller;
 
 import cr.ac.una.mails.model.NotificationsDto;
 import cr.ac.una.mails.model.VariablesDto;
+import cr.ac.una.mails.service.MultimediaService;
 import cr.ac.una.mails.service.NotificacionService;
 import cr.ac.una.mails.service.VariablesService;
 import cr.ac.una.mails.util.AppContext;
@@ -84,6 +85,8 @@ public class AdminNotificationController extends Controller implements Initializ
 
     byte[] multimediaSeleccionada;
 
+    MultimediaService multimediaService = new MultimediaService();
+
     @FXML
     private ToggleButton btnMultimediaActive;
 
@@ -162,6 +165,8 @@ public class AdminNotificationController extends Controller implements Initializ
         variablesService = new VariablesService();
         mensaje = new Mensaje();
 
+        btnAttachImage.setDisable(true);
+
         tbcId.setCellValueFactory(new PropertyValueFactory<>("id"));
         tbcNombre.setCellValueFactory(new PropertyValueFactory<>("name"));
         tbcVarName.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -206,17 +211,17 @@ public class AdminNotificationController extends Controller implements Initializ
             }
         });
 
+        txtVarTipo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            btnAttachImage.setDisable(!"Multimedia".equals(newValue));
+        });
+
+
         ObservableList<String> opciones = FXCollections.observableArrayList("Por defecto", "Condicional", "Multimedia", null);
         txtVarTipo.setItems(opciones);
 
         plantillaCode.setOnKeyReleased(event -> updatePreview());
 
-        btnMultimediaActive.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
-            btnAttachImage.setDisable(!isSelected);
-            if (isSelected) {
-                txtVarTipo.setValue("Multimedia");
-            }
-        });
+
 
         btnAttachImage.setDisable(true);
     }
@@ -238,12 +243,50 @@ public class AdminNotificationController extends Controller implements Initializ
 
     private void updatePreview() {
         String htmlCode = plantillaCode.getText();
-        plantillaPreviewFinal.getEngine().loadContent(htmlCode);
+        List<VariablesDto> variables = new ArrayList<>(tbvVariables.getItems());
+
+        System.out.println("Numero de variables en updatePreview: " + variables.size());
+
+        String finalContent = replaceVariables(htmlCode, variables);
+        plantillaPreviewFinal.getEngine().loadContent(finalContent);
     }
+
+
+    private String replaceVariables(String htmlContent, List<VariablesDto> variables) {
+        for (VariablesDto variable : variables) {
+            String placeholder = "[" + variable.getName() + "]";
+            String value = "";
+
+            if ("Condicional".equals(variable.getType())) {
+                value = "___________";
+            } else if ("Por defecto".equals(variable.getType())) {
+                value = variable.getValue() != null ? variable.getValue() : "";
+            } else if ("Multimedia".equals(variable.getType()) && variable.getVarMultimedia() != null) {
+                Respuesta respuesta = multimediaService.obtenerImagen(variable.getId());
+                if (respuesta.getEstado()) {
+                    String multimediaUrl = (String) respuesta.getResultado("ImagenUrl");
+                    value = variable.getValue() != null && variable.getValue().contains(".mp4")
+                            ? "[previsualizador no soporta videos]"
+                            : "<img src='" + multimediaUrl + "' alt='Multimedia'>";
+                } else {
+                    value = "Recurso multimedia no disponible";
+                }
+            } else {
+                value = variable.getValue() != null ? variable.getValue() : "";
+            }
+
+            // Realiza la sustitución del placeholder en el contenido HTML
+            htmlContent = htmlContent.replace(placeholder, value);
+        }
+        return htmlContent;
+    }
+
+
 
     private void cargarPlantilla(NotificationsDto notificacion) {
         plantillaCode.setText(notificacion.getHtml());
         txtNombre.setText(notificacion.getName());
+        cargarVariables();
         updatePreview();
     }
 
@@ -266,13 +309,12 @@ public class AdminNotificationController extends Controller implements Initializ
 
 
     private void cargarVariableSeleccionada() {
-        // Limpiar visualizadores y archivo temporal antes de cargar nuevo contenido
         limpiarVisualizadores();
 
         if (variableSeleccionada != null) {
             txtVarNombre.setText(variableSeleccionada.getName());
             txtVarValor.setText(variableSeleccionada.getValue());
-            txtVarTipo.setValue(variableSeleccionada.getType() != null ? variableSeleccionada.getType() : "");
+            txtVarTipo.setText(variableSeleccionada.getType());
         }
 
         if (variableSeleccionada != null && "Multimedia".equals(variableSeleccionada.getType()) && variableSeleccionada.getVarMultimedia() != null) {
@@ -286,11 +328,13 @@ public class AdminNotificationController extends Controller implements Initializ
                     fileExtension = ".png";
                 }
 
-                // Mostrar multimedia con el contenido y la extensión
+                btnAttachImage.setDisable(false);
                 mostrarMultimedia(variableSeleccionada.getVarMultimedia(), fileExtension);
             } catch (Exception e) {
                 mensaje.show(Alert.AlertType.ERROR, "Error", "Error al cargar el contenido multimedia desde la base de datos: " + e.getMessage());
             }
+        }else {
+            btnAttachImage.setDisable(true);
         }
     }
 
@@ -529,6 +573,7 @@ public class AdminNotificationController extends Controller implements Initializ
         txtVarValor.clear();
         txtVarTipo.clear();
         variableSeleccionada = null;
+
 
         tbvVariables.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {

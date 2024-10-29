@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.web.WebView;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -28,18 +29,37 @@ public class MaxViewHTMLController extends Controller implements Initializable {
     public void initialize() {
         String htmlContent = (String) AppContext.getInstance().get("htmlContent");
         List<VariablesDto> variables = (List<VariablesDto>) AppContext.getInstance().get("variables");
+        Boolean isPreviewMode = (Boolean) AppContext.getInstance().get("isPreviewMode");
 
-        if (htmlContent != null && !htmlContent.isEmpty() && variables != null) {
-            String finalContent = replaceVariables(htmlContent, variables);
-            webHTML.getEngine().loadContent(finalContent);
+        if (isPreviewMode == null) {
+            isPreviewMode = false;
+        }
+
+
+        if (htmlContent != null && !htmlContent.isEmpty()) {
+            if (variables != null && !variables.isEmpty()) {
+                String finalContent;
+                if (isPreviewMode) {
+                    finalContent = replaceVariablesForPreview(htmlContent, variables);
+                } else {
+                    finalContent = replaceVariables(htmlContent, variables);
+                }
+                webHTML.getEngine().loadContent(finalContent);
+            } else {
+                webHTML.getEngine().loadContent(htmlContent);
+            }
+        } else {
+            webHTML.getEngine().loadContent("<p>No hay contenido disponible para mostrar.</p>");
         }
     }
+
+
+
 
     private String replaceVariables(String htmlContent, List<VariablesDto> variables) {
         for (VariablesDto variable : variables) {
             String placeholder = "[" + variable.getName() + "]";
             String value = "";
-
             if ("Condicional".equals(variable.getType())) {
                 value = "____________";
             } else if ("Multimedia".equals(variable.getType()) && variable.getVarMultimedia() != null) {
@@ -47,10 +67,9 @@ public class MaxViewHTMLController extends Controller implements Initializable {
                 Respuesta respuesta = multimediaService.obtenerImagen(variable.getId());
                 if (respuesta.getEstado()) {
                     String multimediaUrl = (String) respuesta.getResultado("ImagenUrl");
-
                     // Detectar si es imagen o video según la extensión en el valor de la variable
                     if (variable.getValue() != null && variable.getValue().contains(".mp4")) {
-                        value = "<video controls><source src='" + multimediaUrl + "' type='video/mp4'></video>";
+                        value = "<video controls><source src='" + "visualizador no soporta viedos"+ "' type='video/mp4'></video>";
                     } else {
                         value = "<img src='" + multimediaUrl + "' alt='Multimedia'>";
                     }
@@ -60,9 +79,39 @@ public class MaxViewHTMLController extends Controller implements Initializable {
             } else {
                 value = variable.getValue() != null ? variable.getValue() : "";
             }
-
             htmlContent = htmlContent.replace(placeholder, value);
         }
         return htmlContent;
     }
+
+
+    private String replaceVariablesForPreview(String htmlContent, List<VariablesDto> variables) {
+        for (VariablesDto variable : variables) {
+            String placeholder = "[" + variable.getName() + "]";
+            String value = "";
+            if ("Condicional".equals(variable.getType())) {
+                value = "____________";
+            } else if ("Multimedia".equals(variable.getType())) {
+                // Obtener la URL de la imagen desde el MultimediaService
+                Respuesta respuesta = multimediaService.obtenerImagen(variable.getId());
+                if (respuesta.getEstado()) {
+                    String multimediaUrl = (String) respuesta.getResultado("ImagenUrl");
+                    // Detectar si es imagen o video según la extensión en el valor de la variable
+                    if (variable.getValue() != null && variable.getValue().contains(".mp4")) {
+                        value = "<video controls><source src='" + "visualizador no soporta viedos"+ "' type='video/mp4'></video>";
+                    } else {
+                        value = "<img src='" + multimediaUrl + "' alt='Multimedia'>";
+                    }
+                } else {
+                    value = "Recurso multimedia no disponible";
+                }
+            } else {
+                value = variable.getValue() != null ? variable.getValue() : "";
+            }
+            htmlContent = htmlContent.replace(placeholder, value);
+        }
+        return htmlContent;
+    }
+
+
 }

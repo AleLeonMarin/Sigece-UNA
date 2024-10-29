@@ -1,0 +1,1 @@
+El visualizador en procesos de notificación no acepta visualización de videos 
