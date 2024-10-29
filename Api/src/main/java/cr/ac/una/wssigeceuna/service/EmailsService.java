@@ -17,6 +17,20 @@ import java.util.stream.Collectors;
 
 import cr.ac.una.wssigeceuna.model.MailsDto;
 import cr.ac.una.wssigeceuna.model.Paramethers;
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import jakarta.activation.FileDataSource;
+import jakarta.mail.Multipart;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMultipart;
+import jakarta.mail.util.ByteArrayDataSource;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLConnection;
+import java.util.zip.ZipInputStream;
+import org.apache.commons.lang3.tuple.Pair;
 
 @Stateless
 @LocalBean
@@ -31,38 +45,53 @@ public class EmailsService {
         return em.find(Paramethers.class, 1L);
     }
 
-    public String sendMail(String destinary, String subject, String text) {
+    public String sendMail(String destinary, String subject, String text, List<byte[]> attachments) {
         try {
-
             Paramethers parametros = obtainParamethers();
-
             Properties props = new Properties();
             props.put("mail.smtp.host", parametros.getServer());
             props.put("mail.smtp.port", parametros.getPort());
             props.put("mail.smtp.auth", "true");
             props.put("mail.smtp.starttls.enable", "true");
 
-            String sender = parametros.getMail(); // Correo remitente
-            String password = parametros.getPassword(); // Contraseña
+            String sender = parametros.getMail();
+            String password = parametros.getPassword();
 
-            // Crear la sesión de correo
             Session session = Session.getInstance(props);
             session.setDebug(true);
 
-            // Crear el mensaje de correo
             MimeMessage mail = new MimeMessage(session);
-            mail.setFrom(new InternetAddress(sender)); // Establecer remitente
-            mail.addRecipient(Message.RecipientType.TO, new InternetAddress(destinary)); // Establecer destinatario
-            mail.setSubject(subject); // Asunto del correo
-            mail.setText(text, "UTF-8", "html"); // Cuerpo del correo en formato HTML
+            mail.setFrom(new InternetAddress(sender));
+            mail.addRecipient(Message.RecipientType.TO, new InternetAddress(destinary));
+            mail.setSubject(subject);
 
-            // Enviar el correo
+            MimeBodyPart messageBodyPart = new MimeBodyPart();
+            messageBodyPart.setContent(text, "text/html");
+
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(messageBodyPart);
+
+            if (attachments != null) {
+                for (byte[] fileData : attachments) {
+                    MimeBodyPart attachmentPart = new MimeBodyPart();
+
+                    // Detectar tipo MIME
+                    String mimeType = detectMimeType(fileData);
+                    ByteArrayDataSource source = new ByteArrayDataSource(fileData, mimeType);
+
+                    attachmentPart.setDataHandler(new DataHandler(source));
+                    attachmentPart.setFileName("adjunto_" + attachments.indexOf(fileData)); // Nombre de archivo temporal
+                    multipart.addBodyPart(attachmentPart);
+                }
+            }
+
+            mail.setContent(multipart);
             Transport transport = session.getTransport("smtp");
-            transport.connect(sender, password); // Autenticarse
-            transport.sendMessage(mail, mail.getAllRecipients()); // Enviar mensaje
-            transport.close(); // Cerrar la conexión
+            transport.connect(sender, password);
+            transport.sendMessage(mail, mail.getAllRecipients());
+            transport.close();
 
-            return "Correo enviado exitosamente.";
+            return "Correo enviado exitosamente con adjuntos.";
         } catch (MessagingException e) {
             return "Error enviando el correo: " + e.getMessage();
         }
@@ -102,8 +131,8 @@ public class EmailsService {
                 mailDto.setState("P");
             }
         }
-        return "Todos los correos fueron procesados. Resultados:\n" +
-                mails.stream()
+        return "Todos los correos fueron procesados. Resultados:\n"
+                + mails.stream()
                         .map(c -> "Correo a: " + c.getDestinatary() + " - Estado: " + c.getState())
                         .collect(Collectors.joining("\n"));
     }
@@ -150,4 +179,38 @@ public class EmailsService {
         }
     }
 
+    public String detectMimeType(byte[] fileData) {
+        try (InputStream is = new ByteArrayInputStream(fileData)) {
+            String mimeType = URLConnection.guessContentTypeFromStream(is);
+
+            if (mimeType == null) {
+                // Verificar si es un archivo Office basado en el encabezado ZIP
+                try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(fileData))) {
+                    if (zis.getNextEntry() != null) {
+                        // Basado en la estructura de archivos de Office
+                        if (containsOfficeHeader(fileData, "[Content_Types].xml")) {
+                            return "application/vnd.openxmlformats-officedocument.wordprocessingml.document"; // .docx
+                        }
+                    }
+                }
+
+                // Fallbacks adicionales
+                if (fileData.length > 4 && fileData[0] == 0x25 && fileData[1] == 0x50 && fileData[2] == 0x44 && fileData[3] == 0x46) {
+                    mimeType = "application/pdf";
+                } else {
+                    mimeType = "application/octet-stream"; // Asignación genérica
+                }
+            }
+            return mimeType;
+        } catch (IOException e) {
+            return "application/octet-stream";
+        }
+    }
+
+    private boolean containsOfficeHeader(byte[] fileData, String header) {
+        String content = new String(fileData);
+        return content.contains(header);
+    }
 }
+
+

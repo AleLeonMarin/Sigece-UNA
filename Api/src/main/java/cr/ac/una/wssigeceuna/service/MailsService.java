@@ -24,6 +24,8 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.validation.ConstraintViolationException;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.tuple.Pair;
 
 @LocalBean
 @Stateless
@@ -167,7 +169,7 @@ public class MailsService {
                 String destinatary = mailNotSend.getDestinatary();
                 String subject = mailNotSend.getSubject();
 
-                String resultMail = emailsService.sendMail(destinatary, subject, html);
+                String resultMail = emailsService.sendMail(destinatary, subject, html, null);
 
                 if (resultMail.contains("exitosamente")) {
                     mailNotSend.setState("E");
@@ -193,7 +195,6 @@ public class MailsService {
         try {
             Mails mail;
 
-            // Verificar si el correo ya existe en la base de datos
             if (mailsDto.getId() != null && mailsDto.getId() > 0) {
                 mail = em.find(Mails.class, mailsDto.getId());
                 if (mail == null) {
@@ -201,16 +202,14 @@ public class MailsService {
                             "No se encontró el correo a enviar.", "sendMailNow");
                 }
             } else {
-                // Si es un correo nuevo, lo creamos
                 mail = new Mails(mailsDto);
                 em.persist(mail); // Persistir el nuevo correo
                 em.flush();
             }
 
-            // Enviar el correo
-            String result = emailsService.sendMail(mail.getDestinatary(), mail.getSubject(), mail.getResult());
+            // Ahora `mailsDto.getAttachments()` ya contiene la información como `List<Pair<byte[], String>>`
+            String result = emailsService.sendMail(mail.getDestinatary(), mail.getSubject(), mail.getResult(), mailsDto.getAttachments());
 
-            // Verificar si el correo fue enviado correctamente
             if (result.contains("exitosamente")) {
                 mail.setState("E"); // Cambiar el estado a 'Enviado'
                 em.merge(mail); // Guardar los cambios en la base de datos
@@ -258,7 +257,7 @@ public class MailsService {
 
             // Enviar el correo utilizando el servicio de email
             String result = emailsService.sendMail(mail.getDestinatary(), mail.getSubject(),
-                    content);
+                    content, null);
             if (result.contains("exitosamente")) {
                 return new Respuesta(true, CodigoRespuesta.CORRECTO, "Correo de activación enviado exitosamente.", "",
                         "Correo", mail);
@@ -308,7 +307,7 @@ public class MailsService {
             }
 
             // Enviar el correo utilizando el servicio de email
-            String result = emailsService.sendMail(mail.getDestinatary(), mail.getSubject(), content);
+            String result = emailsService.sendMail(mail.getDestinatary(), mail.getSubject(), content, null);
             if (result.contains("exitosamente")) {
                 return new Respuesta(true, CodigoRespuesta.CORRECTO,
                         "Correo de recuperación de contraseña enviado exitosamente.", "",
