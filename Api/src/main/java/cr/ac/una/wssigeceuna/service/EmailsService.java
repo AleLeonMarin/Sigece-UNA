@@ -144,7 +144,6 @@ public class EmailsService {
 
             long wait = paramethers.getTimeout();
 
-            // Esperar el tiempo configurado antes de enviar el correo
             Thread.sleep(wait);
 
             Properties props = new Properties();
@@ -181,24 +180,34 @@ public class EmailsService {
 
     public String detectMimeType(byte[] fileData) {
         try (InputStream is = new ByteArrayInputStream(fileData)) {
+            // Intentar detección de tipo MIME a través de URLConnection
             String mimeType = URLConnection.guessContentTypeFromStream(is);
 
             if (mimeType == null) {
-                // Verificar si es un archivo Office basado en el encabezado ZIP
+                // Intentar detectar archivos de Microsoft Office basados en encabezado ZIP
                 try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(fileData))) {
                     if (zis.getNextEntry() != null) {
-                        // Basado en la estructura de archivos de Office
                         if (containsOfficeHeader(fileData, "[Content_Types].xml")) {
-                            return "application/vnd.openxmlformats-officedocument.wordprocessingml.document"; // .docx
+                            return "application/vnd.openxmlformats-officedocument.wordprocessingml.document"; // DOCX
+                        } else if (containsOfficeHeader(fileData, "ppt/")) {
+                            return "application/vnd.openxmlformats-officedocument.presentationml.presentation"; // PPTX
+                        } else if (containsOfficeHeader(fileData, "xl/")) {
+                            return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"; // XLSX
                         }
                     }
                 }
 
-                // Fallbacks adicionales
+                // Verificar encabezados para tipos de archivos adicionales
                 if (fileData.length > 4 && fileData[0] == 0x25 && fileData[1] == 0x50 && fileData[2] == 0x44 && fileData[3] == 0x46) {
-                    mimeType = "application/pdf";
+                    mimeType = "application/pdf"; // PDF
+                } else if (fileData.length > 3 && fileData[0] == (byte) 0xFF && fileData[1] == (byte) 0xD8 && fileData[2] == (byte) 0xFF) {
+                    mimeType = "image/jpeg"; // JPEG
+                } else if (fileData.length > 8 && fileData[0] == (byte) 0x89 && fileData[1] == (byte) 0x50 && fileData[2] == (byte) 0x4E && fileData[3] == (byte) 0x47) {
+                    mimeType = "image/png"; // PNG
+                } else if (fileData.length > 6 && fileData[0] == (byte) 0x47 && fileData[1] == (byte) 0x49 && fileData[2] == (byte) 0x46) {
+                    mimeType = "image/gif"; // GIF
                 } else {
-                    mimeType = "application/octet-stream"; // Asignación genérica
+                    mimeType = "application/octet-stream"; // Tipo MIME genérico
                 }
             }
             return mimeType;
@@ -207,10 +216,10 @@ public class EmailsService {
         }
     }
 
+// Método auxiliar para verificar el encabezado en archivos de Office
     private boolean containsOfficeHeader(byte[] fileData, String header) {
         String content = new String(fileData);
         return content.contains(header);
     }
+
 }
-
-

@@ -169,7 +169,7 @@ public class MailsService {
                 String destinatary = mailNotSend.getDestinatary();
                 String subject = mailNotSend.getSubject();
 
-                String resultMail = emailsService.sendMail(destinatary, subject, html, null);
+                String resultMail = emailsService.sendMail(destinatary, subject, html, mailNotSend.getAttachments());
 
                 if (resultMail.contains("exitosamente")) {
                     mailNotSend.setState("E");

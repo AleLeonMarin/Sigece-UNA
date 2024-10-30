@@ -34,6 +34,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -197,10 +198,17 @@ public class MassiveMailSenderController extends Controller implements Initializ
 
                     correoDto.setNotification(notificacionSeleccionada);
 
-                    String contenidoHTML = generarContenidoConVariables(row, headerRow);
+
+
+                    List<byte[]> adjuntos = new ArrayList<>();
+                    List<String> contentIds = new ArrayList<>();
+
+                    String contenidoHTML = generarContenidoConVariables(row, headerRow, adjuntos, contentIds);
                     if (contenidoHTML == null) {
-                        continue; // Si el contenido es nulo, omite esta fila
+                        continue;
                     }
+
+                    correoDto.setAttachments(new ArrayList<>(adjuntos));
 
                     correoDto.setResult(contenidoHTML);
                     correoDto.setState("P");
@@ -232,7 +240,7 @@ public class MassiveMailSenderController extends Controller implements Initializ
         mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "Correos enviados a la base de datos, serán enviados automáticamente.");
     }
 
-    private String generarContenidoConVariables(Row row, Row headerRow) {
+    private String generarContenidoConVariables(Row row, Row headerRow, List<byte[]> adjuntos, List<String> contentIds) {
         String plantillaHTML = notificacionSeleccionada.getHtml();
         String plantillaHTMLFinal = plantillaHTML;
         List<VariablesDto> variables = notificacionSeleccionada.getVariables();
@@ -244,7 +252,7 @@ public class MassiveMailSenderController extends Controller implements Initializ
                 String variable = "[" + columnName + "]";
                 String valor = "";
 
-                Cell cell = row.getCell(i, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL); // Retorna null si la celda está vacía
+                Cell cell = row.getCell(i, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
                 if (cell != null) {
                     switch (cell.getCellType()) {
                         case STRING:
@@ -261,15 +269,13 @@ public class MassiveMailSenderController extends Controller implements Initializ
                     }
                 }
 
-                // Verificar si es una variable condicional y si está vacía
                 boolean isCondicional = esVariableCondicional(columnName, variables);
                 if (isCondicional && (valor == null || valor.isEmpty())) {
                     mensaje.show(Alert.AlertType.WARNING, "Advertencia", "La variable condicional '" + columnName + "' está vacía en la fila " + (row.getRowNum() + 1) + ". Revisa la estructura de tu Excel.");
                     System.out.println("Variable condicional vacía: " + columnName + " en fila: " + (row.getRowNum() + 1));
-                    return null; // Cancela la generación de contenido para este correo
+                    return null;
                 }
 
-                // Asignar valores por defecto si la variable no es condicional y está vacía
                 if (!isCondicional && (valor == null || valor.isEmpty())) {
                     valor = buscarValorPorDefecto(columnName, variables);
                     if (valor == null || valor.isEmpty()) {
@@ -281,19 +287,21 @@ public class MassiveMailSenderController extends Controller implements Initializ
             }
         }
 
-        // Reemplazo de variables multimedia y valores por defecto restantes
         for (VariablesDto variable : variables) {
             String variableName = "[" + variable.getName() + "]";
             if ("Multimedia".equals(variable.getType()) && plantillaHTMLFinal.contains(variableName)) {
                 Respuesta respuesta = multimediaService.obtenerImagen(variable.getId());
-                String multimediaUrl = respuesta.getEstado() ? (String) respuesta.getResultado("ImagenUrl") : "Recurso no disponible";
+                if (respuesta.getEstado()) {
+                    byte[] multimediaData = (byte[]) respuesta.getResultado("ImagenData");
+                    String contentId = variable.getName() + "@mails.com";
 
-                if (variable.getValue() != null && variable.getValue().contains(".mp4")) {
-                    String multimediaHtml = "<video controls><source src='" /* + multimediaUrl */ + "' type='video/mp4'></video>";
+                    adjuntos.add(multimediaData); // Agregar a la lista de adjuntos
+                    contentIds.add(contentId);
+
+                    String multimediaHtml = "<img src='cid:" + contentId + "' alt='Multimedia'>";
                     plantillaHTMLFinal = plantillaHTMLFinal.replace(variableName, multimediaHtml);
                 } else {
-                String multimediaHtml = "<img src='" + multimediaUrl + "' alt='Multimedia'>";
-                plantillaHTMLFinal = plantillaHTMLFinal.replace(variableName, multimediaHtml);
+                    plantillaHTMLFinal = plantillaHTMLFinal.replace(variableName, "Recurso multimedia no disponible");
                 }
             } else if (plantillaHTMLFinal.contains(variableName)) {
                 String defaultValue = variable.getValue() != null ? variable.getValue() : "Valor no encontrado";
@@ -303,6 +311,8 @@ public class MassiveMailSenderController extends Controller implements Initializ
 
         return plantillaHTMLFinal;
     }
+
+
 
 
 
