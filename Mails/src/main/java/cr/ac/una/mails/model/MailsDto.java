@@ -20,6 +20,7 @@ public class MailsDto {
     public SimpleLongProperty version;
     public NotificationsDto notification;
     private List <byte[]> attachments;
+    private List<String> contentIds;
 
     public MailsDto() {
         this.id = new SimpleLongProperty();
@@ -105,6 +106,14 @@ public class MailsDto {
 
     public void setAttachments(List <byte[]> attachments) {
         this.attachments = attachments;
+    }
+
+    public List<String> getContentIds() {
+        return contentIds;
+    }
+
+    public void setContentIds(List<String> contentIds) {
+        this.contentIds = contentIds;
     }
 
     @Override

@@ -286,7 +286,8 @@ CREATE TABLE
         cor_fecha DATE NOT NULL,
         cor_not_id NUMBER NOT NULL,
         cor_version NUMBER DEFAULT 1 NOT NULL,
-        cor_adjuntos BLOB 
+        cor_adjuntos BLOB,
+        COR_CONTENT_IDS BLOB
     );
 
 ALTER TABLE sis_correos ADD CONSTRAINT sis_correos_pk PRIMARY KEY (cor_id);

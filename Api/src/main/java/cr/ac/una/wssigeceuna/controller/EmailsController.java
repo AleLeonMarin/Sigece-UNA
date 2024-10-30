@@ -39,7 +39,7 @@ public class EmailsController {
     public Response sendEmail(@FormParam("to") String to, @FormParam("subject") String subject,
             @FormParam("body") String body) {
         try {
-            String result = emailsService.sendMail(to, subject, body, null);
+            String result = emailsService.sendMail(to, subject, body, null, null);
             return Response.ok(result).build();
         } catch (Exception ex) {
             LOG.severe("Ocurrió un error al enviar el correo.");
@@ -68,7 +68,7 @@ public class EmailsController {
         
 
             // Llama al servicio con la lista de archivos adjuntos con nombre y bytes
-            String result = emailsService.sendMail(to, subject, body, attachments);
+            String result = emailsService.sendMail(to, subject, body, attachments, null);
             return Response.ok(result).build();
         } catch (Exception ex) {
             LOG.severe("Ocurrió un error al enviar el correo con adjuntos.");
@@ -90,7 +90,7 @@ public class EmailsController {
     public Response sendHtmlEmail(@FormParam("to") String to, @FormParam("subject") String subject,
             @FormParam("body") String body) {
         try {
-            String result = emailsService.sendMail(to, subject, body, null);
+            String result = emailsService.sendMail(to, subject, body, null, null);
             return Response.ok(result).build();
         } catch (Exception ex) {
             LOG.severe("Ocurrió un error al enviar el correo.");

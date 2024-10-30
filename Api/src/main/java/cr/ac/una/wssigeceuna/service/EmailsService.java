@@ -45,8 +45,9 @@ public class EmailsService {
         return em.find(Paramethers.class, 1L);
     }
 
-    public String sendMail(String destinary, String subject, String text, List<byte[]> attachments) {
+    public String sendMail(String destinary, String subject, String text, List<byte[]> attachments, List<String> contentIds) {
         try {
+            // Configuración SMTP
             Paramethers parametros = obtainParamethers();
             Properties props = new Properties();
             props.put("mail.smtp.host", parametros.getServer());
@@ -60,11 +61,13 @@ public class EmailsService {
             Session session = Session.getInstance(props);
             session.setDebug(true);
 
+            // Crear mensaje
             MimeMessage mail = new MimeMessage(session);
             mail.setFrom(new InternetAddress(sender));
             mail.addRecipient(Message.RecipientType.TO, new InternetAddress(destinary));
             mail.setSubject(subject);
 
+            // Parte del cuerpo HTML
             MimeBodyPart messageBodyPart = new MimeBodyPart();
             messageBodyPart.setContent(text, "text/html");
 
@@ -72,26 +75,52 @@ public class EmailsService {
             multipart.addBodyPart(messageBodyPart);
 
             if (attachments != null) {
-                for (byte[] fileData : attachments) {
-                    MimeBodyPart attachmentPart = new MimeBodyPart();
+                for (int i = 0; i < attachments.size(); i++) {
+                    byte[] fileData = attachments.get(i);
 
-                    // Detectar tipo MIME
+                    MimeBodyPart attachmentPart = new MimeBodyPart();
                     String mimeType = detectMimeType(fileData);
                     ByteArrayDataSource source = new ByteArrayDataSource(fileData, mimeType);
 
                     attachmentPart.setDataHandler(new DataHandler(source));
-                    attachmentPart.setFileName("adjunto_" + attachments.indexOf(fileData)); // Nombre de archivo temporal
+
+                    // Verificar si existe un contentId para el archivo actual
+                    if (contentIds != null && i < contentIds.size() && contentIds.get(i) != null) {
+                        String contentId = contentIds.get(i);
+                        attachmentPart.setHeader("Content-ID", "<" + contentId + ">");
+                        attachmentPart.setDisposition(MimeBodyPart.INLINE);  // Incrustado en el HTML
+                    } else {
+                        // Si no hay contentId, tratar como archivo adjunto normal
+                        attachmentPart.setDisposition(MimeBodyPart.ATTACHMENT);
+                        String fileName = "attachment_" + (i + 1); // Nombre genérico o personalizado
+
+                        // Asignar extensión
+                        if ("video/mp4".equals(mimeType)) {
+                            fileName += ".mp4";
+                        } else if ("image/png".equals(mimeType)) {
+                            fileName += ".png";
+                        } else if ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet".equals(mimeType)) {
+                             fileName += ".xlsx";
+                        } else if ("application/vnd.ms-excel".equals(mimeType)) {
+                        fileName += ".xls";
+                        }
+
+                        attachmentPart.setFileName(fileName);
+                    }
+
                     multipart.addBodyPart(attachmentPart);
                 }
             }
 
             mail.setContent(multipart);
+
+            // Enviar mensaje
             Transport transport = session.getTransport("smtp");
             transport.connect(sender, password);
             transport.sendMessage(mail, mail.getAllRecipients());
             transport.close();
 
-            return "Correo enviado exitosamente con adjuntos.";
+            return "Correo enviado exitosamente con adjuntos inline.";
         } catch (MessagingException e) {
             return "Error enviando el correo: " + e.getMessage();
         }
@@ -206,8 +235,12 @@ public class EmailsService {
                     mimeType = "image/png"; // PNG
                 } else if (fileData.length > 6 && fileData[0] == (byte) 0x47 && fileData[1] == (byte) 0x49 && fileData[2] == (byte) 0x46) {
                     mimeType = "image/gif"; // GIF
+                } else if (fileData.length > 8 && fileData[4] == 0x66 && fileData[5] == 0x74 && fileData[6] == 0x79 && fileData[7] == 0x70) {
+                    mimeType = "video/mp4"; // MP4
+                } else if (fileData.length > 7 && fileData[0] == (byte) 0xD0 && fileData[1] == (byte) 0xCF && fileData[2] == (byte) 0x11 && fileData[3] == (byte) 0xE0) {
+                    mimeType = "application/vnd.ms-excel";
                 } else {
-                    mimeType = "application/octet-stream"; // Tipo MIME genérico
+                    mimeType = "application/octet-stream";
                 }
             }
             return mimeType;
@@ -216,7 +249,6 @@ public class EmailsService {
         }
     }
 
-// Método auxiliar para verificar el encabezado en archivos de Office
     private boolean containsOfficeHeader(byte[] fileData, String header) {
         String content = new String(fileData);
         return content.contains(header);

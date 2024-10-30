@@ -169,7 +169,7 @@ public class MailsService {
                 String destinatary = mailNotSend.getDestinatary();
                 String subject = mailNotSend.getSubject();
 
-                String resultMail = emailsService.sendMail(destinatary, subject, html, mailNotSend.getAttachments());
+                String resultMail = emailsService.sendMail(destinatary, subject, html, mailNotSend.getAttachments(), mailNotSend.getContentIds());
 
                 if (resultMail.contains("exitosamente")) {
                     mailNotSend.setState("E");
@@ -207,8 +207,8 @@ public class MailsService {
                 em.flush();
             }
 
-            // Ahora `mailsDto.getAttachments()` ya contiene la información como `List<Pair<byte[], String>>`
-            String result = emailsService.sendMail(mail.getDestinatary(), mail.getSubject(), mail.getResult(), mailsDto.getAttachments());
+          
+            String result = emailsService.sendMail(mail.getDestinatary(), mail.getSubject(), mail.getResult(), mailsDto.getAttachments(),null);
 
             if (result.contains("exitosamente")) {
                 mail.setState("E"); // Cambiar el estado a 'Enviado'
@@ -257,7 +257,7 @@ public class MailsService {
 
             // Enviar el correo utilizando el servicio de email
             String result = emailsService.sendMail(mail.getDestinatary(), mail.getSubject(),
-                    content, null);
+                    content, null, null);
             if (result.contains("exitosamente")) {
                 return new Respuesta(true, CodigoRespuesta.CORRECTO, "Correo de activación enviado exitosamente.", "",
                         "Correo", mail);
@@ -307,7 +307,7 @@ public class MailsService {
             }
 
             // Enviar el correo utilizando el servicio de email
-            String result = emailsService.sendMail(mail.getDestinatary(), mail.getSubject(), content, null);
+            String result = emailsService.sendMail(mail.getDestinatary(), mail.getSubject(), content, null, null);
             if (result.contains("exitosamente")) {
                 return new Respuesta(true, CodigoRespuesta.CORRECTO,
                         "Correo de recuperación de contraseña enviado exitosamente.", "",
