@@ -203,6 +203,18 @@ public class AdminUsersController extends Controller implements Initializable {
 
         );
 
+        cmbRoles.setConverter(new StringConverter<RolesDto>() {
+            @Override
+            public String toString(RolesDto rolesDto) {
+                return rolesDto != null ? rolesDto.getName() : "";
+            }
+
+            @Override
+            public RolesDto fromString(String string) {
+                return null;
+            }
+        });
+
         cmbLan.getItems().clear();
         cmbLan.getItems().addAll("Español", "Inglés", "Francés", "Alemán"); // Idiomas esperados
 
@@ -260,17 +272,7 @@ public class AdminUsersController extends Controller implements Initializable {
             txfIdSistema.textProperty().bind(this.systems.id);
         }
         txfNombreSistema.textProperty().bindBidirectional(this.systems.name);
-        cmbRoles.setConverter(new StringConverter<RolesDto>() {
-            @Override
-            public String toString(RolesDto rolesDto) {
-                return rolesDto != null ? rolesDto.getName() : "";
-            }
-
-            @Override
-            public RolesDto fromString(String string) {
-                return null;
-            }
-        });
+        
 
         if (this.systems.getRoles() != null) {
             cmbRoles.setItems(FXCollections.observableArrayList(this.systems.getRoles()));
@@ -280,6 +282,9 @@ public class AdminUsersController extends Controller implements Initializable {
     private void unbindSystems() {
         txfIdSistema.textProperty().unbind();
         txfNombreSistema.textProperty().unbindBidirectional(this.systems.name);
+        cmbRoles.setItems(FXCollections.emptyObservableList());
+        cmbRoles.getSelectionModel().clearSelection();
+        cmbRoles.clear();
     }
 
     public String validarRequeridos() {

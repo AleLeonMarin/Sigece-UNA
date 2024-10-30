@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseMoved="#onActionRoot" prefHeight="681.0" prefWidth="900.0" styleClass="stack-personal-pane1" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.chats.controller.RegisterController">
+<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseMoved="#onActionRoot" prefHeight="681.0" prefWidth="900.0" styleClass="stack-personal-pane1" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.chats.controller.RegisterController">
     <children>
         <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="850.0" styleClass="stack-personal-pane">
             <StackPane.margin>
@@ -139,7 +139,20 @@
                                           <String fx:value="jfx-txfs-security-container" />
                                        </styleClass>
                                     </MFXTextField>
-                                    <MFXButton fx:id="btnRegister" onAction="#onActionBtnRegister" prefHeight="40.0" prefWidth="80.0" styleClass="button-Register" text="Registrar" />
+                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="40.0">
+                                       <children>
+                                          <MFXButton fx:id="btnRegister" onAction="#onActionBtnRegister" prefHeight="50.0" prefWidth="120.0" styleClass="jfx-btn-save" text="Registrar">
+                                             <graphic>
+                                                <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                                             </graphic>
+                                          </MFXButton>
+                                          <MFXButton fx:id="btnGoBack" ellipsisString="" onAction="#onActionBtnGoback" prefHeight="50.0" prefWidth="120.0" styleClass="jfx-btn-log-out" text="Regresar">
+                                             <graphic>
+                                                <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                                             </graphic>
+                                          </MFXButton>
+                                       </children>
+                                    </HBox>
                                  </children>
                               </VBox>
                            </children>
@@ -150,6 +163,5 @@
             </VBox>
          </children>
         </StackPane>
-      <MFXButton fx:id="btnGoBack" ellipsisString="" onAction="#onActionBtnGoback" prefHeight="31.0" prefWidth="78.0" styleClass="button-ForgetPass" text="Regresar" translateX="-170.0" translateY="320.0" />
     </children>
 </StackPane>

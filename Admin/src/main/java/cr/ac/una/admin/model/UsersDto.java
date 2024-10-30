@@ -1,32 +1,53 @@
 package cr.ac.una.admin.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.beans.property.SimpleObjectProperty;
 
 public class UsersDto {
 
     public SimpleStringProperty id;
+
     public SimpleStringProperty name;
+
     public SimpleStringProperty lastNames;
+
     public SimpleStringProperty idCard;
+
     public SimpleStringProperty email;
+
     public SimpleStringProperty phone;
+
     public SimpleStringProperty cellPhone;
+
     public SimpleStringProperty language;
+
     public ObjectProperty<byte[]> photo;
+
     public SimpleStringProperty user;
+
     public SimpleStringProperty password;
+
     public SimpleStringProperty state;
+
     public SimpleStringProperty status;
+
     public Boolean modified;
+
     public Long version;
+
     public List<RolesDto> roles;
+
     public AreasDto areas;
+
     public List<FollowsDto> follows;
+
     public List<GestionsDto> gestions;
+
     public List<ApprovalsDto> approvals;
 
     public UsersDto() {
@@ -37,29 +58,29 @@ public class UsersDto {
         this.email = new SimpleStringProperty("");
         this.phone = new SimpleStringProperty("");
         this.cellPhone = new SimpleStringProperty("");
-        this.language = new SimpleStringProperty("es");
+        this.language = new SimpleStringProperty("");
         this.photo = new SimpleObjectProperty<>(new byte[0]);
         this.user = new SimpleStringProperty("");
         this.password = new SimpleStringProperty("");
         this.state = new SimpleStringProperty("");
         this.status = new SimpleStringProperty("");
         this.modified = false;
-        this.roles = new ArrayList<>();
-        this.follows = new ArrayList<>();
-        this.gestions = new ArrayList<>();
-        this.approvals = new ArrayList<>();
+        this.roles = FXCollections.observableArrayList();
+        this.follows = FXCollections.observableArrayList();
+        this.gestions = FXCollections.observableArrayList();
+        this.approvals = FXCollections.observableArrayList();
     }
 
     public Long getId() {
-        if (id != null && id.get() != null && !id.get().isEmpty()) {
-            return Long.valueOf(id.get());
+        if (this.id.get() != null && !this.id.get().isEmpty()) {
+            return Long.valueOf(this.id.get());
         } else {
             return null;
         }
     }
 
     public void setId(Long id) {
-        this.id.set(id.toString());
+        this.id.set(String.valueOf(id));
     }
 
     public String getName() {
@@ -157,7 +178,7 @@ public class UsersDto {
     public void setStatus(String status) {
         this.status.set(status);
     }
-
+    
     public Boolean getModified() {
         return modified;
     }

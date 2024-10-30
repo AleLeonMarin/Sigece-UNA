@@ -84,14 +84,15 @@ public class LoginController extends Controller implements Initializable {
 
                 if (respuesta.getEstado()) {
 
-//                    UsersDto usuario = (UsersDto) respuesta.getResultado("Usuario");
-//                    if (usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Admin")) && usuario.getState().equals("A")) {
-                    FlowController.getInstance().goMain("ChatsAppView");
-                    getStage().close();
-//                    } else {
-//                        new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
-//                                "Usuario no tiene permisos para ingresar al sistema o no esta activo.");
-//                    }
+                    UsersDto user = (UsersDto) respuesta.getResultado("Usuario");
+                    if (user.getRoles().stream().anyMatch(r -> r.getName().equals("Admin"))
+                            && user.getState().equals("A")) {
+                        FlowController.getInstance().goMain("ChatsAppView");
+                        getStage().close();
+                    } else {
+                        new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
+                                "Usuario no tiene permisos para ingresar al sistema o no esta activo.");
+                    }
                 } else {
                     new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
                             "Usuario o contraseña incorrecta.");

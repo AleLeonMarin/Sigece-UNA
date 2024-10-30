@@ -68,47 +68,44 @@ public class LoginController extends Controller implements Initializable {
 
     @FXML
     void onActionBtnLogIn(ActionEvent event) {
-        /*
-         * try {
-         * if (textMail.getText().isEmpty() || textPassword.getText().isBlank()) {
-         * new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
-         * "Es necesario digitar un usuario para ingresar al sistema.");
-         * } else if (textPassword.getText().isEmpty() ||
-         * textPassword.getText().isBlank()) {
-         * new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
-         * "Es necesario digitar una contraseña para ingresar al sistema.");
-         * } else {
-         * UsersService service = new UsersService();
-         * Respuesta respuesta = service.logIn(textMail.getText(),
-         * textPassword.getText());
-         * if (respuesta.getEstado()) {
-         * 
-         * UsersDto usuario = (UsersDto) respuesta.getResultado("Usuario");
-         * if (usuario.getRoles().stream().anyMatch(r ->
-         * r.getName().equals("Administrador"))
-         * || usuario.getRoles().stream().anyMatch(r ->
-         * r.getName().equals("Solictante"))
-         * || usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Gestor"))
-         * && usuario.getState().equals("A")) {
-         * FlowController.getInstance().goMain("PrincipalView");
-         * getStage().close();
-         * } else {
-         * new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
-         * "Usuario no tiene permisos para ingresar al sistema o no esta activo.");
-         * }
-         * } else {
-         * new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
-         * "Usuario o contraseña incorrecta.");
-         * }
-         * }
-         * } catch (Exception e) {
-         * Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE,
-         * "Error al intentar ingresar al sistema",
-         * e);
-         * new Mensaje().showModal(AlertType.ERROR, "LogIn", getStage(),
-         * "Error al intentar ingresar al sistema.");
-         * }
-         */
+
+        try {
+            if (textMail.getText().isEmpty() || textPassword.getText().isBlank()) {
+                new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
+                        "Es necesario digitar un usuario para ingresar al sistema.");
+            } else if (textPassword.getText().isEmpty() ||
+                    textPassword.getText().isBlank()) {
+                new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
+                        "Es necesario digitar una contraseña para ingresar al sistema.");
+            } else {
+                UsersService service = new UsersService();
+                Respuesta respuesta = service.logIn(textMail.getText(),
+                        textPassword.getText());
+                if (respuesta.getEstado()) {
+
+                    UsersDto usuario = (UsersDto) respuesta.getResultado("Usuario");
+                    if (usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Administrador"))
+                            || usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Solictante"))
+                            || usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Gestor"))
+                                    && usuario.getState().equals("A")) {
+                        FlowController.getInstance().goMain("PrincipalView");
+                        getStage().close();
+                    } else {
+                        new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
+                                "Usuario no tiene permisos para ingresar al sistema o no esta activo.");
+                    }
+                } else {
+                    new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
+                            "Usuario o contraseña incorrecta.");
+                }
+            }
+        } catch (Exception e) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE,
+                    "Error al intentar ingresar al sistema",
+                    e);
+            new Mensaje().showModal(AlertType.ERROR, "LogIn", getStage(),
+                    "Error al intentar ingresar al sistema.");
+        }
 
         FlowController.getInstance().goViewInWindow("PrincipalView");
 
