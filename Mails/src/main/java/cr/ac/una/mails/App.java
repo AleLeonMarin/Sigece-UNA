@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * JavaFX App
@@ -19,7 +21,10 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FlowController.getInstance().InitializeFlow(stage, null);
+        Locale locale = new Locale("en");
+        ResourceBundle bundle =  ResourceBundle.getBundle("cr.ac.una.mails.resources.MessagesBundle",
+                locale);
+        FlowController.getInstance().InitializeFlow(stage, bundle);
         FlowController.getInstance().goMain("LoginView");
         //stage.getIcons().add(new Image("cr/ac/una/mails/resources/logo2.png"));
         stage.setTitle("SigeceUna");

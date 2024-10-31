@@ -2,7 +2,6 @@ package cr.ac.una.mails.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
 import cr.ac.una.mails.util.AppContext;
 import cr.ac.una.mails.util.Mensaje;
 import cr.ac.una.mails.util.WebCam;
@@ -55,7 +54,7 @@ public class CamController extends Controller implements Initializable {
         webCam.takePhoto();
         taken = true;
 
-        
+
 
         AppContext.getInstance().set("Taken", taken);
 
