@@ -81,8 +81,13 @@ public class MassiveMailSenderController extends Controller implements Initializ
 
     private Mensaje mensaje = new Mensaje();
 
+    private ResourceBundle rb;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        this.rb = rb;
+
         tbcNotifications.setCellValueFactory(new PropertyValueFactory<>("name"));
 
 
@@ -159,17 +164,16 @@ public class MassiveMailSenderController extends Controller implements Initializ
 //        }
 //    }
 
-@FXML
+    @FXML
     private void onActionBtnUpload(ActionEvent event) {
-        // Validar que se haya seleccionado una notificación antes de continuar
         if (notificacionSeleccionada == null) {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una notificación antes de cargar el archivo Excel.");
+            mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningSelectNotificationBeforeUpload"));
             return;
         }
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Cargar archivo Excel");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos Excel", "*.xlsx"));
+        fileChooser.setTitle(rb.getString("fileChooserTitleUploadExcel"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(rb.getString("fileChooserExcelFilter"), "*.xlsx"));
         File file = fileChooser.showOpenDialog(root.getScene().getWindow());
 
         if (file != null) {
@@ -185,7 +189,7 @@ public class MassiveMailSenderController extends Controller implements Initializ
 
                     Cell correoCell = row.getCell(0, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
                     if (correoCell == null || correoCell.getCellType() == CellType.BLANK || correoCell.getStringCellValue().trim().isEmpty()) {
-                        mensaje.show(Alert.AlertType.WARNING, "Advertencia", "La fila " + (row.getRowNum() + 1) + " no tiene un correo destinatario válido. Revisa tu Excel.");
+                        mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningInvalidEmailRow") + (row.getRowNum() + 1));
                         continue;
                     }
 
@@ -199,8 +203,6 @@ public class MassiveMailSenderController extends Controller implements Initializ
                     }
 
                     correoDto.setNotification(notificacionSeleccionada);
-
-
 
                     List<byte[]> adjuntos = new ArrayList<>();
                     List<String> contentIds = new ArrayList<>();
@@ -219,10 +221,10 @@ public class MassiveMailSenderController extends Controller implements Initializ
                 }
 
                 tbvCorreoGenerados.setItems(correosGenerados);
-                mensaje.show(Alert.AlertType.INFORMATION, "Carga exitosa", "El archivo Excel se ha procesado correctamente.");
+                mensaje.show(Alert.AlertType.INFORMATION, rb.getString("infoTitleSuccess"), rb.getString("infoExcelProcessedSuccessfully"));
 
             } catch (IOException e) {
-                mensaje.show(Alert.AlertType.ERROR, "Error", "Error al procesar el archivo Excel: " + e.getMessage());
+                mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitle"), rb.getString("errorProcessingExcel") + e.getMessage());
             }
         }
     }
@@ -235,12 +237,12 @@ public class MassiveMailSenderController extends Controller implements Initializ
         correosGenerados.forEach(correo -> {
             Respuesta respuesta = correosService.guardarCorreo(correo);
             if (!respuesta.getEstado()) {
-                mensaje.show(Alert.AlertType.ERROR, "Error", "Error al persistir correo de: " + correo.getDestinatary());
+                mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitle"), rb.getString("errorPersistingEmail") + correo.getDestinatary());
             }
         });
 
         tbvCorreoGenerados.refresh();
-        mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "Correos enviados a la base de datos, serán enviados automáticamente.");
+        mensaje.show(Alert.AlertType.INFORMATION, rb.getString("infoTitleSuccess"), rb.getString("infoEmailsSentToDatabase"));
     }
 
     private String generarContenidoConVariables(Row row, Row headerRow, List<byte[]> adjuntos, List<String> contentIds) {
@@ -336,22 +338,21 @@ public class MassiveMailSenderController extends Controller implements Initializ
     @FXML
     void onActionBtnDowload(ActionEvent event) {
         if (notificacionSeleccionada == null) {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una notificación.");
+            mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningSelectNotification"));
             return;
         }
 
         List<VariablesDto> variables = notificacionSeleccionada.getVariables();
 
         Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Plantilla Notificación");
+        Sheet sheet = workbook.createSheet(rb.getString("excelSheetTitle"));
 
         Row headerRow = sheet.createRow(0);
         int colIndex = 0;
 
         Cell emailCell = headerRow.createCell(colIndex++);
-        emailCell.setCellValue("Correo Destino");
+        emailCell.setCellValue(rb.getString("excelHeaderEmail"));
 
-        // Excluir variables multimedia del Excel
         for (VariablesDto variable : variables) {
             if (!"Multimedia".equals(variable.getType())) {
                 Cell cell = headerRow.createCell(colIndex++);
@@ -360,17 +361,17 @@ public class MassiveMailSenderController extends Controller implements Initializ
         }
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Guardar Plantilla Excel");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos Excel", "*.xlsx"));
+        fileChooser.setTitle(rb.getString("fileChooserTitleSaveExcel"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(rb.getString("fileChooserExcelFilter"), "*.xlsx"));
         File file = fileChooser.showSaveDialog(new Stage());
 
         if (file != null) {
             try (FileOutputStream fileOut = new FileOutputStream(file)) {
                 workbook.write(fileOut);
                 workbook.close();
-                mensaje.show(Alert.AlertType.INFORMATION, "Plantilla Excel guardada", "La plantilla Excel se ha guardado correctamente.");
+                mensaje.show(Alert.AlertType.INFORMATION, rb.getString("excelSaveTitleSuccess"), rb.getString("excelSaveMessageSuccess"));
             } catch (IOException e) {
-                mensaje.show(Alert.AlertType.ERROR, "Error al guardar Excel", "Hubo un error al escribir el archivo Excel: " + e.getMessage());
+                mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitleSaveExcel"), rb.getString("errorSaveExcel") + e.getMessage());
             }
         }
     }
@@ -383,10 +384,10 @@ public class MassiveMailSenderController extends Controller implements Initializ
             String htmlContent = notificacionSeleccionada.getHtml();
             AppContext.getInstance().set("htmlContent", htmlContent);
             AppContext.getInstance().set("variables", notificacionSeleccionada.getVariables());
-            AppContext.getInstance().set("isPreviewMode", true); // Establece la bandera de modo vista previa
+            AppContext.getInstance().set("isPreviewMode", true);
             FlowController.getInstance().goViewInWindowModal("MaxViewHTML", this.getStage(), Boolean.TRUE);
         } else {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una notificación.");
+            mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningSelectNotification"));
         }
     }
 
@@ -400,7 +401,7 @@ public class MassiveMailSenderController extends Controller implements Initializ
             AppContext.getInstance().set("htmlContent", htmlContent);
             FlowController.getInstance().goViewInWindowModal("MaxViewHTML", this.getStage(), Boolean.TRUE);
         } else {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una correo.");
+            mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningSelectMail"));
         }
     }
 
