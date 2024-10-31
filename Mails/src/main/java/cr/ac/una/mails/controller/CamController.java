@@ -32,6 +32,8 @@ public class CamController extends Controller implements Initializable {
 
     Boolean taken = false;
 
+    ResourceBundle rb;
+
     @FXML
     void onActionBtnActivate(ActionEvent event) {
         webCam = new WebCam(imgvCam);
@@ -39,6 +41,8 @@ public class CamController extends Controller implements Initializable {
         webCam.start();
 
         webCam.updateImageView();
+
+        this.rb = rb;
     }
 
     @FXML
@@ -63,11 +67,13 @@ public class CamController extends Controller implements Initializable {
     @FXML
     void onActionBtnExit(ActionEvent event) {
 
-        if (new Mensaje().showConfirmation("Salir", getStage(), "¿Desea salir de la cámara?")) {
+
+        if (new Mensaje().showConfirmation(rb.getString("exitTitle"), getStage(), rb.getString("exitConfirmation"))) {
             webCam.stop();
             this.getStage().close();
         }
     }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

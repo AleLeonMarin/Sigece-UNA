@@ -5,12 +5,14 @@
     package cr.ac.una.mails.controller;
 
     import java.net.URL;
+    import java.util.Locale;
     import java.util.ResourceBundle;
     import java.util.logging.Level;
     import java.util.logging.Logger;
 
     import cr.ac.una.mails.model.UsersDto;
     import cr.ac.una.mails.service.UsersService;
+    import cr.ac.una.mails.util.AppContext;
     import cr.ac.una.mails.util.FlowController;
     import cr.ac.una.mails.util.Mensaje;
     import cr.ac.una.mails.util.Respuesta;
@@ -20,6 +22,10 @@
     import javafx.fxml.FXML;
     import javafx.fxml.Initializable;
     import javafx.scene.control.Alert.AlertType;
+    import javafx.scene.control.Button;
+
+    import cr.ac.una.mails.App;
+
 
     /**
      * FXML Controller class
@@ -41,15 +47,24 @@
         @FXML
         private MFXButton btnRegister;
 
+
+        @FXML
+        private Button btnCostaRica;
+
+        @FXML
+        private Button btnUsa;
+
         @FXML
         private MFXTextField textMail;
 
         @FXML
         private MFXTextField textPassword;
 
+        private ResourceBundle bundle;
+
         @Override
         public void initialize(URL url, ResourceBundle rb) {
-            // TODO
+            this.bundle = rb;
         }
 
         @Override
@@ -70,45 +85,51 @@
         void onActionBtnLogIn(ActionEvent event) {
             try {
                 if (textMail.getText().isEmpty() || textPassword.getText().isBlank()) {
-                    new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
-                            "Es necesario digitar un usuario para ingresar al sistema.");
+                    new Mensaje().showModal(AlertType.ERROR, bundle.getString("userValidation.title"), getStage(),
+                            bundle.getString("userValidation.emptyUser"));
                 } else if (textPassword.getText().isEmpty() || textPassword.getText().isBlank()) {
-                    new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
-                            "Es necesario digitar una contraseña para ingresar al sistema.");
+                    new Mensaje().showModal(AlertType.ERROR, bundle.getString("userValidation.title"), getStage(),
+                            bundle.getString("userValidation.emptyPassword"));
                 } else {
                     UsersService service = new UsersService();
                     Respuesta respuesta = service.logIn(textMail.getText(), textPassword.getText());
                     if (respuesta.getEstado()) {
-
                         UsersDto usuario = (UsersDto) respuesta.getResultado("Usuario");
+                        AppContext.getInstance().set("user", usuario);
                         if (usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Admin"))
                                 && usuario.getState().equals("A")) {
                             FlowController.getInstance().goMain("MailAppView");
                             getStage().close();
                         } else {
-                            new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
-                                    "Usuario no tiene permisos para ingresar al sistema o no esta activo.");
+                            new Mensaje().showModal(AlertType.ERROR, bundle.getString("userValidation.title"), getStage(),
+                                    bundle.getString("userValidation.noPermission"));
                         }
                     } else {
-                        new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
-                                "Usuario o contraseña incorrecta.");
+                        new Mensaje().showModal(AlertType.ERROR, bundle.getString("userValidation.title"), getStage(),
+                                bundle.getString("userValidation.invalidCredentials"));
                     }
                 }
             } catch (Exception e) {
-                Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, "Error al intentar ingresar al sistema",
-                        e);
-                new Mensaje().showModal(AlertType.ERROR, "LogIn", getStage(),
-                        "Error al intentar ingresar al sistema.");
+                Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, "Error al intentar ingresar al sistema", e);
+                new Mensaje().showModal(AlertType.ERROR, bundle.getString("loginError.title"), getStage(),
+                        bundle.getString("loginError.general"));
             }
-
         }
 
         @FXML
         void onActionBtnRegister(ActionEvent event) {
-
             FlowController.getInstance().goViewInWindow("RegisterView");
             getStage().close();
+        }
 
+        @FXML
+        void onActionBtnCostaRica(ActionEvent event) {
+            App.restart(new Locale("es"));
+        }
+
+        @FXML
+        void onActionBtnUsa(ActionEvent event) {
+            App.restart(new Locale("en"));
         }
 
     }

@@ -116,4 +116,15 @@ public class MailAppController extends Controller implements Initializable {
 
     }
 
+    @FXML
+    void onActionLogOut(ActionEvent event) {
+
+        AppContext.getInstance().set("Usuario", null);
+
+        FlowController.getInstance().salir();
+
+        FlowController.getInstance().goMain("LoginView");
+
+    }
+
 }

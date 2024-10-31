@@ -1079,4 +1079,28 @@
 
 
 
+/* Clase base para estilo circular */
+.circular-button {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 80% 80%; /* Ajusta el tamaño de la imagen */
+    -fx-background-position: center;
+    -fx-background-radius: 50%; /* Hace que el botón sea circular */
+    -fx-background-color: transparent; /* Fondo transparente */
+    -fx-border-color: transparent; /* Sin borde */
+    -fx-padding: 10; /* Espaciado interno */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 0, 2); /* Sombra para darle un efecto elevado */
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-cursor: hand;
+}
+
+/* Estilo para el botón con la bandera de USA */
+.circular-button-usa {
+    -fx-background-image: url("../resources/usa.png");
+}
+
+/* Estilo para el botón con la bandera de Costa Rica */
+.circular-button-cr {
+    -fx-background-image: url("../resources/costa-rica.png");
+}
 

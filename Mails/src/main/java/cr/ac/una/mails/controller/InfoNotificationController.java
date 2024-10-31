@@ -32,7 +32,6 @@ public class InfoNotificationController extends Controller implements Initializa
     @FXML
     private TableView<MailsDto> tbvMails;
 
-
     @FXML
     private Button btnMaximize;
 
@@ -47,14 +46,13 @@ public class InfoNotificationController extends Controller implements Initializa
 
     private NotificationsDto notificacionSeleccionada;
     private CorreosService correosService;
-
     private Mensaje mensaje = new Mensaje();
-
     private NotificacionService notificacionService;
+    private ResourceBundle rb;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        this.rb = rb; // Asignar el ResourceBundle para el acceso a los mensajes localizados
     }
 
     @Override
@@ -80,21 +78,14 @@ public class InfoNotificationController extends Controller implements Initializa
             txtPorEnviar.setText(String.valueOf(porEnviar));
             txtVecesEnviado.setText(String.valueOf(enviados));
         } else {
-            mensaje.show(Alert.AlertType.ERROR, "Error", "No se ha seleccionado ninguna notificación.");
+            mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitle"), rb.getString("errorNoNotificationSelected"));
         }
     }
 
-
     @FXML
     void onActionBtnMaximize(ActionEvent event) {
-
         String htmlContent = tbvMails.getSelectionModel().getSelectedItem().getResult();
         AppContext.getInstance().set("htmlContent", htmlContent);
         FlowController.getInstance().goViewInWindowModal("MaxViewHTML", this.getStage(), Boolean.TRUE);
-
     }
-
-
-
 }
-

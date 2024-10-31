@@ -20,7 +20,7 @@
          <children>
             <VBox prefHeight="324.0" prefWidth="518.0" spacing="10.0">
                <children>
-                  <Text fill="#0000009f" strokeType="OUTSIDE" strokeWidth="0.0" text="Nuevo Mensaje" wrappingWidth="93.13671875">
+                  <Text fill="#0000009f" strokeType="OUTSIDE" strokeWidth="0.0" text="%titulo.nuevoMensaje" wrappingWidth="93.13671875">
                      <VBox.margin>
                         <Insets left="10.0" top="10.0" />
                      </VBox.margin>
@@ -28,17 +28,17 @@
                         <Font name="Segoe UI" size="12.0" />
                      </font>
                   </Text>
-                  <MFXTextField fx:id="txtDireccionCorreo" animated="false" borderGap="5.0" floatMode="BORDER" prefHeight="38.0" prefWidth="260.0" promptText="Para:">
+                  <MFXTextField fx:id="txtDireccionCorreo" animated="false" borderGap="5.0" floatMode="BORDER" prefHeight="38.0" prefWidth="260.0" promptText="%campo.para">
                      <VBox.margin>
                         <Insets left="20.0" />
                      </VBox.margin>
                   </MFXTextField>
-                  <MFXTextField fx:id="txtCorreoAsunto" animated="false" borderGap="5.0" floatMode="BORDER" prefHeight="38.0" prefWidth="260.0" promptText="Asunto:">
+                  <MFXTextField fx:id="txtCorreoAsunto" animated="false" borderGap="5.0" floatMode="BORDER" prefHeight="38.0" prefWidth="260.0" promptText="%campo.asunto">
                      <VBox.margin>
                         <Insets left="20.0" />
                      </VBox.margin>
                   </MFXTextField>
-                  <TextArea fx:id="txtCorreoContenido" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="187.0" prefWidth="478.0" VBox.vgrow="ALWAYS">
+                  <TextArea fx:id="txtCorreoContenido" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="187.0" prefWidth="478.0" promptText="%campo.contenido" VBox.vgrow="ALWAYS">
                      <VBox.margin>
                         <Insets bottom="10.0" left="20.0" right="20.0" />
                      </VBox.margin>
@@ -57,8 +57,8 @@
                   </Button>
                   <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="15.0" VBox.vgrow="NEVER">
                      <children>
-                        <MFXButton fx:id="btnCancelar" onAction="#onActionBtnCancelar" prefHeight="30.0" prefWidth="80.0" styleClass="button-redStyle" text="Cancelar" HBox.hgrow="NEVER" />
-                        <MFXButton fx:id="btnEnviar" onAction="#onActionBtnEnviar" prefHeight="30.0" prefWidth="80.0" styleClass="button-blueStyle" text="Enviar" HBox.hgrow="NEVER">
+                        <MFXButton fx:id="btnCancelar" onAction="#onActionBtnCancelar" prefHeight="30.0" prefWidth="80.0" styleClass="button-redStyle" text="%boton.cancelar" HBox.hgrow="NEVER" />
+                        <MFXButton fx:id="btnEnviar" onAction="#onActionBtnEnviar" prefHeight="30.0" prefWidth="80.0" styleClass="button-blueStyle" text="%boton.enviar" HBox.hgrow="NEVER">
                            <HBox.margin>
                               <Insets right="10.0" />
                            </HBox.margin>

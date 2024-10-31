@@ -13,14 +13,13 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
 <AnchorPane id="AnchorPane" fx:id="root" prefHeight="496.0" prefWidth="772.0" stylesheets="@Styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/22" fx:controller="cr.ac.una.mails.controller.AdminParametersController">
    <children>
       <BorderPane layoutX="151.0" layoutY="83.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
             <VBox alignment="CENTER" prefHeight="429.0" prefWidth="649.0" spacing="20.0" BorderPane.alignment="CENTER">
                <children>
-                  <Text fill="#000000a5" strokeType="OUTSIDE" strokeWidth="0.0" text="Parámetros del servidor para el envío de correos" wrappingWidth="462.13671875">
+                  <Text fill="#000000a5" strokeType="OUTSIDE" strokeWidth="0.0" text="%parametersTitle" wrappingWidth="462.13671875">
                      <font>
                         <Font size="21.0" />
                      </font>
@@ -32,7 +31,7 @@
                               <Image url="@../resources/mail.png" />
                            </image>
                         </ImageView>
-                        <MFXTextField fx:id="txtCorreo" floatMode="BORDER" floatingText="Correo" prefHeight="40.0" prefWidth="385.0" />
+                        <MFXTextField fx:id="txtCorreo" floatMode="BORDER" floatingText="%email" prefHeight="40.0" prefWidth="385.0" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="52.0" prefWidth="772.0" spacing="10.0">
@@ -42,7 +41,7 @@
                               <Image url="@../resources/padlock.png" />
                            </image>
                         </ImageView>
-                        <MFXTextField fx:id="txtClave" floatMode="BORDER" floatingText="Clave" prefHeight="40.0" prefWidth="385.0" />
+                        <MFXTextField fx:id="txtClave" floatMode="BORDER" floatingText="%password" prefHeight="40.0" prefWidth="385.0" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="45.0" prefWidth="772.0" spacing="10.0">
@@ -52,7 +51,7 @@
                               <Image url="@../resources/computer.png" />
                            </image>
                         </ImageView>
-                        <MFXTextField fx:id="txtPuerto" floatMode="BORDER" floatingText="Puerto" prefHeight="40.0" prefWidth="385.0" />
+                        <MFXTextField fx:id="txtPuerto" floatMode="BORDER" floatingText="%port" prefHeight="40.0" prefWidth="385.0" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="45.0" prefWidth="772.0" spacing="10.0">
@@ -62,7 +61,7 @@
                               <Image url="@../resources/server.png" />
                            </image>
                         </ImageView>
-                        <MFXTextField fx:id="txtServer" floatMode="BORDER" floatingText="Servidor" prefHeight="40.0" prefWidth="385.0" />
+                        <MFXTextField fx:id="txtServer" floatMode="BORDER" floatingText="%server" prefHeight="40.0" prefWidth="385.0" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="45.0" prefWidth="772.0" spacing="10.0">
@@ -72,12 +71,12 @@
                               <Image url="@../resources/wall-clock.png" />
                            </image>
                         </ImageView>
-                        <MFXTextField fx:id="txtTimeout" floatMode="BORDER" floatingText="Cantidad de correos por hora" prefHeight="40.0" prefWidth="385.0" />
+                        <MFXTextField fx:id="txtTimeout" floatMode="BORDER" floatingText="%emailsPerHour" prefHeight="40.0" prefWidth="385.0" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="31.0" prefWidth="772.0">
                      <children>
-                        <MFXButton fx:id="btnSave" onAction="#onActionBtnSave" prefHeight="25.0" prefWidth="101.0" styleClass="button-Register" text="Guardar">
+                        <MFXButton fx:id="btnSave" onAction="#onActionBtnSave" prefHeight="25.0" prefWidth="101.0" styleClass="button-Register" text="%save">
                            <HBox.margin>
                               <Insets right="20.0" />
                            </HBox.margin>

@@ -4,6 +4,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -11,7 +12,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="622.0" styleClass="stack-personal-pane1" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.mails.controller.LoginController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="622.0" styleClass="stack-personal-pane1" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.mails.controller.LoginController">
    <children>
       <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="469.0" prefWidth="485.0" styleClass="stack-personal-pane">
          <StackPane.margin>
@@ -69,6 +70,25 @@
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                      </graphic>
                   </MFXButton>
+                  <HBox alignment="CENTER_LEFT" prefHeight="54.0" prefWidth="481.0" spacing="10.0">
+                     <children>
+                        <Button fx:id="btnUsa" mnemonicParsing="false" onAction="#onActionBtnUsa" prefHeight="43.0" prefWidth="47.0">
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                           <styleClass>
+                              <String fx:value="circular-button-usa" />
+                              <String fx:value="circular-button" />
+                           </styleClass>
+                        </Button>
+                        <Button fx:id="btnCostaRica" mnemonicParsing="false" onAction="#onActionBtnCostaRica" prefHeight="43.0" prefWidth="47.0">
+                           <styleClass>
+                              <String fx:value="circular-button-cr" />
+                              <String fx:value="circular-button" />
+                           </styleClass>
+                        </Button>
+                     </children>
+                  </HBox>
                </children>
             </VBox>
          </children>

@@ -13,10 +13,10 @@
             <ImageView fx:id="imgvCam" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
                <children>
-                  <MFXButton fx:id="btnActivate" onAction="#onActionBtnActivate" text="Activar" />
-                  <MFXButton fx:id="btnTake" layoutX="280.0" layoutY="47.0" onAction="#onActionBtnTake" text="Tomar" />
-                  <MFXButton fx:id="btnStop" layoutX="310.0" layoutY="47.0" onAction="#onActionBtnStop" text="Detener" />
-                  <MFXButton fx:id="btnExit" layoutX="365.0" layoutY="47.0" onAction="#onActionBtnExit" text="Salir" />
+                  <MFXButton fx:id="btnActivate" onAction="#onActionBtnActivate" text="%button.activar" />
+                  <MFXButton fx:id="btnTake" layoutX="280.0" layoutY="47.0" onAction="#onActionBtnTake" text="%button.tomar" />
+                  <MFXButton fx:id="btnStop" layoutX="310.0" layoutY="47.0" onAction="#onActionBtnStop" text="%button.detener" />
+                  <MFXButton fx:id="btnExit" layoutX="365.0" layoutY="47.0" onAction="#onActionBtnExit" text="%button.salir" />
                </children>
             </HBox>
          </children>
