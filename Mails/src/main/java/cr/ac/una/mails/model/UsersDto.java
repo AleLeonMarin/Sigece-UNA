@@ -31,6 +31,9 @@ public class UsersDto {
     public AreasDto areas;
 
 
+    private String token;
+
+
     //
     // public List<FollowsDto> follows;
     //
@@ -57,6 +60,9 @@ public class UsersDto {
         this.areas = new AreasDto();
         this.roles = FXCollections.observableArrayList();
         this.rolesDtoEliminados = FXCollections.observableArrayList();
+        this.token = "";
+
+
     }
 
     public Long getId() {
@@ -226,8 +232,12 @@ public class UsersDto {
     }
 
 
-    public String getUsuFotoBase64() {
-        return photo != null ? Base64.getEncoder().encodeToString(photo) : null;
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     // Setter para establecer la foto desde una cadena Base64

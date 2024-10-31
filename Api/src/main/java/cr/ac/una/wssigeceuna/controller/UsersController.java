@@ -10,6 +10,7 @@ import cr.ac.una.wssigeceuna.model.Users;
 import cr.ac.una.wssigeceuna.model.UsersDto;
 import cr.ac.una.wssigeceuna.service.UsersService;
 import cr.ac.una.wssigeceuna.util.CodigoRespuesta;
+import cr.ac.una.wssigeceuna.util.JwTokenHelper;
 import cr.ac.una.wssigeceuna.util.Respuesta;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -49,6 +50,8 @@ public class UsersController {
             }
 
             UsersDto userDto = (UsersDto) res.getResultado("Usuario");
+            userDto.setToken(JwTokenHelper.getInstance().generatePrivateKey(user));
+
             return Response.ok(userDto).build();
         } catch (Exception ex) {
             Logger.getLogger(UsersController.class.getName()).log(Level.SEVERE,
@@ -74,6 +77,8 @@ public class UsersController {
             if (!res.getEstado()) {
                 return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
             }
+
+
 
             UsersDto userDto = (UsersDto) res.getResultado("Usuario");
             return Response.ok(userDto).build();
