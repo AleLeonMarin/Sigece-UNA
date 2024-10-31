@@ -276,18 +276,19 @@
 
     ALTER TABLE sis_variables_multimedia ADD CONSTRAINT sis_variables_multimedia_pk PRIMARY KEY (media_id);
 
-    CREATE TABLE
-        sis_correos (
-            cor_id NUMBER NOT NULL,
-            cor_asunto VARCHAR2 (300) NOT NULL,
-            cor_destinatario VARCHAR2 (300) NOT NULL,
-            cor_resultado CLOB NOT NULL,
-            cor_estado VARCHAR2 (1) DEFAULT 'P' NOT NULL CONSTRAINT sis_correos_ck01 CHECK (cor_estado in ('E', 'P')),
-            cor_fecha DATE NOT NULL,
-            cor_not_id NUMBER NOT NULL,
-            cor_version NUMBER DEFAULT 1 NOT NULL,
-            cor_adjuntos BLOB 
-        );
+CREATE TABLE
+    sis_correos (
+        cor_id NUMBER NOT NULL,
+        cor_asunto VARCHAR2 (300) NOT NULL,
+        cor_destinatario VARCHAR2 (300) NOT NULL,
+        cor_resultado CLOB NOT NULL,
+        cor_estado VARCHAR2 (1) DEFAULT 'P' NOT NULL CONSTRAINT sis_correos_ck01 CHECK (cor_estado in ('E', 'P')),
+        cor_fecha DATE NOT NULL,
+        cor_not_id NUMBER NOT NULL,
+        cor_version NUMBER DEFAULT 1 NOT NULL,
+        cor_adjuntos BLOB,
+        COR_CONTENT_IDS BLOB
+    );
 
     ALTER TABLE sis_correos ADD CONSTRAINT sis_correos_pk PRIMARY KEY (cor_id);
 

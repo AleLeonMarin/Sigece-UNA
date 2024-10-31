@@ -12,13 +12,13 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 @JsonbPropertyOrder({
-        "id",
-        "subject",
-        "destinatary",
-        "result",
-        "state",
-        "date",
-        "version"
+    "id",
+    "subject",
+    "destinatary",
+    "result",
+    "state",
+    "date",
+    "version"
 })
 
 @Schema(description = "Esta clase contiene la informacion de los correos")
@@ -42,14 +42,15 @@ public class MailsDto implements Serializable {
     @Schema(description = "Fecha del correo", example = "2021-09-01")
     private Date date;
 
-
     @Schema(description = "Notificacion a la que pertenece el correo")
     private Notifications notification;
 
     @Schema(description = "Version del correo", example = "1")
     private Long version;
-    
-    private List<byte []> attachments;
+
+    private List<byte[]> attachments;
+
+    private List<String> contentIds;
 
     public MailsDto() {
     }
@@ -64,6 +65,8 @@ public class MailsDto implements Serializable {
         this.notification = mails.getNotification();
         this.version = mails.getVersion();
         this.attachments = mails.getAttachments();
+        this.contentIds=mails.getContentIds();
+
     }
 
     public Long getId() {
@@ -129,13 +132,21 @@ public class MailsDto implements Serializable {
     public void setVersion(Long version) {
         this.version = version;
     }
-    
-    public List<byte []> getAttachments() {
+
+    public List<byte[]> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(List<byte []> attachments) {
+    public void setAttachments(List<byte[]> attachments) {
         this.attachments = attachments;
+    }
+
+    public List<String> getContentIds() {
+        return contentIds;
+    }
+
+    public void setContentIds(List<String> contentIds) {
+        this.contentIds = contentIds;
     }
 
 }

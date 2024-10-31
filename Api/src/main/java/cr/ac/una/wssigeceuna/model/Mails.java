@@ -35,8 +35,7 @@ import org.apache.commons.lang3.tuple.Pair;
 @Table(name = "SIS_CORREOS")
 @XmlRootElement
 @NamedQueries({
-        @NamedQuery(name = "Mails.findAll", query = "SELECT s FROM Mails s"),
-/*
+    @NamedQuery(name = "Mails.findAll", query = "SELECT s FROM Mails s"), /*
  * @NamedQuery(name = "SisCorreos.findByCorId", query =
  * "SELECT s FROM SisCorreos s WHERE s.corId = :corId"),
  * 
@@ -54,7 +53,7 @@ import org.apache.commons.lang3.tuple.Pair;
  * 
  * @NamedQuery(name = "SisCorreos.findByCorVersion", query =
  * "SELECT s FROM SisCorreos s WHERE s.corVersion = :corVersion")
- */ })
+ */})
 public class Mails implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -95,13 +94,16 @@ public class Mails implements Serializable {
 
     @JoinColumn(name = "COR_NOT_ID", referencedColumnName = "NOT_ID")
     @ManyToOne(optional = false)
-    @JsonbTransient 
+    @JsonbTransient
     private Notifications notification;
-    
-    
+
     @Lob
     @Column(name = "COR_ADJUNTOS")
-    List<byte []> attachments;
+    List<byte[]> attachments;
+
+    @Lob
+    @Column(name = "COR_CONTENT_IDS")
+    private List<String> contentIds;
 
     public Mails() {
     }
@@ -125,13 +127,14 @@ public class Mails implements Serializable {
         this.date = mailsDto.getDate();
         this.version = mailsDto.getVersion();
 
-         if (mailsDto.getNotification()!= null) {
-        Notifications notificacion = new Notifications();
-        notificacion.setId(mailsDto.getNotification().getId());
-        this.notification = notificacion;
-    }
-         
-          this.attachments = mailsDto.getAttachments();
+        if (mailsDto.getNotification() != null) {
+            Notifications notificacion = new Notifications();
+            notificacion.setId(mailsDto.getNotification().getId());
+            this.notification = notificacion;
+        }
+
+        this.attachments = mailsDto.getAttachments();
+        this.contentIds = mailsDto.getContentIds();
     }
 
     public Long getId() {
@@ -221,13 +224,21 @@ public class Mails implements Serializable {
     public String toString() {
         return "Mails{" + "id=" + id + '}';
     }
-    
-     public List<byte []>  getAttachments() {
+
+    public List<byte[]> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(List<byte []> attachments) {
+    public void setAttachments(List<byte[]> attachments) {
         this.attachments = attachments;
+    }
+
+    public List<String> getContentIds() {
+        return contentIds;
+    }
+
+    public void setContentIds(List<String> contentIds) {
+        this.contentIds = contentIds;
     }
 
 }

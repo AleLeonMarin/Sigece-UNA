@@ -34,8 +34,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.UUID;
+
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class MassiveMailSenderController extends Controller implements Initializable {
@@ -197,10 +200,18 @@ public class MassiveMailSenderController extends Controller implements Initializ
 
                     correoDto.setNotification(notificacionSeleccionada);
 
-                    String contenidoHTML = generarContenidoConVariables(row, headerRow);
+
+
+                    List<byte[]> adjuntos = new ArrayList<>();
+                    List<String> contentIds = new ArrayList<>();
+
+                    String contenidoHTML = generarContenidoConVariables(row, headerRow, adjuntos, contentIds);
                     if (contenidoHTML == null) {
-                        continue; // Si el contenido es nulo, omite esta fila
+                        continue;
                     }
+
+                    correoDto.setAttachments(new ArrayList<>(adjuntos));
+                    correoDto.setContentIds(new ArrayList<>(contentIds));
 
                     correoDto.setResult(contenidoHTML);
                     correoDto.setState("P");
@@ -232,19 +243,43 @@ public class MassiveMailSenderController extends Controller implements Initializ
         mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "Correos enviados a la base de datos, serán enviados automáticamente.");
     }
 
-    private String generarContenidoConVariables(Row row, Row headerRow) {
-        String plantillaHTML = notificacionSeleccionada.getHtml();
-        String plantillaHTMLFinal = plantillaHTML;
-        List<VariablesDto> variables = notificacionSeleccionada.getVariables();
+    private String generarContenidoConVariables(Row row, Row headerRow, List<byte[]> adjuntos, List<String> contentIds) {
+        String plantillaHTML = notificacionSeleccionada.getHtml(); // HTML inicial de la notificación
+        String plantillaHTMLFinal = plantillaHTML; // Se usará para hacer los reemplazos
+        List<VariablesDto> variables = notificacionSeleccionada.getVariables(); // Variables asociadas a la notificación
 
-        for (int i = 1; i < row.getLastCellNum(); i++) {
-            Cell headerCell = headerRow.getCell(i);
-            if (headerCell != null) {
-                String columnName = headerCell.getStringCellValue();
-                String variable = "[" + columnName + "]";
-                String valor = "";
+        for (VariablesDto variable : variables) {
+            String variableName = "[" + variable.getName() + "]";
 
-                Cell cell = row.getCell(i, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL); // Retorna null si la celda está vacía
+            // Para variables multimedia
+            if ("Multimedia".equals(variable.getType()) && plantillaHTMLFinal.contains(variableName)) {
+                Respuesta respuesta = multimediaService.obtenerImagen(variable.getId());
+                if (respuesta.getEstado()) {
+                    byte[] multimediaData = (byte[]) respuesta.getResultado("ImagenData");
+                    String contentId = UUID.randomUUID().toString() + "@mails.com";
+
+                    adjuntos.add(multimediaData);
+                    contentIds.add(contentId);
+
+                    String multimediaHtml = "<img src='cid:" + contentId + "' alt='Multimedia'>";
+                    plantillaHTMLFinal = plantillaHTMLFinal.replace(variableName, multimediaHtml);
+                } else {
+                    plantillaHTMLFinal = plantillaHTMLFinal.replace(variableName, "Recurso multimedia no disponible");
+                }
+            } else {
+                // Para otras variables no multimedia
+                String valorVariable = obtenerValorVariable(row, headerRow, variable);
+                plantillaHTMLFinal = plantillaHTMLFinal.replace(variableName, valorVariable);
+            }
+        }
+        return plantillaHTMLFinal;
+    }
+
+    private String obtenerValorVariable(Row row, Row headerRow, VariablesDto variable) {
+        String valor = "";
+        for (Cell headerCell : headerRow) {
+            if (headerCell.getStringCellValue().equals(variable.getName())) {
+                Cell cell = row.getCell(headerCell.getColumnIndex(), Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
                 if (cell != null) {
                     switch (cell.getCellType()) {
                         case STRING:
@@ -260,49 +295,18 @@ public class MassiveMailSenderController extends Controller implements Initializ
                             valor = "";
                     }
                 }
-
-                // Verificar si es una variable condicional y si está vacía
-                boolean isCondicional = esVariableCondicional(columnName, variables);
-                if (isCondicional && (valor == null || valor.isEmpty())) {
-                    mensaje.show(Alert.AlertType.WARNING, "Advertencia", "La variable condicional '" + columnName + "' está vacía en la fila " + (row.getRowNum() + 1) + ". Revisa la estructura de tu Excel.");
-                    System.out.println("Variable condicional vacía: " + columnName + " en fila: " + (row.getRowNum() + 1));
-                    return null; // Cancela la generación de contenido para este correo
-                }
-
-                // Asignar valores por defecto si la variable no es condicional y está vacía
-                if (!isCondicional && (valor == null || valor.isEmpty())) {
-                    valor = buscarValorPorDefecto(columnName, variables);
-                    if (valor == null || valor.isEmpty()) {
-                        continue;
-                    }
-                }
-
-                plantillaHTMLFinal = plantillaHTMLFinal.replace(variable, valor);
+                break;
             }
         }
 
-        // Reemplazo de variables multimedia y valores por defecto restantes
-        for (VariablesDto variable : variables) {
-            String variableName = "[" + variable.getName() + "]";
-            if ("Multimedia".equals(variable.getType()) && plantillaHTMLFinal.contains(variableName)) {
-                Respuesta respuesta = multimediaService.obtenerImagen(variable.getId());
-                String multimediaUrl = respuesta.getEstado() ? (String) respuesta.getResultado("ImagenUrl") : "Recurso no disponible";
-
-                if (variable.getValue() != null && variable.getValue().contains(".mp4")) {
-                    String multimediaHtml = "<video controls><source src='" /* + multimediaUrl */ + "' type='video/mp4'></video>";
-                    plantillaHTMLFinal = plantillaHTMLFinal.replace(variableName, multimediaHtml);
-                } else {
-                String multimediaHtml = "<img src='" + multimediaUrl + "' alt='Multimedia'>";
-                plantillaHTMLFinal = plantillaHTMLFinal.replace(variableName, multimediaHtml);
-                }
-            } else if (plantillaHTMLFinal.contains(variableName)) {
-                String defaultValue = variable.getValue() != null ? variable.getValue() : "Valor no encontrado";
-                plantillaHTMLFinal = plantillaHTMLFinal.replace(variableName, defaultValue);
-            }
+        // Si la variable es condicional y está vacía, mostramos una advertencia y asignamos un valor predeterminado
+        if ("Condicional".equals(variable.getType()) && (valor == null || valor.isEmpty())) {
+            valor = "____________"; // Indicador visual de valor faltante para condicionales
         }
-
-        return plantillaHTMLFinal;
+        return valor;
     }
+
+
 
 
 

@@ -13,10 +13,7 @@ public class MultimediaService {
 
     public Respuesta obtenerImagen(Long variableId) {
         try {
-            // Construimos la URL manualmente usando la URL base de AppContext
             String baseUrl = (String) AppContext.getInstance().get("resturl");
-            String imagenUrl = baseUrl + "multimedia/imagen/" + variableId;
-
             Request request = new Request("multimedia/imagen/" + variableId);
             request.get();
 
@@ -24,12 +21,13 @@ public class MultimediaService {
                 return new Respuesta(false, request.getError(), "");
             }
 
-            // Devolvemos la URL de la imagen como un campo en la respuesta
-            return new Respuesta(true, "", "", "ImagenUrl", imagenUrl);
+            byte[] imagenData = (byte[]) request.readEntity(byte[].class);
 
+            return new Respuesta(true, "", "", "ImagenData", imagenData); // Devuelve los datos de la imagen
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Error obteniendo la imagen.", ex);
             return new Respuesta(false, "Error obteniendo la imagen.", "obtenerImagen " + ex.getMessage());
         }
     }
+
 }

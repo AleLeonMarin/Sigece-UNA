@@ -74,6 +74,7 @@ public class EnvioCorreoController extends Controller implements Initializable {
             NotificationsDto notificacion = new NotificationsDto();
             notificacion.setId(1L);
             correo.setNotification(notificacion);
+            correo.setContentIds(null);
 
             Respuesta respuesta = correosService.enviarCorreoAhora(correo);
 
