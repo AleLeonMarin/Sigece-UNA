@@ -119,6 +119,12 @@
                                                       <MFXComboBox fx:id="cmbLan" />
                                                    </children>
                                                 </VBox>
+                                                <VBox alignment="CENTER" layoutX="149.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                                                   <children>
+                                                      <Label text="Area" />
+                                                      <MFXComboBox fx:id="cmbAreas" />
+                                                   </children>
+                                                </VBox>
                                              </children>
                                           </HBox>
                                           <MFXTextField fx:id="txfUser" floatMode="BORDER" floatingText="Usuario" prefHeight="39.0" prefWidth="292.0">

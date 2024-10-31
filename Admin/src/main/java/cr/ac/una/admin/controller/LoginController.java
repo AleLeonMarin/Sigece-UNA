@@ -9,8 +9,10 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import cr.ac.una.admin.model.RolesDto;
 import cr.ac.una.admin.model.UsersDto;
 import cr.ac.una.admin.service.UsersService;
+import cr.ac.una.admin.util.AppContext;
 import cr.ac.una.admin.util.FlowController;
 import cr.ac.una.admin.util.Mensaje;
 import cr.ac.una.admin.util.Respuesta;
@@ -84,10 +86,12 @@ public class LoginController extends Controller implements Initializable {
                 if (respuesta.getEstado()) {
 
                     UsersDto usuario = (UsersDto) respuesta.getResultado("Usuario");
-                    if (usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Administrador"))
-                            || usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Solictante"))
-                            || usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Gestor"))
-                                    && usuario.getState().equals("A")) {
+                    AppContext.getInstance().set("User", usuario);
+                    
+                    if ("A".equals(usuario.getState()) && usuario.getRoles().stream()
+                            .map(RolesDto::getName)
+                            .anyMatch(name -> name.equals("Administrador") || name.equals("Solicitante")
+                                    || name.equals("Gestor"))) {
                         FlowController.getInstance().goMain("PrincipalView");
                         getStage().close();
                     } else {
@@ -106,8 +110,6 @@ public class LoginController extends Controller implements Initializable {
             new Mensaje().showModal(AlertType.ERROR, "LogIn", getStage(),
                     "Error al intentar ingresar al sistema.");
         }
-
-        FlowController.getInstance().goViewInWindow("PrincipalView");
 
     }
 

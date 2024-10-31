@@ -17,7 +17,7 @@ import java.util.Date;
 })
 
 @Schema(description = "Esta clase contiene la informacion de los seguimientos")
-public class FollowsDto implements Serializable{
+public class FollowsDto implements Serializable {
 
     @Schema(description = "Identificador del seguimiento", example = "1")
     private Long id;
@@ -29,7 +29,7 @@ public class FollowsDto implements Serializable{
     private String description;
 
     @Schema(description = "Archivo del seguimiento")
-    private String archive;
+    private byte[] archive;
 
     @Schema(description = "Version del seguimiento", example = "1")
     private Long version;
@@ -77,11 +77,11 @@ public class FollowsDto implements Serializable{
         this.description = description;
     }
 
-    public String getArchive() {
+    public byte[] getArchive() {
         return archive;
     }
 
-    public void setArchive(String archive) {
+    public void setArchive(byte[] archive) {
         this.archive = archive;
     }
 

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import cr.ac.una.wssigeceuna.model.Areas;
 import cr.ac.una.wssigeceuna.model.Roles;
 import cr.ac.una.wssigeceuna.model.RolesDto;
 import cr.ac.una.wssigeceuna.model.Users;
@@ -89,24 +90,36 @@ public class UsersService {
                         em.merge(rol);
                         em.merge(user);
                     }
-                    LOG.log(Level.INFO, "Rol elimnado: {0}", rolDto.getId());
+                    LOG.log(Level.INFO, "Rol eliminado: {0}", rolDto.getId());
                 }
 
                 // Agregar roles
                 if (!usersDto.getRoles().isEmpty()) {
                     for (RolesDto rolDto : usersDto.getRoles()) {
                         Roles rol = em.find(Roles.class, rolDto.getId());
-                        rol.getUsers().add(user);
-                        user.getRoles().add(rol);
-                        LOG.log(Level.INFO, "Rol agregado: {0}", rol.getId());
-
+                        if (rol != null) {
+                            rol.getUsers().add(user);
+                            user.getRoles().add(rol);
+                            LOG.log(Level.INFO, "Rol agregado: {0}", rol.getId());
+                        }
                     }
                 }
 
-                user = em.merge(user);
+                // Asignar área
+                if (usersDto.getAreas() != null) {
+                    Areas area = em.find(Areas.class, usersDto.getAreas().getId());
+                    if (area != null) {
+                        user.setArea(area);
+                    } else {
+                        LOG.log(Level.WARNING, "Área no encontrada con ID: {0}", usersDto.getAreas().getId());
+                    }
+                }
+
+                user = em.merge(user); // Asegurarse de guardar todos los cambios
             } else {
                 user = new Users(usersDto);
                 em.persist(user);
+
                 // Asignar rol de administrador al primer usuario registrado
                 if (em.createQuery("SELECT COUNT(u) FROM Users u", Long.class).getSingleResult() == 1) {
                     Roles administradorRole = em.find(Roles.class, 1L); // assume role ID 1 is administrator
@@ -114,13 +127,11 @@ public class UsersService {
                         administradorRole.getUsers().add(user);
                         user.getRoles().add(administradorRole);
                         em.merge(administradorRole);
-                        user = em.merge(user); // Actualiza la lista de roles del usuario
                         LOG.log(Level.INFO, "Rol administrador asignado al primer usuario registrado.");
                     }
                 }
 
                 UsersDto usuario = new UsersDto();
-
                 usuario.setUser(usersDto.getUser());
                 usuario.setEmail(usersDto.getEmail());
                 mails.activationMail(usuario);
@@ -129,21 +140,17 @@ public class UsersService {
             // Aseguramos que los cambios se confirmen en la base de datos
             em.flush();
 
-            // Log para confirmar que el usuario fue guardado correctamente
             LOG.log(Level.INFO, "Usuario guardado correctamente: {0}", user);
 
-            // Retornamos la respuesta de éxito
             return new Respuesta(true, CodigoRespuesta.CORRECTO,
                     "El usuario se guardó correctamente", "", "Usuario",
                     new UsersDto(user));
         } catch (NoResultException ex) {
-            // Manejo de excepción específica cuando no se encuentra el usuario
             LOG.log(Level.SEVERE, "Usuario no encontrado.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
                     "No se encontró el usuario a modificar.",
                     "saveUser " + ex.getMessage());
         } catch (Exception ex) {
-            // Manejo de cualquier otra excepción no esperada
             LOG.log(Level.SEVERE, "Ocurrió un error al guardar el usuario.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
                     "Ocurrió un error al guardar el usuario.",
@@ -400,7 +407,8 @@ public class UsersService {
                     "updatePasswordByEmail NoResultException");
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrió un error al actualizar la contraseña.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error actualizando la contraseña.", "updatePasswordByEmail " + ex.getMessage());
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error actualizando la contraseña.",
+                    "updatePasswordByEmail " + ex.getMessage());
         }
     }
 

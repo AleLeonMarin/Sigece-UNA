@@ -17,7 +17,7 @@ public class App extends Application {
         FlowController.getInstance().InitializeFlow(stage, null);
         FlowController.getInstance().goViewInWindow("LoginView");
         stage.setTitle("Security Sigece UNA");
-        stage.getIcons().add(new Image("cr/ac/una/security/resources/security.jpg"));
+        stage.getIcons().add(new Image(getClass().getResource("/cr/ac/una/security/resources/security.jpg").toExternalForm()));
     }
 
     public static void main(String[] args) {

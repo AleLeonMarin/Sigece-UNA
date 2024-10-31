@@ -57,16 +57,19 @@ public class Activities implements Serializable {
     @Column(name = "ACT_NOMBRE")
     private String name;
 
-    @Version
-    @Column(name = "ACT_VERSION")
-    private Long version;
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "activity")
     private List<Subactivities> subactivities;
 
     @JoinColumn(name = "ACT_AR_ID", referencedColumnName = "AR_ID")
     @ManyToOne(optional = false)
     private Areas area;
+
+    @Version
+    @Column(name = "ACT_VERSION")
+    private Long version;
+
+    @OneToMany(mappedBy = "activity")
+    private List<Gestions> gestions;
 
     public Activities() {
         subactivities = new ArrayList<>();

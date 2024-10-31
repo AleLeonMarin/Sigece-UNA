@@ -130,9 +130,10 @@ public class AreasService {
             Query query = em.createNamedQuery("Areas.findAll", Areas.class);
             List<Areas> areas = query.getResultList();
             List<AreasDto> areasDto = new ArrayList<>();
-            areas.forEach((area) -> {
-                areasDto.add(new AreasDto(area));
-            });
+            for (Areas area : areas) {
+                AreasDto areaDto = new AreasDto(area);
+                areasDto.add(areaDto);
+            }
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "",
                     "Areas", areasDto);
         } catch (Exception ex) {

@@ -1,8 +1,10 @@
 package cr.ac.una.wssigeceuna.controller;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import cr.ac.una.wssigeceuna.model.AreasDto;
+import cr.ac.una.wssigeceuna.model.UsersDto;
 import cr.ac.una.wssigeceuna.service.AreasService;
 import cr.ac.una.wssigeceuna.util.CodigoRespuesta;
 import cr.ac.una.wssigeceuna.util.Respuesta;
@@ -12,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -114,7 +117,9 @@ public class AreasController {
             if (!res.getEstado()) {
                 return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
             }
-            return Response.ok(res.getResultado("Areas")).build();
+            return Response.ok(new GenericEntity<List<AreasDto>>((List<AreasDto>) res.getResultado("Areas")) {
+            }).build();
+
         } catch (Exception ex) {
             LOG.severe("Ocurrió un error al obtener las areas.");
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue())

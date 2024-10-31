@@ -67,7 +67,11 @@ public class Follows implements Serializable {
 
     @Lob
     @Column(name = "SEG_ARCHIVO")
-    private String archive;
+    private byte[] archive;
+
+    @Basic(optional = false)
+    @Column(name = "SEG_ESTADO")
+    private String state;
 
     @Version
     @Column(name = "SEG_VERSION")
@@ -128,12 +132,20 @@ public class Follows implements Serializable {
         this.description = description;
     }
 
-    public String getArchive() {
+    public byte[] getArchive() {
         return archive;
     }
 
-    public void setArchive(String archive) {
+    public void setArchive(byte[] archive) {
         this.archive = archive;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public Long getVersion() {

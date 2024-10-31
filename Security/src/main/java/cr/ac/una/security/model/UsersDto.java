@@ -5,7 +5,6 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import java.io.Serializable;
 import java.util.List;
 
 public class UsersDto {
@@ -28,7 +27,6 @@ public class UsersDto {
     public List<RolesDto> roles;
     public List<RolesDto> rolesDtoEliminados;
     public AreasDto areas;
-
 
     //
     // public List<FollowsDto> follows;
@@ -53,8 +51,6 @@ public class UsersDto {
         this.status = new SimpleStringProperty("");
         this.version = new SimpleLongProperty(1L);
         this.modified = new SimpleBooleanProperty(false);
-        
-        this.areas = new AreasDto();
         this.roles = FXCollections.observableArrayList();
         this.rolesDtoEliminados = FXCollections.observableArrayList();
     }

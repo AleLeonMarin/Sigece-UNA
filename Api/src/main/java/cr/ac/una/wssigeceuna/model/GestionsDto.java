@@ -46,7 +46,7 @@ public class GestionsDto implements Serializable {
     private String state;
 
     @Schema(description = "Archivo de la gestion")
-    private Serializable archive;
+    private byte[] archive;
 
     @Schema(description = "Version de la gestion", example = "1")
     private Long version;
@@ -135,11 +135,11 @@ public class GestionsDto implements Serializable {
         this.state = state;
     }
 
-    public Serializable getArchive() {
+    public byte[] getArchive() {
         return archive;
     }
 
-    public void setArchive(Serializable archive) {
+    public void setArchive(byte[] archive) {
         this.archive = archive;
     }
 

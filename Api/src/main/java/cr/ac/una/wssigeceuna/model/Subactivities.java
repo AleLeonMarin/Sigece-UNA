@@ -19,7 +19,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,16 +59,16 @@ public class Subactivities implements Serializable {
     @Column(name = "SUB_NOMBRE")
     private String name;
 
-    @Version
-    @Column(name = "SUB_VERSION")
-    private Long version;
-
     @JoinColumn(name = "SUB_ACT_ID", referencedColumnName = "ACT_ID")
     @ManyToOne(optional = false)
     private Activities activity;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "subactivities")
     private List<Gestions> gestion;
+
+    @Version
+    @Column(name = "SUB_VERSION")
+    private Long version;
 
     public Subactivities() {
         gestion = new ArrayList<>();

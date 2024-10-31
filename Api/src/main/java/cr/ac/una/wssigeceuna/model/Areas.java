@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.QueryHint;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
@@ -28,7 +29,7 @@ import java.util.List;
 @Entity
 @Table(name = "SIS_AREAS")
 @NamedQueries({
-        @NamedQuery(name = "Areas.findAll", query = "SELECT s FROM Areas s"),
+        @NamedQuery(name = "Areas.findAll", query = "SELECT s FROM Areas s", hints = @QueryHint(name = "eclipselink.refresh", value = "true")),
         @NamedQuery(name = "Areas.findById", query = "SELECT s FROM Areas s WHERE s.id = :id"),
 /*
  * @NamedQuery(name = "SisAreas.findByArId", query =

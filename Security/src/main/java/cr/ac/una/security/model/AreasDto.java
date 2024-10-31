@@ -1,6 +1,8 @@
 package cr.ac.una.security.model;
 
 import javafx.beans.property.SimpleStringProperty;
+import javassist.Loader.Simple;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -70,6 +72,10 @@ public class AreasDto implements Serializable {
 
     public void setActivities(List<ActivitiesDto> activities) {
         this.activities = activities;
+    }
+
+    public SimpleStringProperty namePrroperty() {
+        return name;
     }
 
     @Override

@@ -37,10 +37,6 @@
                   <Separator orientation="VERTICAL" prefHeight="200.0" />
                   <Button fx:id="btnGestions" mnemonicParsing="false" onAction="#onActionBtnGestions" prefHeight="56.0" prefWidth="118.0" styleClass="button-transparent" text="Gestiones" />
                   <Separator orientation="VERTICAL" prefHeight="200.0" />
-                  <Button fx:id="btnFollows" mnemonicParsing="false" onAction="#onActionBtnFollows" prefHeight="56.0" prefWidth="118.0" styleClass="button-transparent" text="Seguimientos" />
-                  <Separator orientation="VERTICAL" prefHeight="200.0" />
-                  <Button fx:id="btnApprovals" mnemonicParsing="false" onAction="#onAcntionBtnApprovals" prefHeight="56.0" prefWidth="118.0" styleClass="button-transparent" text="Aprobaciones" />
-                  <Separator layoutX="586.0" layoutY="10.0" orientation="VERTICAL" prefHeight="200.0" />
                   <Button fx:id="btnSearch" layoutX="657.0" layoutY="10.0" mnemonicParsing="false" onAction="#onActionBtnSearch" prefHeight="56.0" prefWidth="118.0" styleClass="button-transparent" text="Busquedas" />
                   <Separator layoutX="707.0" layoutY="10.0" orientation="VERTICAL" prefHeight="200.0" />
                   <Button fx:id="btnReports" layoutX="711.0" layoutY="10.0" mnemonicParsing="false" onAction="#onActionBtnReports" prefHeight="56.0" prefWidth="118.0" styleClass="button-transparent" text="Reportes" />

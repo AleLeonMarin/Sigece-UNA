@@ -13,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
@@ -94,11 +95,18 @@ public class Gestions implements Serializable {
     @Basic(optional = false)
     @Lob
     @Column(name = "GES_ARCHIVO")
-    private String archive;
+    private byte[] archive;
 
     @Version
     @Column(name = "GES_VERSION")
     private Long version;
+
+    @ManyToMany(mappedBy = "approvers")
+    private List<Users> approvers;
+
+    @JoinColumn(name = "GES_ACT_ID", referencedColumnName = "ACT_ID")
+    @ManyToOne
+    private Activities activity;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "gestion")
     private List<Follows> follows;
@@ -119,6 +127,7 @@ public class Gestions implements Serializable {
     private List<Approvals> approvals;
 
     public Gestions() {
+        approvers = new ArrayList<>();
         follows = new ArrayList<>();
         approvals = new ArrayList<>();
     }
@@ -140,7 +149,7 @@ public class Gestions implements Serializable {
         this.subject = gestionsDto.getSubject();
         this.description = gestionsDto.getDescription();
         this.state = gestionsDto.getState();
-        this.archive = (String) gestionsDto.getArchive();
+        this.archive = gestionsDto.getArchive();
         this.version = gestionsDto.getVersion();
         this.subactivities = new Subactivities(gestionsDto.getSubactivities());
         this.requester = new Users(gestionsDto.getRequester());
@@ -203,11 +212,11 @@ public class Gestions implements Serializable {
         this.state = state;
     }
 
-    public String getArchive() {
+    public byte[] getArchive() {
         return archive;
     }
 
-    public void setArchive(String archive) {
+    public void setArchive(byte[] archive) {
         this.archive = archive;
     }
 

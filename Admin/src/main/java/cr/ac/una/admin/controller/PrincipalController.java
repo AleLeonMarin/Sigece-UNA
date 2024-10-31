@@ -11,6 +11,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.Flow;
 import java.time.LocalDateTime;
 
+import cr.ac.una.admin.model.UsersDto;
+import cr.ac.una.admin.util.AppContext;
 import cr.ac.una.admin.util.FlowController;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -88,9 +90,13 @@ public class PrincipalController extends Controller implements Initializable {
     @FXML
     private PieChart ChartGestiones;
 
+    UsersDto user;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        username = "Kendall";
+
+        user = (UsersDto) AppContext.getInstance().get("User");
+        username = user.getName();
         updateGreeting();
         updateClock();
 

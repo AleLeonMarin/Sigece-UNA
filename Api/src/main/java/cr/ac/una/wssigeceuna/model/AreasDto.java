@@ -45,13 +45,6 @@ public class AreasDto implements Serializable {
         this.name = areas.getName();
         this.state = areas.getState();
         this.version = areas.getVersion();
-        // Convertir las actividades de la entidad a DTO si es necesario
-        if (areas.getActivity() != null) {
-            this.activities = new ArrayList<>();
-            for (Activities activity : areas.getActivity()) {
-                this.activities.add(new ActivitiesDto(activity));
-            }
-        }
     }
 
     public Long getId() {

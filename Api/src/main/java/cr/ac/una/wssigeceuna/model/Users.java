@@ -13,6 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
@@ -34,7 +35,7 @@ import java.util.List;
 @Entity
 @Table(name = "SIS_USUARIOS", schema = "SigeceUNA")
 @NamedQueries({
-        @NamedQuery(name = "Users.findAll", query = "SELECT s FROM Users s"),
+        @NamedQuery(name = "Users.findAll", query = "SELECT s FROM Users s", hints = @QueryHint(name = "eclipselink.refresh", value = "true")),
         @NamedQuery(name = "Users.findByUserPass", query = "SELECT s FROM Users s LEFT JOIN FETCH s.roles WHERE s.user = :user AND s.password = :password", hints = @QueryHint(name = "eclipselink.refresh", value = "true")),
         @NamedQuery(name = "Users.findById", query = "SELECT s FROM Users s WHERE s.id = :id"),
         @NamedQuery(name = "Users.findByMail", query = "SELECT s FROM Users s WHERE s.email = :mail"),
@@ -138,6 +139,12 @@ public class Users implements Serializable {
     @Column(name = "USER_VERSION")
     private Long version;
 
+    @JoinTable(name = "SIS_APROBADORES", joinColumns = {
+            @JoinColumn(name = "SGU_USER_ID", referencedColumnName = "USER_ID") }, inverseJoinColumns = {
+                    @JoinColumn(name = "SGU_GES_ID", referencedColumnName = "GES_ID") })
+    @ManyToMany
+    private List<Gestions> approvers;
+
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users")
     private List<Roles> roles;
 
@@ -159,7 +166,7 @@ public class Users implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "assigned")
     private List<Gestions> gestionAssigned;
 
-    @JoinColumn(name = "USER_AR_ID", referencedColumnName = "users")
+    @JoinColumn(name = "USER_AR_ID", referencedColumnName = "AR_ID")
     @ManyToOne(optional = false)
     private Areas area;
 
@@ -176,6 +183,7 @@ public class Users implements Serializable {
         gestionRequester = new ArrayList<>();
         gestionAssigned = new ArrayList<>();
         approval = new ArrayList<>();
+        approvers = new ArrayList<>();
 
     }
 
@@ -388,6 +396,14 @@ public class Users implements Serializable {
 
     public void setApproval(List<Approvals> approval) {
         this.approval = approval;
+    }
+
+    public List<Gestions> getApprovers() {
+        return approvers;
+    }
+
+    public void setApprovers(List<Gestions> approvers) {
+        this.approvers = approvers;
     }
 
     @Override

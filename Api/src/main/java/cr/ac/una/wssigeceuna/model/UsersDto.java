@@ -8,29 +8,29 @@ import jakarta.json.bind.annotation.JsonbPropertyOrder;
 import jakarta.json.bind.annotation.JsonbTransient;
 
 @JsonbPropertyOrder({
-    "id",
-    "name",
-    "lastNames",
-    "idCard",
-    "email",
-    "password",
-    "phone",
-    "cellPhone",
-    "language",
-    "photo",
-    "user",
-    "password",
-    "state",
-    "status",
-    "modified",
-    "version",
-    "role",
-    "area",
-    "chat",
-    "message",
-    "follows",
-    "Gestions",
-    "Approvals",})
+        "id",
+        "name",
+        "lastNames",
+        "idCard",
+        "email",
+        "password",
+        "phone",
+        "cellPhone",
+        "language",
+        "photo",
+        "user",
+        "password",
+        "state",
+        "status",
+        "modified",
+        "version",
+        "role",
+        "area",
+        "chat",
+        "message",
+        "follows",
+        "Gestions",
+        "Approvals", })
 
 @Schema(description = "Clase que contiene la informacion de los usuarios")
 public class UsersDto implements Serializable {
@@ -85,7 +85,6 @@ public class UsersDto implements Serializable {
     @JsonbTransient
     private List<RolesDto> eliminatedRoles;
 
-    @JsonbTransient
     public AreasDto areas;
 
     @JsonbTransient
@@ -100,6 +99,8 @@ public class UsersDto implements Serializable {
 
     public List<ApprovalsDto> approvals;
 
+    public List<GestionsDto> approvers;
+
     public UsersDto() {
         this.modified = false;
         this.roles = new ArrayList<>();
@@ -109,6 +110,7 @@ public class UsersDto implements Serializable {
         this.follows = new ArrayList<>();
         this.gestions = new ArrayList<>();
         this.approvals = new ArrayList<>();
+        this.approvers = new ArrayList<>();
     }
 
     public UsersDto(Users users) {
@@ -311,6 +313,14 @@ public class UsersDto implements Serializable {
 
     public void setApprovals(List<ApprovalsDto> approvals) {
         this.approvals = approvals;
+    }
+
+    public List<GestionsDto> getApprovers() {
+        return approvers;
+    }
+
+    public void setApprovers(List<GestionsDto> approvers) {
+        this.approvers = approvers;
     }
 
 }

@@ -12,9 +12,12 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+
+import cr.ac.una.security.model.AreasDto;
 import cr.ac.una.security.model.RolesDto;
 import cr.ac.una.security.model.SystemsDto;
 import cr.ac.una.security.model.UsersDto;
+import cr.ac.una.security.service.AreasService;
 import cr.ac.una.security.service.SystemsService;
 import cr.ac.una.security.service.UsersService;
 import cr.ac.una.security.util.AppContext;
@@ -53,6 +56,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.util.StringConverter;
+
+import java.awt.geom.Area;
 import java.awt.image.BufferedImage;;
 
 /**
@@ -83,6 +88,9 @@ public class AdminUsersController extends Controller implements Initializable {
 
     @FXML
     private MFXComboBox<RolesDto> cmbRoles;
+
+    @FXML
+    private MFXComboBox<AreasDto> cmbAreas;
 
     @FXML
     private ImageView imgViewUser;
@@ -156,6 +164,8 @@ public class AdminUsersController extends Controller implements Initializable {
 
     RolesDto rol;
 
+    AreasDto area;
+
     File file;
 
     List<Node> requeridos = new ArrayList<>();
@@ -188,6 +198,7 @@ public class AdminUsersController extends Controller implements Initializable {
         this.usuariosDto = new UsersDto();
         this.systems = new SystemsDto();
         this.rol = new RolesDto();
+        this.area = new AreasDto();
         newUser(); // Resets to a new user
         indicateRequiredFields(); // Marks required fields
 
@@ -211,6 +222,18 @@ public class AdminUsersController extends Controller implements Initializable {
 
             @Override
             public RolesDto fromString(String string) {
+                return null;
+            }
+        });
+
+        cmbAreas.setConverter(new StringConverter<AreasDto>() {
+            @Override
+            public String toString(AreasDto area) {
+                return area != null ? area.getName() : "";
+            }
+
+            @Override
+            public AreasDto fromString(String string) {
                 return null;
             }
         });
@@ -272,7 +295,6 @@ public class AdminUsersController extends Controller implements Initializable {
             txfIdSistema.textProperty().bind(this.systems.id);
         }
         txfNombreSistema.textProperty().bindBidirectional(this.systems.name);
-        
 
         if (this.systems.getRoles() != null) {
             cmbRoles.setItems(FXCollections.observableArrayList(this.systems.getRoles()));
@@ -283,8 +305,6 @@ public class AdminUsersController extends Controller implements Initializable {
         txfIdSistema.textProperty().unbind();
         txfNombreSistema.textProperty().unbindBidirectional(this.systems.name);
         cmbRoles.setItems(FXCollections.emptyObservableList());
-        cmbRoles.getSelectionModel().clearSelection();
-        cmbRoles.clear();
     }
 
     public String validarRequeridos() {
@@ -340,6 +360,10 @@ public class AdminUsersController extends Controller implements Initializable {
         cmbLan.clear();
         cmbLan.getSelectionModel().clearSelection();
         cmbLan.getItems().addAll("Español", "Inglés");
+        cmbAreas.getItems().clear();
+        cmbAreas.getSelectionModel().clearSelection();
+        chargeAreas();
+        tbvRoles.getItems().clear();
 
     }
 
@@ -379,6 +403,21 @@ public class AdminUsersController extends Controller implements Initializable {
         tbvRoles.refresh();
     }
 
+    public void chargeAreasToCombo() {
+        AreasDto areaSeleccionada = usuariosDto.getAreas();
+        if (areaSeleccionada != null) {
+            for (AreasDto area : cmbAreas.getItems()) {
+                if (area.getId().equals(areaSeleccionada.getId())) {
+                    cmbAreas.getSelectionModel().selectItem(area);
+                    break;
+                }
+            }
+        } else {
+            System.out.println("El área es nula en usuariosDto");
+        }
+
+    }
+
     private void chargeUser(Long id) {
         try {
             UsersService service = new UsersService();
@@ -394,6 +433,19 @@ public class AdminUsersController extends Controller implements Initializable {
                 bindUser(false); // Vincula los datos si existen
                 validarRequeridos(); // Verifica los campos requeridos
                 chargeRoles(); // Carga los roles asociados al usuario
+                AreasDto areaSeleccionada = usuariosDto.getAreas();
+                if (areaSeleccionada != null) {
+                    for (AreasDto area : cmbAreas.getItems()) {
+                        if (area.getId().equals(areaSeleccionada.getId())) {
+                            cmbAreas.getSelectionModel().selectItem(area);
+                            break;
+                        }
+                    }
+                } else {
+                    System.out.println("El área es nula en usuariosDto");
+                }
+                cmbLan.getSelectionModel().selectItem(usuariosDto.getLanguage());
+
             } else {
                 new Mensaje().showModal(AlertType.INFORMATION, "Buscar Usuario", getStage(), respuesta.getMensaje());
             }
@@ -418,6 +470,21 @@ public class AdminUsersController extends Controller implements Initializable {
         } catch (Exception e) {
             Logger.getLogger(AdminSystemController.class.getName()).log(Level.SEVERE, "Error cargando sistema", e);
             new Mensaje().showModal(AlertType.ERROR, "Cargar Sistema", getStage(), "Error cargando el Sistema.");
+        }
+    }
+
+    private void chargeAreas() {
+        try {
+            AreasService service = new AreasService();
+            Respuesta respuesta = service.getAreas();
+            if (respuesta.getEstado()) {
+                cmbAreas.setItems(FXCollections.observableArrayList((List<AreasDto>) respuesta.getResultado("Areas")));
+            } else {
+                new Mensaje().showModal(AlertType.INFORMATION, "Cargar Areas", getStage(), respuesta.getMensaje());
+            }
+        } catch (Exception e) {
+            Logger.getLogger(AdminUsersController.class.getName()).log(Level.SEVERE, "Error cargando las áreas", e);
+            new Mensaje().showModal(AlertType.ERROR, "Cargar Areas", getStage(), "Error cargando las áreas.");
         }
     }
 
@@ -610,6 +677,19 @@ public class AdminUsersController extends Controller implements Initializable {
                 this.usuariosDto.setRoles(rolesList);
 
                 rolesList.forEach(rol -> System.out.println("Rol seleccionado: " + rol.getName()));
+
+                AreasDto area = cmbAreas.getSelectionModel().getSelectedItem();
+
+                System.out.println("Área seleccionada: " + area.getId());
+
+                if (area != null) {
+                    this.usuariosDto.setAreas(area);
+                    System.out.println("Área seleccionada: " + area.getName());
+                } else {
+                    System.out.println("No se seleccionó un área.");
+                }
+
+                System.out.println("Usuario: " + this.usuariosDto.getAreas().getName());
 
                 // Guardar el usuario y sus roles seleccionados
                 UsersService service = new UsersService();
