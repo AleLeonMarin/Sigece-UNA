@@ -31,7 +31,7 @@ import jakarta.ws.rs.ext.Provider;
 
 public class SecurityFilter implements ContainerRequestFilter {
     
-    private static final String AUTHORIZATION_SERVICE_PATH = "validarUsuario";
+    private static final String AUTHORIZATION_SERVICE_PATH = "logIn";
     private static final String RENEWAL_SERVICE_PATH = "renovarToken";
     private final JwTokenHelper jwTokenHelper = JwTokenHelper.getInstance();
     private static final String AUTHENTICATION_SCHEME = "Bearer ";
