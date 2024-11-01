@@ -168,18 +168,6 @@ public class MassiveMailSenderController extends Controller implements Initializ
     }
 
 
-
-    //NO funciona correctamente
-//    private void cargarPlantillaFinal(CorreosDTO correo) {
-//        if (correo != null && correo.getCorResultado() != null) {
-//            System.out.println("Actualizando WebView con el contenido del correo: " + correo.getCorResultado());
-//            webViewPlantillaFinal.getEngine().loadContent(correo.getCorResultado());
-//        } else {
-//            System.out.println("El correo seleccionado no tiene contenido o es nulo.");
-//            webViewPlantillaFinal.getEngine().loadContent("No hay contenido disponible para este correo.</p>");
-//        }
-//    }
-
     @FXML
     private void onActionBtnUpload(ActionEvent event) {
         if (notificacionSeleccionada == null) {
@@ -263,14 +251,13 @@ public class MassiveMailSenderController extends Controller implements Initializ
     }
 
     private String generarContenidoConVariables(Row row, Row headerRow, List<byte[]> adjuntos, List<String> contentIds) {
-        String plantillaHTML = notificacionSeleccionada.getHtml(); // HTML inicial de la notificación
-        String plantillaHTMLFinal = plantillaHTML; // Se usará para hacer los reemplazos
-        List<VariablesDto> variables = notificacionSeleccionada.getVariables(); // Variables asociadas a la notificación
+        String plantillaHTML = notificacionSeleccionada.getHtml();
+        String plantillaHTMLFinal = plantillaHTML;
+        List<VariablesDto> variables = notificacionSeleccionada.getVariables();
 
         for (VariablesDto variable : variables) {
             String variableName = "[" + variable.getName() + "]";
 
-            // Para variables multimedia
             if ("Multimedia".equals(variable.getType()) && plantillaHTMLFinal.contains(variableName)) {
                 Respuesta respuesta = multimediaService.obtenerImagen(variable.getId());
                 if (respuesta.getEstado()) {
@@ -286,13 +273,27 @@ public class MassiveMailSenderController extends Controller implements Initializ
                     plantillaHTMLFinal = plantillaHTMLFinal.replace(variableName, "Recurso multimedia no disponible");
                 }
             } else {
-                // Para otras variables no multimedia
                 String valorVariable = obtenerValorVariable(row, headerRow, variable);
+
+                // Verificar si la variable es condicional y está vacía
+                if ("Condicional".equals(variable.getType()) && (valorVariable == null || valorVariable.isEmpty())) {
+                    mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"),
+                            rb.getString("warningMissingConditionalVariable") + " [" + variable.getName() + "] en la fila " + (row.getRowNum() + 1));
+                    return null; // Interrumpir si falta una variable condicional
+                }
+
+                // Si no es condicional, o si tiene valor, reemplazar en el HTML
+                if (valorVariable == null || valorVariable.isEmpty()) {
+                    valorVariable = variable.getValue() != null ? variable.getValue() : "Valor no encontrado";
+                }
+
                 plantillaHTMLFinal = plantillaHTMLFinal.replace(variableName, valorVariable);
             }
         }
         return plantillaHTMLFinal;
     }
+
+
 
     private String obtenerValorVariable(Row row, Row headerRow, VariablesDto variable) {
         String valor = "";
@@ -320,35 +321,9 @@ public class MassiveMailSenderController extends Controller implements Initializ
 
         // Si la variable es condicional y está vacía, mostramos una advertencia y asignamos un valor predeterminado
         if ("Condicional".equals(variable.getType()) && (valor == null || valor.isEmpty())) {
-            valor = "____________"; // Indicador visual de valor faltante para condicionales
+            valor = "____________";
         }
         return valor;
-    }
-
-
-
-
-
-
-
-
-    private String buscarValorPorDefecto(String nombreVariable, List<VariablesDto> variables) {
-        for (VariablesDto variable : variables) {
-            if (variable.getName().equals(nombreVariable)) {
-                return variable.getValue() != null ? variable.getValue() : "Valor no encontrado";
-            }
-        }
-        return "Valor no encontrado";
-    }
-
-
-    private boolean esVariableCondicional(String columnName, List<VariablesDto> variables) {
-        for (VariablesDto variable : variables) {
-            if (variable.getName().equals(columnName) && "Condicional".equals(variable.getType())) {
-                return true;
-            }
-        }
-        return false;
     }
 
 
@@ -408,9 +383,6 @@ public class MassiveMailSenderController extends Controller implements Initializ
         }
     }
 
-
-
-
     @FXML
     void onActionBtnMaximizeMail(ActionEvent event) {
         if (tbvCorreoGenerados.getSelectionModel().getSelectedItem() != null) {
@@ -423,6 +395,10 @@ public class MassiveMailSenderController extends Controller implements Initializ
     }
 
     private String replaceVariables(String htmlContent, List<VariablesDto> variables) {
+
+        String baseUrl = (String) AppContext.getInstance().get("resturl");
+
+
         for (VariablesDto variable : variables) {
             String placeholder = "[" + variable.getName() + "]";
             String value = "";
@@ -437,7 +413,7 @@ public class MassiveMailSenderController extends Controller implements Initializ
                     if (variable.getValue() != null && variable.getValue().contains(".mp4")) {
                         value = "<video controls><source src='" + "visualizador no soporta viedos"+ "' type='video/mp4'></video>";
                     } else {
-                        value = "<img src='" + multimediaUrl + "' alt='Multimedia'>";
+                        value = "<img src='" + baseUrl+"multimedia/imagen/" + variable.getId() + "' alt='Multimedia'>";
                     }
                 } else {
                     value = "Recurso multimedia no disponible";

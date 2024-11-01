@@ -3,6 +3,7 @@ package cr.ac.una.mails.controller;
 import cr.ac.una.mails.model.VariablesDto;
 import cr.ac.una.mails.service.MultimediaService;
 import cr.ac.una.mails.util.AppContext;
+import cr.ac.una.mails.util.Request;
 import cr.ac.una.mails.util.Respuesta;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -57,6 +58,9 @@ public class MaxViewHTMLController extends Controller implements Initializable {
 
 
     private String replaceVariables(String htmlContent, List<VariablesDto> variables) {
+
+        String baseUrl = (String) AppContext.getInstance().get("resturl");
+
         for (VariablesDto variable : variables) {
             String placeholder = "[" + variable.getName() + "]";
             String value = "";
@@ -71,7 +75,7 @@ public class MaxViewHTMLController extends Controller implements Initializable {
                     if (variable.getValue() != null && variable.getValue().contains(".mp4")) {
                         value = "<video controls><source src='" + "visualizador no soporta viedos"+ "' type='video/mp4'></video>";
                     } else {
-                        value = "<img src='" + multimediaUrl + "' alt='Multimedia'>";
+                        value = "<img src='" +  baseUrl+"multimedia/imagen/" + variable.getId() + "' alt='Multimedia'>";
                     }
                 } else {
                     value = "Recurso multimedia no disponible";
@@ -86,6 +90,10 @@ public class MaxViewHTMLController extends Controller implements Initializable {
 
 
     private String replaceVariablesForPreview(String htmlContent, List<VariablesDto> variables) {
+
+        String baseUrl = (String) AppContext.getInstance().get("resturl");
+
+
         for (VariablesDto variable : variables) {
             String placeholder = "[" + variable.getName() + "]";
             String value = "";
@@ -100,7 +108,7 @@ public class MaxViewHTMLController extends Controller implements Initializable {
                     if (variable.getValue() != null && variable.getValue().contains(".mp4")) {
                         value = "<video controls><source src='" + "visualizador no soporta viedos"+ "' type='video/mp4'></video>";
                     } else {
-                        value = "<img src='" + multimediaUrl + "' alt='Multimedia'>";
+                        value = "<img src='" + baseUrl+"multimedia/imagen/" + variable.getId() + "' alt='Multimedia'>";
                     }
                 } else {
                     value = "Recurso multimedia no disponible";

@@ -257,6 +257,9 @@ public class AdminNotificationController extends Controller implements Initializ
 
 
     private String replaceVariables(String htmlContent, List<VariablesDto> variables) {
+
+        String baseUrl = (String) AppContext.getInstance().get("resturl");
+
         for (VariablesDto variable : variables) {
             String placeholder = "[" + variable.getName() + "]";
             String value = "";
@@ -271,7 +274,7 @@ public class AdminNotificationController extends Controller implements Initializ
                     String multimediaUrl = (String) respuesta.getResultado("ImagenUrl");
                     value = variable.getValue() != null && variable.getValue().contains(".mp4")
                             ? "[previsualizador no soporta videos]"
-                            : "<img src='" + multimediaUrl + "' alt='Multimedia'>";
+                            : "<img src='" + baseUrl+"multimedia/imagen/" + variable.getId() + "' alt='Multimedia'>";
                 } else {
                     value = "Recurso multimedia no disponible";
                 }
@@ -303,7 +306,7 @@ public class AdminNotificationController extends Controller implements Initializ
                 ObservableList<VariablesDto> variablesObservableList = FXCollections.observableArrayList(variablesList);
                 tbvVariables.setItems(variablesObservableList);
                 tbvVariables2.setItems(FXCollections.observableArrayList(variablesList));
-                tbvVariables.refresh(); // Forzar actualización visual
+                tbvVariables.refresh();
                 tbvVariables2.refresh();
             } else {
                 mensaje.show(Alert.AlertType.ERROR, "Error", "Error al cargar las variables: " + respuesta.getMensaje());
@@ -629,10 +632,6 @@ public class AdminNotificationController extends Controller implements Initializ
         }
     }
 
-    @FXML
-    void clickBtnMultimedia(ActionEvent event) {
-
-    }
 
     private byte[] obtenerBytesDeArchivo(File file) throws IOException {
         try (FileInputStream fileInputStream = new FileInputStream(file)) {

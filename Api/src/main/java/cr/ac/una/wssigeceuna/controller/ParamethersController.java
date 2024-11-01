@@ -6,17 +6,30 @@ import cr.ac.una.wssigeceuna.model.ParamethersDto;
 import cr.ac.una.wssigeceuna.service.ParamethersService;
 import cr.ac.una.wssigeceuna.util.CodigoRespuesta;
 import cr.ac.una.wssigeceuna.util.Respuesta;
+import jakarta.ws.rs.*;
+
+
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ejb.EJB;
-import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.logging.Logger;
+
+import cr.ac.una.wssigeceuna.util.JwTokenHelper;
+import cr.ac.una.wssigeceuna.util.Secure;
+
+
+
+@Secure
 @Path("/paramethers")
 @Tag(name = "Paramethers", description = "API para los parámetros del sistema")
+@SecurityRequirement(name = "jwt-auth")
 public class ParamethersController {
 
     private static final Logger LOG = Logger.getLogger(ParamethersController.class.getName());

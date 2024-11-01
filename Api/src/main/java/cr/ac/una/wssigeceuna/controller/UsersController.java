@@ -21,9 +21,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 
 @Path("/UsersController")
 @Tag(name = "UsersController", description = "Operaciones sobre los usuarios")
@@ -31,6 +33,9 @@ public class UsersController {
 
     @EJB
     UsersService usersService;
+    
+    @Context
+    SecurityContext securityContext;
 
     @Path("/logIn/{user}/{password}")
     @GET
@@ -369,6 +374,28 @@ public class UsersController {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue())
                     .entity("Error actualizando la contraseña " + e.getMessage())
                     .build();
+        }
+    }
+    
+    @GET
+    @Path("/renovar")
+    @Operation(description = "Genera un nuevo token a partir de un token de renovación")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Renovación del token exitosa", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
+        @ApiResponse(responseCode = "401", description = "No se pudo renovar el token.", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
+        @ApiResponse(responseCode = "500", description = "Error renovando el token", content = @Content(mediaType = MediaType.TEXT_PLAIN))
+    })
+    public Response renovarToken(){
+        try {
+            String usuarioRequest = securityContext.getUserPrincipal().getName();
+            if (usuarioRequest != null && !usuarioRequest.isEmpty()) {
+                return Response.ok(JwTokenHelper.getInstance().generatePrivateKey(usuarioRequest)).build();
+            } else{
+                return Response.status(CodigoRespuesta.ERROR_PERMISOS.getValue()).entity("No se pudo renovar el token.").build();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(UsersController.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error renovando el token").build();
         }
     }
 
