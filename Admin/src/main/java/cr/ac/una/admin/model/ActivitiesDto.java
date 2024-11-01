@@ -7,11 +7,11 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class ActivitiesDto implements Serializable {
 
-    private SimpleStringProperty id;
-    private SimpleStringProperty name;
-    private AreasDto area;
-    private Long version;
-    private List<SubactivitiesDto> subactivities;
+    public SimpleStringProperty id;
+    public SimpleStringProperty name;
+    public AreasDto area;
+    public Long version;
+    public List<SubactivitiesDto> subactivities;
 
     public ActivitiesDto() {
         this.id = new SimpleStringProperty("");

@@ -20,3 +20,8 @@
 # Ignorar archivos de texto genéricos
 **/userphotos/
 **/account_types.json
+
+# Ignorar archivos de imagen
+**/photo.jpg
+
+

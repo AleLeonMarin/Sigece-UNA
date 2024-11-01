@@ -47,46 +47,6 @@ public class AreasService {
                 em.persist(areas); // Persistimos el área primero para que tenga ID generado
             }
 
-            // Proceso de las actividades
-            for (ActivitiesDto activityDto : area.getActivities()) {
-                Activities activity;
-
-                // Si la actividad tiene ID, busca la actividad en la base de datos
-                if (activityDto.getId() != null && activityDto.getId() > 0) {
-                    activity = em.find(Activities.class, activityDto.getId());
-                    if (activity == null) {
-                        activity = new Activities(activityDto);
-                    } else {
-                        activity.update(activityDto);
-                    }
-                } else {
-                    // Si no tiene ID, crea una nueva actividad
-                    activity = new Activities(activityDto);
-                }
-
-                areas.getActivity().add(activity); // Relaciona la actividad con el área
-
-                // Proceso de las subactividades
-                for (SubactivitiesDto subactivityDto : activityDto.getSubactivities()) {
-                    Subactivities subactivity;
-
-                    // Si la subactividad tiene ID, búscala en la base de datos
-                    if (subactivityDto.getId() != null && subactivityDto.getId() > 0) {
-                        subactivity = em.find(Subactivities.class, subactivityDto.getId());
-                        if (subactivity == null) {
-                            subactivity = new Subactivities(subactivityDto);
-                        } else {
-                            subactivity.update(subactivityDto);
-                        }
-                    } else {
-                        // Si no tiene ID, crea una nueva subactividad
-                        subactivity = new Subactivities(subactivityDto);
-                    }
-
-                    activity.getSubactivities().add(subactivity); // Relaciona la subactividad con la actividad
-                }
-            }
-
             // Finalmente, mergeamos el área para guardar los cambios
             areas = em.merge(areas);
             em.flush();

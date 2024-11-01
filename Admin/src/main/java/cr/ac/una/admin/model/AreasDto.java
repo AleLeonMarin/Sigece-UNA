@@ -7,18 +7,18 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class AreasDto implements Serializable {
-    private SimpleStringProperty id;
-    private SimpleStringProperty name;
-    private SimpleBooleanProperty state;
-    private Long version;
-    private List<UsersDto> users;
-    private List<ActivitiesDto> activities;
+    public SimpleStringProperty id;
+    public SimpleStringProperty name;
+    public SimpleBooleanProperty state;
+    public Long version;
+    public List<UsersDto> users;
+    public List<ActivitiesDto> activities;
 
     public AreasDto() {
 
         this.id = new SimpleStringProperty("");
         this.name = new SimpleStringProperty("");
-        this.state = new SimpleBooleanProperty(false);
+        this.state = new SimpleBooleanProperty(true);
         users = new ArrayList<>();
         activities = new ArrayList<>();
     }
@@ -43,12 +43,12 @@ public class AreasDto implements Serializable {
         this.name.set(name);
     }
 
-    public Boolean getState() {
-        return state.get();
+    public String getState() {
+        return state.get() ? "A" : "I";
     }
 
-    public void setState(Boolean state) {
-        this.state.set(state);
+    public void setState(String state) {
+        this.state.set(state.equals("A"));
     }
 
     public Long getVersion() {

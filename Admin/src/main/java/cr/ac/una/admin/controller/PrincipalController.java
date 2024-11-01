@@ -8,9 +8,6 @@ import java.net.URL;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
-import java.util.concurrent.Flow;
-import java.time.LocalDateTime;
-
 import cr.ac.una.admin.model.UsersDto;
 import cr.ac.una.admin.util.AppContext;
 import cr.ac.una.admin.util.FlowController;
@@ -38,13 +35,7 @@ import javafx.util.Duration;
 public class PrincipalController extends Controller implements Initializable {
 
     @FXML
-    private Button btnApprovals;
-
-    @FXML
     private Button btnAreas;
-
-    @FXML
-    private Button btnFollows;
 
     @FXML
     private Button btnGestions;
@@ -57,6 +48,9 @@ public class PrincipalController extends Controller implements Initializable {
 
     @FXML
     private Button btnCalendar;
+
+    @FXML
+    private Button btnSalir;
 
     @FXML
     private Label gestCompletadasLabel;
@@ -153,23 +147,10 @@ public class PrincipalController extends Controller implements Initializable {
     }
 
     @FXML
-    void onAcntionBtnApprovals(ActionEvent event) {
-
-        FlowController.getInstance().goViewInWindow("ApprovalsView");
-
-    }
-
-    @FXML
     void onActionBtnAreas(ActionEvent event) {
 
         FlowController.getInstance().goViewInWindow("AreasView");
-
-    }
-
-    @FXML
-    void onActionBtnFollows(ActionEvent event) {
-
-        FlowController.getInstance().goViewInWindow("FollowsView");
+        this.getStage().close();
 
     }
 
@@ -177,6 +158,7 @@ public class PrincipalController extends Controller implements Initializable {
     void onActionBtnGestions(ActionEvent event) {
 
         FlowController.getInstance().goViewInWindow("GestionView");
+        this.getStage().close();
 
     }
 
@@ -188,6 +170,13 @@ public class PrincipalController extends Controller implements Initializable {
     }
 
     @FXML
+    void onActionBtnCalendar(ActionEvent event) {
+
+        FlowController.getInstance().goViewInWindow("CalendarView");
+
+    }
+
+    @FXML
     void onActionBtnReports(ActionEvent event) {
 
         FlowController.getInstance().goViewInWindow("ReportsView");
@@ -195,9 +184,10 @@ public class PrincipalController extends Controller implements Initializable {
     }
 
     @FXML
-    void onActionBtnCalendar(ActionEvent event) {
+    void onActionBtnSalir(ActionEvent event) {
 
-        FlowController.getInstance().goViewInWindow("CalendarView");
+        FlowController.getInstance().goViewInWindow("LoginView");
+        getStage().close();
 
     }
 

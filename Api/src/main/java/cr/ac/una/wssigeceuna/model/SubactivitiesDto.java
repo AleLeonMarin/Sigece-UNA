@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
 import jakarta.json.bind.annotation.JsonbTransient;
 
-@JsonbPropertyOrder({ "id", "name", "version", "activity" })
+@JsonbPropertyOrder({"id", "name", "version", "activity"})
 
 @Schema(description = "Clase que contiene la información de las subactividades")
 public class SubactivitiesDto {
@@ -31,10 +31,15 @@ public class SubactivitiesDto {
     }
 
     public SubactivitiesDto(Subactivities subactivities) {
+        this();
         this.id = subactivities.getId();
         this.name = subactivities.getName();
         this.version = subactivities.getVersion();
-        this.activity = new ActivitiesDto(subactivities.getActivity());
+        if (subactivities.getActivity() != null) {
+            // Solo asignamos el ID para evitar la recursión
+            this.activity = new ActivitiesDto();
+            this.activity.setId(subactivities.getActivity().getId());
+        }
     }
 
     public Long getId() {

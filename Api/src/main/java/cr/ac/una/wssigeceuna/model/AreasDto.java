@@ -32,7 +32,6 @@ public class AreasDto implements Serializable {
     @JsonbTransient
     private List<UsersDto> users;
 
-    @JsonbTransient
     private List<ActivitiesDto> activities;
 
     public AreasDto() {
@@ -41,6 +40,7 @@ public class AreasDto implements Serializable {
     }
 
     public AreasDto(Areas areas) {
+        this();
         this.id = areas.getId();
         this.name = areas.getName();
         this.state = areas.getState();

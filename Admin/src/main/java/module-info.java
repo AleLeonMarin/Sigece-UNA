@@ -19,6 +19,7 @@ module cr.ac.una.admin {
     requires javafx.swing;
     requires webcam.capture;
     requires com.calendarfx.view;
+    requires javafx.base;
 
     opens cr.ac.una.admin.model;
 

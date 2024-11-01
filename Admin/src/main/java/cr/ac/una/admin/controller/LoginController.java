@@ -6,6 +6,7 @@ package cr.ac.una.admin.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.Flow;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -87,13 +88,13 @@ public class LoginController extends Controller implements Initializable {
 
                     UsersDto usuario = (UsersDto) respuesta.getResultado("Usuario");
                     AppContext.getInstance().set("User", usuario);
-                    
+
                     if ("A".equals(usuario.getState()) && usuario.getRoles().stream()
                             .map(RolesDto::getName)
                             .anyMatch(name -> name.equals("Administrador") || name.equals("Solicitante")
                                     || name.equals("Gestor"))) {
-                        FlowController.getInstance().goMain("PrincipalView");
-                        getStage().close();
+                        FlowController.getInstance().goViewInWindow("PrincipalView");
+                        FlowController.getInstance().salir();
                     } else {
                         new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
                                 "Usuario no tiene permisos para ingresar al sistema o no esta activo.");

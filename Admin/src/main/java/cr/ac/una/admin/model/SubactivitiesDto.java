@@ -7,11 +7,11 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class SubactivitiesDto {
 
-    private SimpleStringProperty id;
-    private SimpleStringProperty name;
-    private ActivitiesDto activity;
-    private Long version;
-    private List<GestionsDto> gestions;
+    public SimpleStringProperty id;
+    public SimpleStringProperty name;
+    public ActivitiesDto activity;
+    public Long version;
+    public List<GestionsDto> gestions;
 
     public SubactivitiesDto() {
 

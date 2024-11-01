@@ -203,6 +203,8 @@ public class UsersDto {
         this.rolesDtoEliminados = rolesDtoEliminados;
     }
 
+    
+
     @Override
     public String toString() {
         return "UsersDto{" +
