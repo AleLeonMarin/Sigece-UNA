@@ -25,10 +25,10 @@
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
                   <TabPane prefHeight="423.0" prefWidth="696.0" tabClosingPolicy="UNAVAILABLE">
-                    <tabs>
-                      <Tab fx:id="tptUsers" text="Busqueda de Usuarios">
-                        <content>
-                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <tabs>
+                        <Tab fx:id="tptUsers" text="%tab.usuarios">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
                                     <VBox alignment="CENTER" prefHeight="407.0" prefWidth="696.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
@@ -36,19 +36,19 @@
                                              <children>
                                                 <VBox alignment="CENTER" prefHeight="465.0" prefWidth="0.0" spacing="40.0" HBox.hgrow="SOMETIMES">
                                                    <children>
-                                                      <MFXTextField fx:id="txfName" floatingText="Nombre" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="150.0">
+                                                      <MFXTextField fx:id="txfName" floatingText="%campo.nombre" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="150.0">
                                                          <styleClass>
                                                             <String fx:value="jfx-txfs-security" />
                                                             <String fx:value="jfx-txfs-security-container" />
                                                          </styleClass>
                                                       </MFXTextField>
-                                                      <MFXTextField fx:id="txfLastNames" floatingText="Apellidos" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="150.0">
+                                                      <MFXTextField fx:id="txfLastNames" floatingText="%campo.apellidos" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="150.0">
                                                          <styleClass>
                                                             <String fx:value="jfx-txfs-security" />
                                                             <String fx:value="jfx-txfs-security-container" />
                                                          </styleClass>
                                                       </MFXTextField>
-                                                      <MFXTextField fx:id="txfIdCard" floatingText="Cedula" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="150.0">
+                                                      <MFXTextField fx:id="txfIdCard" floatingText="%campo.cedula" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="150.0">
                                                          <styleClass>
                                                             <String fx:value="jfx-txfs-security" />
                                                             <String fx:value="jfx-txfs-security-container" />
@@ -65,9 +65,9 @@
                                                    <children>
                                                       <TableView fx:id="tbvUsers" onMousePressed="#onMousePressedTbvUsers" prefHeight="345.0" prefWidth="404.0">
                                                          <columns>
-                                                            <TableColumn fx:id="tbcName" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="100.0" text="Nombre" />
-                                                            <TableColumn fx:id="tbcLastNames" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="130.0" text="Apellidos" />
-                                                            <TableColumn fx:id="tbcIdCard" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="100.0" text="Cedula" />
+                                                            <TableColumn fx:id="tbcName" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="100.0" text="%columna.nombre" />
+                                                            <TableColumn fx:id="tbcLastNames" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="130.0" text="%columna.apellidos" />
+                                                            <TableColumn fx:id="tbcIdCard" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="100.0" text="%columna.cedula" />
                                                          </columns>
                                                          <VBox.margin>
                                                             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -84,11 +84,11 @@
                                     </VBox>
                                  </children>
                               </AnchorPane>
-                        </content>
-                      </Tab>
-                      <Tab fx:id="tptSystems" text="Busqueda de Sistemas">
-                        <content>
-                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           </content>
+                        </Tab>
+                        <Tab fx:id="tptSystems" text="%tab.sistemas">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
                                     <VBox alignment="CENTER" prefHeight="407.0" prefWidth="696.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
@@ -96,7 +96,7 @@
                                              <children>
                                                 <VBox alignment="CENTER" prefHeight="465.0" prefWidth="0.0" spacing="40.0" HBox.hgrow="SOMETIMES">
                                                    <children>
-                                                      <MFXTextField fx:id="txfNameSystem" floatingText="Nombre" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="150.0">
+                                                      <MFXTextField fx:id="txfNameSystem" floatingText="%campo.nombreSistema" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="150.0">
                                                          <styleClass>
                                                             <String fx:value="jfx-txfs-security" />
                                                             <String fx:value="jfx-txfs-security-container" />
@@ -113,7 +113,7 @@
                                                    <children>
                                                       <TableView fx:id="tbvSystems" onMousePressed="#onMousePressedTbvSystems" prefHeight="345.0" prefWidth="404.0">
                                                          <columns>
-                                                            <TableColumn fx:id="tbcSystem" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="146.0" text="Nombre" />
+                                                            <TableColumn fx:id="tbcSystem" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="146.0" text="%columna.nombreSistema" />
                                                          </columns>
                                                          <VBox.margin>
                                                             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -130,27 +130,15 @@
                                     </VBox>
                                  </children>
                               </AnchorPane>
-                        </content>
-                      </Tab>
-                    </tabs>
+                           </content>
+                        </Tab>
+                     </tabs>
                   </TabPane>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                      <children>
-                        <MFXButton fx:id="btnFilter" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnFilter" prefHeight="40.0" prefWidth="100.0" styleClass="jfx-btn-filter" text="Aplicar">
-                           <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
-                           </graphic>
-                        </MFXButton>
-                        <MFXButton fx:id="btnLoad" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnLoad" prefHeight="40.0" prefWidth="100.0" styleClass="jfx-btn-load" text="Cargar">
-                           <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
-                           </graphic>
-                        </MFXButton>
-                        <MFXButton fx:id="btnExit" layoutX="100.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnExit" prefHeight="40.0" prefWidth="100.0" styleClass="jfx-btn-log-out" text="Salir">
-                           <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
-                           </graphic>
-                        </MFXButton>
+                        <MFXButton fx:id="btnFilter" onAction="#onActionBtnFilter" prefHeight="40.0" prefWidth="100.0" styleClass="jfx-btn-filter" text="%boton.aplicar" />
+                        <MFXButton fx:id="btnLoad" onAction="#onActionBtnLoad" prefHeight="40.0" prefWidth="100.0" styleClass="jfx-btn-load" text="%boton.cargar" />
+                        <MFXButton fx:id="btnExit" onAction="#onActionBtnExit" prefHeight="40.0" prefWidth="100.0" styleClass="jfx-btn-log-out" text="%boton.salir" />
                      </children>
                   </HBox>
                </children>

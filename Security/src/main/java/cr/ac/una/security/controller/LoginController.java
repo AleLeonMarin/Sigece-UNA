@@ -5,6 +5,7 @@
 package cr.ac.una.security.controller;
 
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,8 +21,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import cr.ac.una.security.App;
 
-/**
+    /**
  * FXML Controller class
  *
  * @author Kendall Fonseca
@@ -47,10 +50,23 @@ public class LoginController extends Controller implements Initializable {
     @FXML
     private MFXTextField textPassword;
 
+    @FXML
+    private Button btnCostaRica;
+
+    @FXML
+    private Button btnUsa;
+
+    private ResourceBundle bundle;
+
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+
+        this.bundle = rb;
+
     }
+
+
 
     @Override
     public void initialize() {
@@ -110,5 +126,16 @@ public class LoginController extends Controller implements Initializable {
         getStage().close();
 
     }
+
+    @FXML
+    void onActionBtnCostaRica(ActionEvent event) {
+        App.restart(new Locale("es"));
+    }
+
+    @FXML
+    void onActionBtnUsa(ActionEvent event) {
+        App.restart(new Locale("en"));
+    }
+
 
 }

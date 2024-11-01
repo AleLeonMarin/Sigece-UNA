@@ -16,7 +16,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         primaryStage = stage;
-        restartApp();  // Llama a este método para cargar la aplicación con el idioma actual.
+        restartApp();
     }
 
     public static void restart(Locale newLocale) {
@@ -26,7 +26,7 @@ public class App extends Application {
 
     public static void restartAf(Locale newLocale) {
         currentLocale = newLocale;
-        restartApp();
+        restartAppAf();
     }
 
     private static void restartApp() {

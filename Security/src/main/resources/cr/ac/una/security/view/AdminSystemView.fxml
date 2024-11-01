@@ -20,7 +20,7 @@
          <children>
             <TabPane fx:id="tpbSistemas" prefHeight="600.0" prefWidth="846.0" tabClosingPolicy="UNAVAILABLE">
                <tabs>
-                  <Tab fx:id="tptSistemas" text="Administracion de Sistemas">
+                  <Tab fx:id="tptSistemas" text="%tab.administracionSistemas">
                      <content>
                         <HBox alignment="CENTER" prefHeight="627.0" prefWidth="856.0" spacing="10.0">
                            <children>
@@ -40,18 +40,18 @@
                                  <children>
                                     <VBox alignment="CENTER" prefHeight="475.0" prefWidth="100.0" spacing="40.0">
                                        <children>
-                                          <Text fill="#00000099" strokeType="OUTSIDE" strokeWidth="0.0" text="Creacion de Sistemas" wrappingWidth="346.13671875">
+                                          <Text fill="#00000099" strokeType="OUTSIDE" strokeWidth="0.0" text="%text.creacionSistemas" wrappingWidth="346.13671875">
                                              <font>
                                                 <Font name="Segoe UI" size="20.0" />
                                              </font>
                                           </Text>
-                                          <MFXTextField fx:id="txfID" floatMode="BORDER" floatingText="ID" onKeyPressed="#onKeyPressedTxfIdSystema">
+                                          <MFXTextField fx:id="txfID" floatMode="BORDER" floatingText="%text.id" onKeyPressed="#onKeyPressedTxfIdSystema">
                                              <styleClass>
                                                 <String fx:value="jfx-txfs-security" />
                                                 <String fx:value="jfx-txfs-security-container" />
                                              </styleClass>
                                           </MFXTextField>
-                                          <MFXTextField fx:id="txfName" floatMode="BORDER" floatingText="Nombre" layoutX="182.0" layoutY="237.0" prefWidth="200.0">
+                                          <MFXTextField fx:id="txfName" floatMode="BORDER" floatingText="%text.nombre" layoutX="182.0" layoutY="237.0" prefWidth="200.0">
                                              <styleClass>
                                                 <String fx:value="jfx-txfs-security" />
                                                 <String fx:value="jfx-txfs-security-container" />
@@ -65,7 +65,7 @@
                         </HBox>
                      </content>
                   </Tab>
-                  <Tab fx:id="tptRoles" onSelectionChanged="#onSelectiontptRoles" text="Administracion de Roles">
+                  <Tab fx:id="tptRoles" onSelectionChanged="#onSelectiontptRoles" text="%tab.administracionRoles">
                      <content>
                         <HBox alignment="CENTER" prefHeight="627.0" prefWidth="856.0" spacing="10.0">
                            <children>
@@ -85,18 +85,18 @@
                                  <children>
                                     <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
                                        <children>
-                                          <Text fill="#00000099" strokeType="OUTSIDE" strokeWidth="0.0" text="Creacion de Roles" wrappingWidth="346.13671875">
+                                          <Text fill="#00000099" strokeType="OUTSIDE" strokeWidth="0.0" text="%text.creacionRoles" wrappingWidth="346.13671875">
                                              <font>
                                                 <Font name="Segoe UI" size="20.0" />
                                              </font>
                                           </Text>
-                                          <MFXTextField fx:id="txfIdRol" floatMode="BORDER" floatingText="ID" onKeyPressed="#onKeyPressedTxfIdRol">
+                                          <MFXTextField fx:id="txfIdRol" floatMode="BORDER" floatingText="%text.id" onKeyPressed="#onKeyPressedTxfIdRol">
                                              <styleClass>
                                                 <String fx:value="jfx-txfs-security" />
                                                 <String fx:value="jfx-txfs-security-container" />
                                              </styleClass>
                                           </MFXTextField>
-                                          <MFXTextField fx:id="txfNombreRol" floatMode="BORDER" floatingText="Nombre" prefHeight="39.0" prefWidth="200.0">
+                                          <MFXTextField fx:id="txfNombreRol" floatMode="BORDER" floatingText="%text.nombre" prefHeight="39.0" prefWidth="200.0">
                                              <styleClass>
                                                 <String fx:value="jfx-txfs-security" />
                                                 <String fx:value="jfx-txfs-security-container" />
@@ -114,17 +114,17 @@
             </TabPane>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                <children>
-                  <MFXButton fx:id="btnDelete" onAction="#onActionBtnDelete" prefHeight="35.0" prefWidth="100.0" styleClass="jfx-btn-delete" text="Eliminar">
+                  <MFXButton fx:id="btnDelete" onAction="#onActionBtnDelete" prefHeight="35.0" prefWidth="100.0" styleClass="jfx-btn-delete" text="%boton.eliminar">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                      </graphic>
                   </MFXButton>
-                  <MFXButton fx:id="btnAccept" onAction="#onActionBtnAccept" prefHeight="35.0" prefWidth="111.0" styleClass="jfx-btn-save" text="Guardar">
+                  <MFXButton fx:id="btnAccept" onAction="#onActionBtnAccept" prefHeight="35.0" prefWidth="111.0" styleClass="jfx-btn-save" text="%boton.guardar">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                      </graphic>
                   </MFXButton>
-                  <MFXButton fx:id="btnNew" layoutX="237.0" layoutY="43.0" onAction="#onActionBtnNew" prefHeight="35.0" prefWidth="90.0" styleClass="jfx-btn-new" text="Nuevo">
+                  <MFXButton fx:id="btnNew" layoutX="237.0" layoutY="43.0" onAction="#onActionBtnNew" prefHeight="35.0" prefWidth="90.0" styleClass="jfx-btn-new" text="%boton.nuevo">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                      </graphic>
