@@ -3,6 +3,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -11,77 +12,92 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
 
 <AnchorPane id="AnchorPane" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="432.0" prefWidth="699.0" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.mails.controller.MassiveMailSenderController">
-   <children>
-      <StackPane layoutX="162.0" layoutY="66.0" prefHeight="432.0" prefWidth="681.0" styleClass="stack-personal-pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <TabPane prefHeight="428.0" prefWidth="0.0" tabClosingPolicy="UNAVAILABLE">
-              <tabs>
-                <Tab text="Envío">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="399.0" prefWidth="0.0">
-                           <children>
-                              <TableView fx:id="tbvNotificationProcess" layoutX="31.0" layoutY="29.0" prefHeight="353.0" prefWidth="238.0">
-                                <columns>
-                                  <TableColumn fx:id="tbcNotifications" prefWidth="237.0" text="Procesos Disponibles" />
-                                </columns>
-                              </TableView>
-                              <Button fx:id="btnUploadExcel" layoutX="475.0" layoutY="250.0" mnemonicParsing="false" onAction="#onActionBtnUpload" prefHeight="45.0" prefWidth="125.0" styleClass="button-blueStyle" text="Cargar">
+    <children>
+        <StackPane layoutX="162.0" layoutY="66.0" prefHeight="432.0" prefWidth="681.0" styleClass="stack-personal-pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <TabPane prefHeight="428.0" prefWidth="0.0" tabClosingPolicy="UNAVAILABLE">
+                    <tabs>
+                        <Tab text="%LblEnvio">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="399.0" prefWidth="0.0">
+                                    <children>
+                                        <TableView fx:id="tbvNotificationProcess" layoutX="31.0" layoutY="29.0" prefHeight="353.0" prefWidth="238.0">
+                                            <columns>
+                                                <TableColumn fx:id="tbcNotifications" prefWidth="237.0" text="%LblProcesosDisponibles" />
+                                            </columns>
+                                        </TableView>
+                                        <Button fx:id="btnUploadExcel" layoutX="475.0" layoutY="250.0" mnemonicParsing="false" onAction="#onActionBtnUpload" prefHeight="45.0" prefWidth="125.0" styleClass="button-blueStyle" text="%BtnCargar">
+                                            <graphic>
+                                                <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@../resources/archivo-xls2.png" />
+                                                    </image>
+                                                </ImageView>
+                                            </graphic></Button>
+                                        <Button fx:id="btnDowloadExcel" layoutX="326.0" layoutY="250.0" mnemonicParsing="false" onAction="#onActionBtnDowload" prefHeight="45.0" prefWidth="125.0" styleClass="button-blueStyle" text="%BtnDescargar">
+                                            <graphic>
+                                                <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@../resources/archivo-xls.png" />
+                                                    </image>
+                                                </ImageView>
+                                            </graphic></Button>
+                                        <WebView fx:id="htmlPreview" layoutX="318.0" layoutY="29.0" prefHeight="209.0" prefWidth="291.0" />
+                                        <Button fx:id="btnMaximize" layoutX="622.0" layoutY="29.0" mnemonicParsing="false" onAction="#onActionBtnMaximize" prefHeight="39.0" prefWidth="45.0" styleClass="image-max-button" />
+                                        <MFXTextField fx:id="txtAsunto" floatMode="BORDER" floatingText="%LblAsuntoCorreos" layoutX="336.0" layoutY="322.0" prefHeight="38.0" prefWidth="256.0">
+                                            <padding>
+                                                <Insets top="10.0" />
+                                            </padding>
+                                        </MFXTextField>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                        <Tab text="%LblBuzon">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <children>
+                                        <TableView fx:id="tbvCorreoGenerados" layoutX="14.0" layoutY="22.0" prefHeight="320.0" prefWidth="256.0">
+                                            <columns>
+                                                <TableColumn fx:id="tbcDestinatario" prefWidth="105.0" text="%LblDestinatario" />
+                                                <TableColumn fx:id="tbcPlantilla" prefWidth="71.0" text="%LblPlantilla" />
+                                                <TableColumn fx:id="tbcEstado" prefWidth="79.0" text="%LblEstado" />
+                                            </columns>
+                                        </TableView>
+                                        <Button fx:id="btnSendMails" layoutX="567.0" layoutY="315.0" mnemonicParsing="false" onAction="#onActionBtnSend" prefHeight="39.0" prefWidth="107.0" styleClass="button-redStyle" text="%BtnEnviar">
+                                            <graphic>
+                                                <ImageView fitHeight="32.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@../resources/enviar-mensaje.png" />
+                                                    </image>
+                                                </ImageView>
+                                            </graphic></Button>
+                                        <Button fx:id="btnMaximizeMail" layoutX="248.0" layoutY="323.0" mnemonicParsing="false" onAction="#onActionBtnMaximizeMail" prefHeight="39.0" prefWidth="45.0" styleClass="image-max-button" />
+                              <Button fx:id="btnAdjuntar" layoutX="461.0" layoutY="315.0" mnemonicParsing="false" onAction="#onActionBtnAdjuntar" prefHeight="39.0" prefWidth="95.0" styleClass="button-redStyle" text="%BtnAdjuntar">
                                  <graphic>
-                                    <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../resources/archivo-xls2.png" />
+                                          <Image url="@../resources/clip-de-papel.png" />
                                        </image>
                                     </ImageView>
-                                 </graphic></Button>
-                              <Button fx:id="btnDowloadExcel" layoutX="326.0" layoutY="250.0" mnemonicParsing="false" onAction="#onActionBtnDowload" prefHeight="45.0" prefWidth="125.0" styleClass="button-blueStyle" text="Descargar">
-                                 <graphic>
-                                    <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../resources/archivo-xls.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic></Button>
-                              <WebView fx:id="htmlPreview" layoutX="318.0" layoutY="29.0" prefHeight="209.0" prefWidth="291.0" />
-                              <Button fx:id="btnMaximize" layoutX="622.0" layoutY="29.0" mnemonicParsing="false" onAction="#onActionBtnMaximize" prefHeight="39.0" prefWidth="45.0" styleClass="image-max-button" />
-                              <MFXTextField fx:id="txtAsunto" floatMode="BORDER" floatingText="Asunto para los correos" layoutX="336.0" layoutY="322.0" prefHeight="38.0" prefWidth="256.0">
-                                 <padding>
-                                    <Insets top="10.0" />
-                                 </padding>
-                              </MFXTextField>
-                           </children>
-                        </AnchorPane>
-                  </content>
-                </Tab>
-                <Tab text="Buzón">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <TableView fx:id="tbvCorreoGenerados" layoutX="14.0" layoutY="22.0" prefHeight="320.0" prefWidth="256.0">
-                                <columns>
-                                  <TableColumn fx:id="tbcDestinatario" prefWidth="105.0" text="Destinatario" />
-                                    <TableColumn fx:id="tbcPlantilla" prefWidth="71.0" text="Plantilla" />
-                                    <TableColumn fx:id="tbcEstado" prefWidth="79.0" text="Estado" />
-                                </columns>
-                              </TableView>
-                              <Button fx:id="btnSendMails" layoutX="567.0" layoutY="315.0" mnemonicParsing="false" onAction="#onActionBtnSend" prefHeight="39.0" prefWidth="107.0" styleClass="button-redStyle" text="Enviar">
-                                 <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../resources/enviar-mensaje.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic></Button>
-                              <Button fx:id="btnMaximizeMail" layoutX="248.0" layoutY="323.0" mnemonicParsing="false" onAction="#onActionBtnMaximizeMail" prefHeight="39.0" prefWidth="45.0" styleClass="image-max-button" />
-                           </children>
-                        </AnchorPane>
-                  </content>
-                </Tab>
-              </tabs>
-            </TabPane>
-         </children>
-      </StackPane>
-   </children>
+                                 </graphic>
+                              </Button>
+                              <ScrollPane layoutX="412.0" layoutY="29.0" prefHeight="240.0" prefWidth="262.0">
+                                 <content>
+                                    <VBox fx:id="vboxFiles" prefHeight="230.0" prefWidth="240.0" />
+                                 </content>
+                              </ScrollPane>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                    </tabs>
+                </TabPane>
+            </children>
+        </StackPane>
+    </children>
 </AnchorPane>

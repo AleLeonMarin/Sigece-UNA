@@ -28,6 +28,10 @@ public class AdminParametersController extends Controller implements Initializab
     @FXML
     private AnchorPane root;
 
+
+
+
+
     @FXML
     private TextField txtCorreo;
     @FXML
@@ -42,10 +46,14 @@ public class AdminParametersController extends Controller implements Initializab
 
     private ParametrosService parametrosService;
 
+    private ResourceBundle bundle;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         parametrosService = new ParametrosService();
         cargarParametros();
+
+        this.bundle = rb;
     }
 
     @Override
@@ -60,6 +68,7 @@ public class AdminParametersController extends Controller implements Initializab
 
     @FXML
     void onActionBtnSave(ActionEvent event) {
+
         ParamethersDto parametrosDTO = new ParamethersDto();
         parametrosDTO.setMail(txtCorreo.getText());
         parametrosDTO.setPassword(txtClave.getText());
@@ -70,18 +79,19 @@ public class AdminParametersController extends Controller implements Initializab
         Respuesta respuesta = parametrosService.guardarParametros(parametrosDTO);
         if (respuesta.getEstado()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Éxito");
+            alert.setTitle(bundle.getString("successTitle"));
             alert.setHeaderText(null);
-            alert.setContentText("Parámetros guardados correctamente.");
+            alert.setContentText(bundle.getString("parametersSavedSuccess"));
             alert.showAndWait();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
+            alert.setTitle(bundle.getString("errorTitle"));
             alert.setHeaderText(null);
-            alert.setContentText("Error guardando los parámetros: " + respuesta.getMensajeInterno());
+            alert.setContentText(bundle.getString("parametersSaveError") + ": " + respuesta.getMensajeInterno());
             alert.showAndWait();
         }
     }
+
 
     private void cargarParametros() {
         Respuesta respuesta = parametrosService.getParametros();

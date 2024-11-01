@@ -101,6 +101,8 @@ public class UsersDto implements Serializable {
 
     public List<GestionsDto> approvers;
 
+    private String token;
+
     public UsersDto() {
         this.modified = false;
         this.roles = new ArrayList<>();
@@ -321,6 +323,14 @@ public class UsersDto implements Serializable {
 
     public void setApprovers(List<GestionsDto> approvers) {
         this.approvers = approvers;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
 }

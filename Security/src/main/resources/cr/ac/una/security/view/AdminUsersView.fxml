@@ -23,14 +23,14 @@
    <children>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
          <children>
-            <Label prefHeight="24.0" prefWidth="257.0" text="Personalización De Usuario" textFill="#0000006b">
+            <Label prefHeight="24.0" prefWidth="257.0" text="%label.personalizacionUsuario" textFill="#0000006b">
                <font>
                   <Font name="Segoe UI" size="20.0" />
                </font>
             </Label>
             <TabPane fx:id="tbpUsuarios" prefHeight="650.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
-              <tabs>
-                <Tab fx:id="tptMantenimiento" text="Mantenimiento Usuarios">
+               <tabs>
+                  <Tab fx:id="tptMantenimiento" text="%tab.mantenimientoUsuarios">
                      <content>
                         <HBox alignment="CENTER" prefHeight="627.0" prefWidth="856.0" spacing="10.0">
                            <children>
@@ -52,13 +52,13 @@
                                                    </image></ImageView>
                                              </children>
                                           </StackPane>
-                                          <MFXTextField fx:id="txfID" floatMode="BORDER" floatingText="ID" onKeyPressed="#onKeyPressedTxId" prefHeight="41.0" prefWidth="137.0">
+                                          <MFXTextField fx:id="txfID" floatMode="BORDER" floatingText="%text.id" onKeyPressed="#onKeyPressedTxId" prefHeight="41.0" prefWidth="137.0">
                                              <styleClass>
                                                 <String fx:value="jfx-txfs-security" />
                                                 <String fx:value="jfx-txfs-security-container" />
                                              </styleClass>
                                           </MFXTextField>
-                                          <MFXTextField fx:id="txfNombre" floatMode="BORDER" floatingText="Nombre" prefHeight="39.0" prefWidth="292.0">
+                                          <MFXTextField fx:id="txfNombre" floatMode="BORDER" floatingText="%text.nombre" prefHeight="39.0" prefWidth="292.0">
                                              <styleClass>
                                                 <String fx:value="jfx-txfs-security" />
                                                 <String fx:value="jfx-txfs-security-container" />
@@ -66,7 +66,7 @@
                                           </MFXTextField>
                                           <HBox alignment="TOP_CENTER" prefHeight="45.0" prefWidth="417.0" spacing="5.0">
                                              <children>
-                                                <MFXTextField fx:id="txfLasts" floatMode="BORDER" floatingText="Apellidos" prefHeight="41.0" prefWidth="292.0">
+                                                <MFXTextField fx:id="txfLasts" floatMode="BORDER" floatingText="%text.apellidos" prefHeight="41.0" prefWidth="292.0">
                                                    <styleClass>
                                                       <String fx:value="jfx-txfs-security" />
                                                       <String fx:value="jfx-txfs-security-container" />
@@ -74,31 +74,30 @@
                                                 </MFXTextField>
                                              </children>
                                           </HBox>
-                                          <MFXTextField fx:id="txfCed" floatMode="BORDER" floatingText="Cédula" prefHeight="39.0" prefWidth="292.0">
+                                          <MFXTextField fx:id="txfCed" floatMode="BORDER" floatingText="%text.cedula" prefHeight="39.0" prefWidth="292.0">
                                              <styleClass>
                                                 <String fx:value="jfx-txfs-security" />
                                                 <String fx:value="jfx-txfs-security-container" />
                                              </styleClass>
                                           </MFXTextField>
-                                          <MFXTextField fx:id="txfMail" floatMode="BORDER" floatingText="Correo" prefHeight="39.0" prefWidth="292.0">
+                                          <MFXTextField fx:id="txfMail" floatMode="BORDER" floatingText="%text.correo" prefHeight="39.0" prefWidth="292.0">
                                              <styleClass>
                                                 <String fx:value="jfx-txfs-security" />
                                                 <String fx:value="jfx-txfs-security-container" />
                                              </styleClass>
                                           </MFXTextField>
-                                          <MFXTextField fx:id="txfTel" floatMode="BORDER" floatingText="Telefono" prefHeight="39.0" prefWidth="292.0">
+                                          <MFXTextField fx:id="txfTel" floatMode="BORDER" floatingText="%text.telefono" prefHeight="39.0" prefWidth="292.0">
                                              <styleClass>
                                                 <String fx:value="jfx-txfs-security" />
                                                 <String fx:value="jfx-txfs-security-container" />
                                              </styleClass>
                                           </MFXTextField>
-                                          <MFXTextField fx:id="txfCel" floatMode="BORDER" floatingText="Celular" prefHeight="39.0" prefWidth="292.0">
+                                          <MFXTextField fx:id="txfCel" floatMode="BORDER" floatingText="%text.celular" prefHeight="39.0" prefWidth="292.0">
                                              <styleClass>
                                                 <String fx:value="jfx-txfs-security" />
                                                 <String fx:value="jfx-txfs-security-container" />
                                              </styleClass>
                                           </MFXTextField>
-                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" />
                                        </children>
                                     </VBox>
                                  </children>
@@ -115,41 +114,41 @@
                                              <children>
                                                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                                                    <children>
-                                                      <Label text="Idioma" />
+                                                      <Label text="%label.idioma" />
                                                       <MFXComboBox fx:id="cmbLan" />
                                                    </children>
                                                 </VBox>
                                                 <VBox alignment="CENTER" layoutX="149.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                                                    <children>
-                                                      <Label text="Area" />
+                                                      <Label text="%label.area" />
                                                       <MFXComboBox fx:id="cmbAreas" />
                                                    </children>
                                                 </VBox>
                                              </children>
                                           </HBox>
-                                          <MFXTextField fx:id="txfUser" floatMode="BORDER" floatingText="Usuario" prefHeight="39.0" prefWidth="292.0">
+                                          <MFXTextField fx:id="txfUser" floatMode="BORDER" floatingText="%text.usuario" prefHeight="39.0" prefWidth="292.0">
                                              <styleClass>
                                                 <String fx:value="jfx-txfs-security" />
                                                 <String fx:value="jfx-txfs-security-container" />
                                              </styleClass>
                                           </MFXTextField>
-                                          <MFXTextField fx:id="txfPassword" floatMode="BORDER" floatingText="Clave" prefHeight="39.0" prefWidth="292.0">
+                                          <MFXTextField fx:id="txfPassword" floatMode="BORDER" floatingText="%text.clave" prefHeight="39.0" prefWidth="292.0">
                                              <styleClass>
                                                 <String fx:value="jfx-txfs-security" />
                                                 <String fx:value="jfx-txfs-security-container" />
                                              </styleClass>
                                           </MFXTextField>
-                                          <MFXTextField fx:id="txfStatus" floatMode="BORDER" floatingText="Estado" prefHeight="39.0" prefWidth="292.0">
+                                          <MFXTextField fx:id="txfStatus" floatMode="BORDER" floatingText="%text.estado" prefHeight="39.0" prefWidth="292.0">
                                              <styleClass>
                                                 <String fx:value="jfx-txfs-security" />
                                                 <String fx:value="jfx-txfs-security-container" />
                                              </styleClass>
                                           </MFXTextField>
-                                          <Label text="Roles" />
+                                          <Label text="%label.roles" />
                                           <TableView fx:id="tbvRoles" prefHeight="200.0">
                                              <columns>
-                                                <TableColumn fx:id="tbcIdRol" prefWidth="75.0" text="ID" />
-                                                <TableColumn fx:id="tbcRolNombre" prefWidth="75.0" text="ROL" />
+                                                <TableColumn fx:id="tbcIdRol" prefWidth="75.0" text="%columna.id" />
+                                                <TableColumn fx:id="tbcRolNombre" prefWidth="75.0" text="%columna.rol" />
                                              </columns>
                                              <VBox.margin>
                                                 <Insets left="30.0" right="30.0" />
@@ -162,22 +161,22 @@
                            </children>
                         </HBox>
                      </content>
-                </Tab>
-                <Tab fx:id="tptRoles" onSelectionChanged="#selectionChangeTabUsuarios" text="Agregacion de Roles">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                  </Tab>
+                  <Tab fx:id="tptRoles" onSelectionChanged="#selectionChangeTabUsuarios" text="%tab.agregacionRoles">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
                               <VBox alignment="CENTER" prefHeight="580.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
                                        <children>
-                                          <MFXTextField fx:id="txfIdSistema" floatMode="BORDER" floatingText="ID" onKeyPressed="#onKeyPressedTxfIdSistema">
+                                          <MFXTextField fx:id="txfIdSistema" floatMode="BORDER" floatingText="%text.idSistema" onKeyPressed="#onKeyPressedTxfIdSistema">
                                              <styleClass>
                                                 <String fx:value="jfx-txfs-security" />
                                                 <String fx:value="jfx-txfs-security-container" />
                                              </styleClass>
                                           </MFXTextField>
-                                          <MFXTextField fx:id="txfNombreSistema" floatMode="BORDER" floatingText="Sistema" layoutX="10.0" layoutY="10.0" prefHeight="39.0" prefWidth="350.0">
+                                          <MFXTextField fx:id="txfNombreSistema" floatMode="BORDER" floatingText="%text.sistema" layoutX="10.0" layoutY="10.0" prefHeight="39.0" prefWidth="350.0">
                                              <styleClass>
                                                 <String fx:value="jfx-txfs-security" />
                                                 <String fx:value="jfx-txfs-security-container" />
@@ -196,26 +195,26 @@
                               </VBox>
                            </children>
                         </AnchorPane>
-                  </content>
-                </Tab>
-              </tabs>
+                     </content>
+                  </Tab>
+               </tabs>
             </TabPane>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0" VBox.vgrow="ALWAYS">
                <children>
-                  <MFXButton fx:id="btnSave" onAction="#onActionBtnSave" prefHeight="40.0" prefWidth="120.0" styleClass="jfx-btn-save" text="Guardar">
+                  <MFXButton fx:id="btnSave" onAction="#onActionBtnSave" prefHeight="40.0" prefWidth="120.0" styleClass="jfx-btn-save" text="%boton.guardar">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                      </graphic></MFXButton>
-                  <MFXButton fx:id="btnSeacrh" onAction="#onActionBtnSearch" prefHeight="40.0" prefWidth="120.0" styleClass="jfx-btn-search" text="Buscar">
+                  <MFXButton fx:id="btnSeacrh" onAction="#onActionBtnSearch" prefHeight="40.0" prefWidth="120.0" styleClass="jfx-btn-search" text="%boton.buscar">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                      </graphic>
                   </MFXButton>
-                  <MFXButton fx:id="btnDelete" onAction="#onActionBtnDelete" prefHeight="40.0" prefWidth="120.0" styleClass="jfx-btn-delete" text="Eliminar">
+                  <MFXButton fx:id="btnDelete" onAction="#onActionBtnDelete" prefHeight="40.0" prefWidth="120.0" styleClass="jfx-btn-delete" text="%boton.eliminar">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                      </graphic></MFXButton>
-                  <MFXButton fx:id="btnNew" ellipsisString="" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnNew" prefHeight="40.0" prefWidth="120.0" styleClass="jfx-btn-new" text="Nuevo">
+                  <MFXButton fx:id="btnNew" ellipsisString="" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnNew" prefHeight="40.0" prefWidth="120.0" styleClass="jfx-btn-new" text="%boton.nuevo">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>

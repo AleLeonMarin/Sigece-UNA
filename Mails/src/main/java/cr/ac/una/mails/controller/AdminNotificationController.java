@@ -159,8 +159,12 @@ public class AdminNotificationController extends Controller implements Initializ
     private VariablesDto variableSeleccionada;
     private Mensaje mensaje;
 
+    private ResourceBundle rb;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        this.rb = rb;
         notificacionService = new NotificacionService();
         variablesService = new VariablesService();
         mensaje = new Mensaje();
@@ -381,26 +385,27 @@ public class AdminNotificationController extends Controller implements Initializ
         btnSave.setDisable(true);
         tabConfigHTML.setDisable(true);
         tabConfigVariables.setDisable(true);
+
         if (notificacionSeleccionada != null) {
-            boolean confirm = mensaje.showConfirmation("Eliminar Notificación", root.getScene().getWindow(), "¿Está seguro de eliminar esta notificación?");
+            boolean confirm = mensaje.showConfirmation(
+                    rb.getString("confirmDeleteNotificationTitle"),
+                    root.getScene().getWindow(),
+                    rb.getString("confirmDeleteNotificationMessage")
+            );
             if (confirm) {
                 Respuesta respuesta = notificacionService.eliminarNotificacion(notificacionSeleccionada.getId());
-
                 if (respuesta.getEstado()) {
-                    mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "Notificación eliminada correctamente.");
+                    mensaje.show(Alert.AlertType.INFORMATION, rb.getString("successTitle"), rb.getString("successDeleteNotification"));
                     cargarNotificaciones();
                     limpiarFormulario();
                 } else {
-                    mensaje.show(Alert.AlertType.ERROR, "Error", "Error al eliminar la notificación: " + respuesta.getMensaje());
+                    mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitle"), rb.getString("errorDeleteNotification") + respuesta.getMensaje());
                 }
             }
         } else {
             limpiarFormulario();
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Su formulario para la creación de un proceso de notificación " +
-                    "ha sido limpiado. " +
-                    " Si desea eliminar una  existente notificación debe seleccionarla.");
+            mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningEmptyNotificationForm"));
         }
-
     }
 
     @FXML
@@ -419,25 +424,21 @@ public class AdminNotificationController extends Controller implements Initializ
         limpiarVisualizadores();
     }
 
-
     @FXML
     void onActionBtnSave(ActionEvent event) {
         if (txtNombre.getText().isEmpty() || plantillaCode.getText().isEmpty()) {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe completar todos los campos.");
+            mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningCompleteFields"));
             return;
         }
-
         String htmlContent = plantillaCode.getText();
         boolean allVariablesPresent = true;
-
         for (VariablesDto variable : tbvVariables.getItems()) {
             String variablePattern = "[" + variable.getName() + "]";
             if (!htmlContent.contains(variablePattern)) {
-                mensaje.show(Alert.AlertType.WARNING, "Advertencia", "La variable '" + variable.getName() + "' no está implementada en la plantilla HTML.");
+                mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningMissingVariable") + variable.getName() + "'.");
                 allVariablesPresent = false;
             }
         }
-
         if (!allVariablesPresent) {
             return;
         }
@@ -455,12 +456,13 @@ public class AdminNotificationController extends Controller implements Initializ
         Respuesta respuesta = notificacionService.guardarNotificacion(notificacion);
 
         if (respuesta.getEstado()) {
-            mensaje.show(Alert.AlertType.INFORMATION, "Éxito", notificacionSeleccionada != null ? "Notificación actualizada correctamente." : "Notificación guardada correctamente.");
+            mensaje.show(Alert.AlertType.INFORMATION, rb.getString("successTitle"),
+                    notificacionSeleccionada != null ? rb.getString("successUpdateNotification") : rb.getString("successSaveNotification"));
             cargarNotificaciones();
             limpiarFormulario();
             variablesTemporales.clear();
         } else {
-            mensaje.show(Alert.AlertType.ERROR, "Error", "Error al guardar la notificación: " + respuesta.getMensaje());
+            mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitle"), rb.getString("errorSaveNotification") + respuesta.getMensaje());
         }
     }
 
@@ -468,17 +470,17 @@ public class AdminNotificationController extends Controller implements Initializ
     @FXML
     void onActionBtnSaveVar(ActionEvent event) {
         if (txtVarNombre.getText().isEmpty() || txtVarTipo.getValue() == null || txtVarTipo.getValue().isEmpty()) {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe completar los campos de nombre y tipo de la variable.");
+            mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningCompleteVarFields"));
             return;
         }
 
         if ("Condicional".equals(txtVarTipo.getValue()) && !txtVarValor.getText().isEmpty()) {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Las variables condicionales no deben tener contenido en el campo de valor.");
+            mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningConditionalVarNoContent"));
             return;
         }
 
         if ("Por defecto".equals(txtVarTipo.getValue()) && txtVarValor.getText().isEmpty()) {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Las variables por defecto deben tener contenido en el campo de valor.");
+            mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningDefaultVarContent"));
             return;
         }
 
@@ -486,10 +488,9 @@ public class AdminNotificationController extends Controller implements Initializ
             variableSeleccionada.setName(txtVarNombre.getText());
             variableSeleccionada.setType(txtVarTipo.getValue());
 
-            // Guardar contenido multimedia solo en multimediaSeleccionada
             if ("Multimedia".equals(txtVarTipo.getValue())) {
                 variableSeleccionada.setVarMultimedia(multimediaSeleccionada);
-                variableSeleccionada.setValue(txtVarValor.getText()); // Aquí puedes almacenar la referencia, no la Base64
+                variableSeleccionada.setValue(txtVarValor.getText());
             } else {
                 variableSeleccionada.setValue(txtVarValor.getText());
                 variableSeleccionada.setVarMultimedia(null);
@@ -502,7 +503,6 @@ public class AdminNotificationController extends Controller implements Initializ
             nuevaVariable.setName(txtVarNombre.getText());
             nuevaVariable.setType(txtVarTipo.getValue());
 
-            // Nueva variable multimedia, asignando solo multimediaSeleccionada a Base64
             if ("Multimedia".equals(txtVarTipo.getValue())) {
                 nuevaVariable.setVarMultimedia(multimediaSeleccionada);
                 nuevaVariable.setValue(txtVarValor.getText());
@@ -515,7 +515,7 @@ public class AdminNotificationController extends Controller implements Initializ
                     .anyMatch(var -> var.getName().equalsIgnoreCase(nuevaVariable.getName()));
 
             if (variableYaExiste) {
-                mensaje.show(Alert.AlertType.WARNING, "Advertencia", "La variable ya existe en la lista.");
+                mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningVariableExists"));
                 return;
             }
 
@@ -536,19 +536,21 @@ public class AdminNotificationController extends Controller implements Initializ
     @FXML
     void onActionBtnDeleteVar(ActionEvent event) {
         VariablesDto variableToDelete = tbvVariables.getSelectionModel().getSelectedItem();
-
         if (variableToDelete != null) {
-            boolean confirm = mensaje.showConfirmation("Eliminar Variable", root.getScene().getWindow(), "¿Está seguro de eliminar esta variable?");
+            boolean confirm = mensaje.showConfirmation(
+                    rb.getString("confirmDeleteVariableTitle"),
+                    root.getScene().getWindow(),
+                    rb.getString("confirmDeleteVariableMessage")
+            );
 
             if (confirm) {
                 tbvVariables.getItems().remove(variableToDelete);
-
                 tbvVariables2.setItems(FXCollections.observableArrayList(tbvVariables.getItems()));
                 variablesService.eliminarVariable(variableToDelete.getId());
                 limpiarFormularioVar();
             }
         } else {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una variable para eliminar.");
+            mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningSelectVariable"));
         }
     }
 
@@ -623,7 +625,7 @@ public class AdminNotificationController extends Controller implements Initializ
             AppContext.getInstance().set("notificacionSeleccionada", notificacionSeleccionada);
             FlowController.getInstance().goViewInWindowModal("InfoNotificationView", this.getStage(), Boolean.TRUE);
         } else {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una notificación antes de ver la información.");
+            mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningSelectNotificationForInfo"));
         }
     }
 
@@ -639,11 +641,23 @@ public class AdminNotificationController extends Controller implements Initializ
     }
 
 
+
+
+    /**
+     * Obtiene la extensión del archivo.
+     */
+    private String getFileExtension(File file) {
+        String fileName = file.getName();
+        return fileName.substring(fileName.lastIndexOf('.')).toLowerCase();
+    }
+
+
+
     @FXML
     void clickBtnAttachImage(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Seleccionar imagen o video");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos multimedia", "*.png", "*.mp4"));
+        fileChooser.setTitle(rb.getString("fileChooserTitle"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(rb.getString("fileChooserExtension"), "*.png", "*.mp4"));
 
         File selectedFile = fileChooser.showOpenDialog(root.getScene().getWindow());
         if (selectedFile != null) {
@@ -668,23 +682,14 @@ public class AdminNotificationController extends Controller implements Initializ
                 txtVarTipo.setValue("Multimedia");
 
             } catch (IOException e) {
-                mensaje.show(Alert.AlertType.ERROR, "Error", "No se pudo cargar el archivo seleccionado.");
+                mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitle"), rb.getString("errorFileLoad"));
             }
         }
     }
 
-
-
     /**
      * Obtiene la extensión del archivo.
      */
-    private String getFileExtension(File file) {
-        String fileName = file.getName();
-        return fileName.substring(fileName.lastIndexOf('.')).toLowerCase();
-    }
-
-
-
     private void mostrarMultimedia(byte[] fileBytes, String fileExtension) {
         // Limpiar cualquier contenido previo
         limpiarVisualizadores();
@@ -717,9 +722,10 @@ public class AdminNotificationController extends Controller implements Initializ
             }
 
         } catch (IOException e) {
-            mensaje.show(Alert.AlertType.ERROR, "Error", "Error al cargar el contenido multimedia: " + e.getMessage());
+            mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitle"), rb.getString("errorMultimediaLoad") + e.getMessage());
         }
     }
+
 
 
 

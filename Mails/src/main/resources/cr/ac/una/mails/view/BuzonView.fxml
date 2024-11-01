@@ -38,13 +38,13 @@
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                      <children>
-                        <MFXFilterComboBox fx:id="cmbEstado" floatMode="BORDER" floatingText="Estado" prefHeight="38.0" prefWidth="123.0" />
-                        <MFXTextField fx:id="txtBusqueda" floatMode="DISABLED" floatingText="Buscar" prefHeight="39.0" prefWidth="292.0">
+                        <MFXFilterComboBox fx:id="cmbEstado" floatMode="BORDER" floatingText="%comboBox.estado" prefHeight="38.0" prefWidth="123.0" />
+                        <MFXTextField fx:id="txtBusqueda" floatMode="DISABLED" floatingText="%textfield.buscar" prefHeight="39.0" prefWidth="292.0">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
                         </MFXTextField>
-                        <MFXButton fx:id="btnBuscar" onAction="#onActionBtnBuscar" prefHeight="30.0" prefWidth="62.0" styleClass="button-redStyle" text="Buscar">
+                        <MFXButton fx:id="btnBuscar" onAction="#onActionBtnBuscar" prefHeight="30.0" prefWidth="62.0" styleClass="button-redStyle" text="%button.buscar">
                            <HBox.margin>
                               <Insets left="5.0" />
                            </HBox.margin>
@@ -56,21 +56,21 @@
                         <Insets left="40.0" top="10.0" />
                      </VBox.margin>
                      <columns>
-                        <TableColumn fx:id="tbcDestinatario" prefWidth="182.0" text="Destinatario" />
-                        <TableColumn fx:id="tbcEstado" prefWidth="99.0" text="Estado" />
-                        <TableColumn fx:id="tbcFecha" prefWidth="209.0" text="Fecha" />
-                        <TableColumn fx:id="tbcId" prefWidth="38.0" text="ID " />
+                        <TableColumn fx:id="tbcDestinatario" prefWidth="182.0" text="%table.column.destinatario" />
+                        <TableColumn fx:id="tbcEstado" prefWidth="99.0" text="%table.column.estado" />
+                        <TableColumn fx:id="tbcFecha" prefWidth="209.0" text="%table.column.fecha" />
+                        <TableColumn fx:id="tbcId" prefWidth="38.0" text="%table.column.id" />
                      </columns>
                   </TableView>
                   <HBox alignment="CENTER" prefHeight="60.0" prefWidth="563.0" spacing="20.0">
                      <children>
-                        <MFXButton fx:id="btnDelete" onAction="#onActionBtnDelete" prefHeight="30.0" prefWidth="75.0" styleClass="button-blueStyle" text="Eliminar">
+                        <MFXButton fx:id="btnDelete" onAction="#onActionBtnDelete" prefHeight="30.0" prefWidth="75.0" styleClass="button-blueStyle" text="%button.eliminar">
                            <HBox.margin>
                               <Insets left="15.0" />
                            </HBox.margin>
                         </MFXButton>
-                        <MFXButton fx:id="btnShowContent" onAction="#onActionBtnShowContent" prefHeight="30.0" prefWidth="112.0" styleClass="button-blueStyle" text="Ver Contenido" />
-                        <MFXButton fx:id="btnSendNow" onAction="#onActionBtnSendNow" prefHeight="30.0" prefWidth="162.0" styleClass="button-blueStyle" text="Actualizar Correos" />
+                        <MFXButton fx:id="btnShowContent" onAction="#onActionBtnShowContent" prefHeight="30.0" prefWidth="112.0" styleClass="button-blueStyle" text="%button.verContenido" />
+                        <MFXButton fx:id="btnSendNow" onAction="#onActionBtnSendNow" prefHeight="30.0" prefWidth="162.0" styleClass="button-blueStyle" text="%button.actualizarCorreos" />
                      </children>
                      <VBox.margin>
                         <Insets top="10.0" />
@@ -80,8 +80,8 @@
             </VBox>
          </children>
       </StackPane>
-      <Button fx:id="btnNewMail" layoutX="664.0" layoutY="501.0" mnemonicParsing="false" onAction="#onActionBtnNewMail" prefHeight="66.0" prefWidth="62.0" styleClass="image-newMail-button" />
-      <Label layoutX="293.0" layoutY="546.0" prefHeight="17.0" prefWidth="174.0" text="      Correos por hora" textAlignment="CENTER" textFill="#000000b6">
+      <Button fx:id="btnNewMail" layoutX="664.0" layoutY="501.0" mnemonicParsing="false" onAction="#onActionBtnNewMail" prefHeight="66.0" prefWidth="62.0" styleClass="image-newMail-button" text="%button.nuevoCorreo" />
+      <Label layoutX="293.0" layoutY="546.0" prefHeight="17.0" prefWidth="174.0" text="%label.correosPorHora" textAlignment="CENTER" textFill="#000000b6">
          <font>
             <Font name="Segoe UI" size="13.0" />
          </font>

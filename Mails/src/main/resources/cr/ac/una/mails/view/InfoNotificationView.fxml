@@ -20,7 +20,7 @@
                      <children>
                         <TableView fx:id="tbvMails" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="177.0" prefWidth="343.0">
                            <columns>
-                              <TableColumn fx:id="tbcDestinatario" prefWidth="342.0" text="Destinatario" />
+                              <TableColumn fx:id="tbcDestinatario" prefWidth="342.0" text="%tabla.destinatario" />
                            </columns>
                            <VBox.margin>
                               <Insets top="10.0" />
@@ -28,19 +28,19 @@
                         </TableView>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                            <children>
-                              <Label prefHeight="35.0" prefWidth="139.0" styleClass="button-redStyle" text="Veces Utilizado">
+                              <Label prefHeight="35.0" prefWidth="139.0" styleClass="button-redStyle" text="%label.vecesUtilizado">
                                  <graphic>
-                                    <Label fx:id="txtVecesUtilizado" opacity="0.9" styleClass="button-redStyle" text="Label" />
+                                    <Label fx:id="txtVecesUtilizado" opacity="0.9" styleClass="button-redStyle" text="%label.vecesUtilizado" />
                                  </graphic>
                               </Label>
-                              <Label prefHeight="35.0" prefWidth="111.0" styleClass="button-redStyle" text="Enviados">
+                              <Label prefHeight="35.0" prefWidth="111.0" styleClass="button-redStyle" text="%label.enviados">
                                  <graphic>
-                                    <Label fx:id="txtVecesEnviado" opacity="0.9" styleClass="button-redStyle" text="Label" />
+                                    <Label fx:id="txtVecesEnviado" opacity="0.9" styleClass="button-redStyle" text="%label.enviados" />
                                  </graphic>
                               </Label>
-                              <Label prefHeight="37.0" prefWidth="114.0" styleClass="button-redStyle" text="Por Enviar">
+                              <Label prefHeight="37.0" prefWidth="114.0" styleClass="button-redStyle" text="%label.porEnviar">
                                  <graphic>
-                                    <Label fx:id="txtPorEnviar" opacity="0.9" styleClass="button-redStyle" text="Label" />
+                                    <Label fx:id="txtPorEnviar" opacity="0.9" styleClass="button-redStyle" text="%label.porEnviar" />
                                  </graphic>
                               </Label>
                               <Button fx:id="btnMaximize" mnemonicParsing="false" onAction="#onActionBtnMaximize" prefHeight="47.0" prefWidth="41.0" styleClass="image-max-button" />

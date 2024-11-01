@@ -18,12 +18,12 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -39,6 +39,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
+import javafx.scene.layout.VBox;
+
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class MassiveMailSenderController extends Controller implements Initializable {
@@ -61,6 +64,13 @@ public class MassiveMailSenderController extends Controller implements Initializ
     @FXML
     private Button btnMaximizeMail;
 
+
+    @FXML
+    private VBox vboxFiles;
+
+    @FXML
+    private Button btnAdjuntar;
+
     @FXML
     private TableColumn<MailsDto, String> tbcEstado, tbcDestinatario, tbcPlantilla;
 
@@ -69,6 +79,8 @@ public class MassiveMailSenderController extends Controller implements Initializ
 
     @FXML
     private TableColumn<NotificationsDto, String> tbcNotifications;
+
+    private List<File> attachedFiles = new ArrayList<>();
 
     private NotificacionService notificacionService = new NotificacionService();
     private CorreosService correosService = new CorreosService();
@@ -81,8 +93,13 @@ public class MassiveMailSenderController extends Controller implements Initializ
 
     private Mensaje mensaje = new Mensaje();
 
+    private ResourceBundle rb;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        this.rb = rb;
+
         tbcNotifications.setCellValueFactory(new PropertyValueFactory<>("name"));
 
 
@@ -95,6 +112,10 @@ public class MassiveMailSenderController extends Controller implements Initializ
         tbcDestinatario.setCellValueFactory(new PropertyValueFactory<>("destinatary"));
         tbcEstado.setCellValueFactory(new PropertyValueFactory<>("state"));
         tbcPlantilla.setCellValueFactory(new PropertyValueFactory<>("result"));
+
+        btnAdjuntar.setDisable(true);
+        btnSendMails.setDisable(true);
+
     }
 
     @Override
@@ -159,17 +180,16 @@ public class MassiveMailSenderController extends Controller implements Initializ
 //        }
 //    }
 
-@FXML
+    @FXML
     private void onActionBtnUpload(ActionEvent event) {
-        // Validar que se haya seleccionado una notificación antes de continuar
         if (notificacionSeleccionada == null) {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una notificación antes de cargar el archivo Excel.");
+            mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningSelectNotificationBeforeUpload"));
             return;
         }
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Cargar archivo Excel");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos Excel", "*.xlsx"));
+        fileChooser.setTitle(rb.getString("fileChooserTitleUploadExcel"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(rb.getString("fileChooserExcelFilter"), "*.xlsx"));
         File file = fileChooser.showOpenDialog(root.getScene().getWindow());
 
         if (file != null) {
@@ -185,7 +205,7 @@ public class MassiveMailSenderController extends Controller implements Initializ
 
                     Cell correoCell = row.getCell(0, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
                     if (correoCell == null || correoCell.getCellType() == CellType.BLANK || correoCell.getStringCellValue().trim().isEmpty()) {
-                        mensaje.show(Alert.AlertType.WARNING, "Advertencia", "La fila " + (row.getRowNum() + 1) + " no tiene un correo destinatario válido. Revisa tu Excel.");
+                        mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningInvalidEmailRow") + (row.getRowNum() + 1));
                         continue;
                     }
 
@@ -199,8 +219,6 @@ public class MassiveMailSenderController extends Controller implements Initializ
                     }
 
                     correoDto.setNotification(notificacionSeleccionada);
-
-
 
                     List<byte[]> adjuntos = new ArrayList<>();
                     List<String> contentIds = new ArrayList<>();
@@ -219,10 +237,11 @@ public class MassiveMailSenderController extends Controller implements Initializ
                 }
 
                 tbvCorreoGenerados.setItems(correosGenerados);
-                mensaje.show(Alert.AlertType.INFORMATION, "Carga exitosa", "El archivo Excel se ha procesado correctamente.");
-
+                mensaje.show(Alert.AlertType.INFORMATION, rb.getString("infoTitleSuccess"), rb.getString("infoExcelProcessedSuccessfully"));
+                btnAdjuntar.setDisable(false);
+                btnSendMails.setDisable(false);
             } catch (IOException e) {
-                mensaje.show(Alert.AlertType.ERROR, "Error", "Error al procesar el archivo Excel: " + e.getMessage());
+                mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitle"), rb.getString("errorProcessingExcel") + e.getMessage());
             }
         }
     }
@@ -235,12 +254,12 @@ public class MassiveMailSenderController extends Controller implements Initializ
         correosGenerados.forEach(correo -> {
             Respuesta respuesta = correosService.guardarCorreo(correo);
             if (!respuesta.getEstado()) {
-                mensaje.show(Alert.AlertType.ERROR, "Error", "Error al persistir correo de: " + correo.getDestinatary());
+                mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitle"), rb.getString("errorPersistingEmail") + correo.getDestinatary());
             }
         });
 
         tbvCorreoGenerados.refresh();
-        mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "Correos enviados a la base de datos, serán enviados automáticamente.");
+        mensaje.show(Alert.AlertType.INFORMATION, rb.getString("infoTitleSuccess"), rb.getString("infoEmailsSentToDatabase"));
     }
 
     private String generarContenidoConVariables(Row row, Row headerRow, List<byte[]> adjuntos, List<String> contentIds) {
@@ -336,22 +355,21 @@ public class MassiveMailSenderController extends Controller implements Initializ
     @FXML
     void onActionBtnDowload(ActionEvent event) {
         if (notificacionSeleccionada == null) {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una notificación.");
+            mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningSelectNotification"));
             return;
         }
 
         List<VariablesDto> variables = notificacionSeleccionada.getVariables();
 
         Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Plantilla Notificación");
+        Sheet sheet = workbook.createSheet(rb.getString("excelSheetTitle"));
 
         Row headerRow = sheet.createRow(0);
         int colIndex = 0;
 
         Cell emailCell = headerRow.createCell(colIndex++);
-        emailCell.setCellValue("Correo Destino");
+        emailCell.setCellValue(rb.getString("excelHeaderEmail"));
 
-        // Excluir variables multimedia del Excel
         for (VariablesDto variable : variables) {
             if (!"Multimedia".equals(variable.getType())) {
                 Cell cell = headerRow.createCell(colIndex++);
@@ -360,17 +378,17 @@ public class MassiveMailSenderController extends Controller implements Initializ
         }
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Guardar Plantilla Excel");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos Excel", "*.xlsx"));
+        fileChooser.setTitle(rb.getString("fileChooserTitleSaveExcel"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(rb.getString("fileChooserExcelFilter"), "*.xlsx"));
         File file = fileChooser.showSaveDialog(new Stage());
 
         if (file != null) {
             try (FileOutputStream fileOut = new FileOutputStream(file)) {
                 workbook.write(fileOut);
                 workbook.close();
-                mensaje.show(Alert.AlertType.INFORMATION, "Plantilla Excel guardada", "La plantilla Excel se ha guardado correctamente.");
+                mensaje.show(Alert.AlertType.INFORMATION, rb.getString("excelSaveTitleSuccess"), rb.getString("excelSaveMessageSuccess"));
             } catch (IOException e) {
-                mensaje.show(Alert.AlertType.ERROR, "Error al guardar Excel", "Hubo un error al escribir el archivo Excel: " + e.getMessage());
+                mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitleSaveExcel"), rb.getString("errorSaveExcel") + e.getMessage());
             }
         }
     }
@@ -383,10 +401,10 @@ public class MassiveMailSenderController extends Controller implements Initializ
             String htmlContent = notificacionSeleccionada.getHtml();
             AppContext.getInstance().set("htmlContent", htmlContent);
             AppContext.getInstance().set("variables", notificacionSeleccionada.getVariables());
-            AppContext.getInstance().set("isPreviewMode", true); // Establece la bandera de modo vista previa
+            AppContext.getInstance().set("isPreviewMode", true);
             FlowController.getInstance().goViewInWindowModal("MaxViewHTML", this.getStage(), Boolean.TRUE);
         } else {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una notificación.");
+            mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningSelectNotification"));
         }
     }
 
@@ -400,7 +418,7 @@ public class MassiveMailSenderController extends Controller implements Initializ
             AppContext.getInstance().set("htmlContent", htmlContent);
             FlowController.getInstance().goViewInWindowModal("MaxViewHTML", this.getStage(), Boolean.TRUE);
         } else {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una correo.");
+            mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningSelectMail"));
         }
     }
 
@@ -431,4 +449,125 @@ public class MassiveMailSenderController extends Controller implements Initializ
         }
         return htmlContent;
     }
+
+    @FXML
+    void onActionBtnAdjuntar(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(rb.getString("fileChooserTitleAttachFiles"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(rb.getString("fileChooserAllFiles"), "*.*"));
+
+        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(root.getScene().getWindow());
+        if (selectedFiles != null && !selectedFiles.isEmpty()) {
+            for (File file : selectedFiles) {
+                try (FileInputStream fis = new FileInputStream(file)) {
+                    byte[] fileData = new byte[(int) file.length()];
+                    fis.read(fileData);
+
+                    // Añadir los archivos adjuntos a cada correo generado
+                    for (MailsDto correo : correosGenerados) {
+                        if (correo.getAttachments() == null) {
+                            correo.setAttachments(new ArrayList<>());
+                        }
+                        correo.getAttachments().add(fileData);
+                    }
+
+                    // Añadir el archivo a la lista de archivos y al VBox
+                    attachedFiles.add(file);
+                    addFileToVBox(file);
+
+                } catch (IOException e) {
+                    mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitle"), rb.getString("errorAttachFile") + file.getName());
+                }
+            }
+            mensaje.show(Alert.AlertType.INFORMATION, rb.getString("infoTitleAttachFiles"), rb.getString("infoFilesAttachedSuccessfully"));
+        }
+    }
+
+    private void addFileToVBox(File file) {
+        HBox fileCell = new HBox(10); // Espacio entre ícono y nombre
+        fileCell.setStyle("-fx-padding: 7; -fx-alignment: center-left;");
+
+        // Icono para el archivo
+        ImageView icon = new ImageView(getFileIcon(file.getName()));
+        icon.setFitWidth(40);
+        icon.setFitHeight(40);
+
+        // Nombre del archivo
+        Label fileName = new Label(file.getName());
+
+        // Botón de eliminar
+        Button deleteButton = new Button("Eliminar");
+        deleteButton.setOnAction(event -> {
+            // Remover archivo de la lista y del VBox
+            attachedFiles.remove(file);
+            vboxFiles.getChildren().remove(fileCell);
+
+            // Remover archivo de cada correo generado en correosGenerados
+            for (MailsDto correo : correosGenerados) {
+                if (correo.getAttachments() != null) {
+                    correo.getAttachments().removeIf(attachment -> attachment.equals(readFileToBytes(file)));
+                }
+            }
+        });
+
+        fileCell.getChildren().addAll(icon, fileName, deleteButton);
+        vboxFiles.getChildren().add(fileCell);
+    }
+
+
+    /**
+     * Obtiene el ícono adecuado basado en la extensión del archivo
+     */
+    private Image getFileIcon(String fileName) {
+        String extension = getFileExtension(fileName).toLowerCase();
+
+        String iconPath;
+        switch (extension) {
+            case ".pdf":
+                iconPath = "/cr/ac/una/mails/resources/pdf.png";
+                break;
+            case ".doc":
+            case ".docx":
+                iconPath = "/cr/ac/una/mails/resources/word.png";
+                break;
+            case ".xls":
+            case ".xlsx":
+                iconPath = "/cr/ac/una/mails/resources/sheets.png";
+                break;
+            case ".ppt":
+            case ".pptx":
+                iconPath = "/cr/ac/una/mails/resources/ppt.png";
+                break;
+            case ".png":
+            case ".jpg":
+            case ".jpeg":
+                iconPath = "/cr/ac/una/mails/resources/photo-gallery.png";
+                break;
+            case ".mp4":
+                iconPath = "/cr/ac/una/mails/resources/video.png";
+                break;
+            default:
+                iconPath = "/cr/ac/una/mails/resources/file.png";
+                break;
+        }
+
+        return new Image(getClass().getResourceAsStream(iconPath));
+    }
+
+    private String getFileExtension(String fileName) {
+        int lastDotIndex = fileName.lastIndexOf('.');
+        return lastDotIndex > 0 ? fileName.substring(lastDotIndex) : "";
+    }
+
+    private byte[] readFileToBytes(File file) {
+        try (FileInputStream fis = new FileInputStream(file)) {
+            byte[] fileData = new byte[(int) file.length()];
+            fis.read(fileData);
+            return fileData;
+        } catch (IOException e) {
+            mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitle"), rb.getString("errorReadFile") + file.getName());
+            return null;
+        }
+    }
+
 }

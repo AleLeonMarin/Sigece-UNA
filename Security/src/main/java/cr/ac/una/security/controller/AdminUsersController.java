@@ -172,8 +172,12 @@ public class AdminUsersController extends Controller implements Initializable {
 
     ObservableList<SystemsDto> sistemasList = FXCollections.observableArrayList();
 
+    ResourceBundle bundle;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        this.bundle = rb;
 
         txfID.delegateSetTextFormatter(Formato.getInstance().integerFormat());
         txfCed.delegateSetTextFormatter(Formato.getInstance().cedulaFormat(15));
@@ -345,8 +349,8 @@ public class AdminUsersController extends Controller implements Initializable {
         }
         if (validos) {
             return "";
-        } else {
-            return "Campos requeridos o con problemas de formato [" + invalidos + "].";
+        }else {
+            return validos ? "" : bundle.getString("requiredFields") + "[" + invalidos + "].";
         }
     }
 
@@ -391,11 +395,12 @@ public class AdminUsersController extends Controller implements Initializable {
                 Image image = SwingFXUtils.toFXImage(bufferedImage, null);
                 photo.setImage(image);
             } catch (IOException e) {
-                new Mensaje().showModal(AlertType.ERROR, "Error", getStage(), "Error al cargar la imagen.");
+                new Mensaje().showModal(AlertType.ERROR, bundle.getString("errorCargaImagen"), getStage(), bundle.getString("errorCargaImagen"));
             }
         }
-
     }
+
+
 
     public void chargeRoles() {
         tbvRoles.getItems().clear();
@@ -423,16 +428,11 @@ public class AdminUsersController extends Controller implements Initializable {
             UsersService service = new UsersService();
             Respuesta respuesta = service.obtenerUsuario(id);
             if (respuesta.getEstado()) {
-                unbindUser(); // Desvincula los campos para evitar problemas anteriores
+                unbindUser();
                 this.usuariosDto = (UsersDto) respuesta.getResultado("Usuario");
-
-                // Aquí puedes imprimir para asegurarte de que el objeto tiene datos
-                System.out.println("Usuario ID: " + usuariosDto.getId());
-                System.out.println("Nombre: " + usuariosDto.getName());
-
-                bindUser(false); // Vincula los datos si existen
-                validarRequeridos(); // Verifica los campos requeridos
-                chargeRoles(); // Carga los roles asociados al usuario
+                bindUser(false);
+                validarRequeridos();
+                chargeRoles();
                 AreasDto areaSeleccionada = usuariosDto.getAreas();
                 if (areaSeleccionada != null) {
                     for (AreasDto area : cmbAreas.getItems()) {
@@ -441,37 +441,36 @@ public class AdminUsersController extends Controller implements Initializable {
                             break;
                         }
                     }
-                } else {
-                    System.out.println("El área es nula en usuariosDto");
                 }
                 cmbLan.getSelectionModel().selectItem(usuariosDto.getLanguage());
-
             } else {
-                new Mensaje().showModal(AlertType.INFORMATION, "Buscar Usuario", getStage(), respuesta.getMensaje());
+                new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("buscarUsuario"), getStage(), respuesta.getMensaje());
             }
         } catch (Exception e) {
-            Logger.getLogger(AdminUsersController.class.getName()).log(Level.SEVERE, "Error buscando el usuario ", e);
-            new Mensaje().showModal(AlertType.ERROR, "Buscar Usuario", getStage(), "Error buscando el usuario.");
+            Logger.getLogger(AdminUsersController.class.getName()).log(Level.SEVERE, bundle.getString("errorBuscarUsuario"), e);
+            new Mensaje().showModal(AlertType.ERROR, bundle.getString("buscarUsuario"), getStage(), bundle.getString("errorBuscarUsuario"));
         }
     }
+
+
 
     private void chargeSistem(Long id) {
         try {
             SystemsService service = new SystemsService();
             Respuesta res = service.obtenerSystem(id);
-
             if (!res.getEstado()) {
-                new Mensaje().showModal(AlertType.ERROR, "Cargar Sistema", getStage(), res.getMensaje());
+                new Mensaje().showModal(AlertType.ERROR, bundle.getString("cargarSistema"), getStage(), res.getMensaje());
             } else {
                 unbindSystems();
                 this.systems = (SystemsDto) res.getResultado("Sistema");
                 bindSystems(false);
             }
         } catch (Exception e) {
-            Logger.getLogger(AdminSystemController.class.getName()).log(Level.SEVERE, "Error cargando sistema", e);
-            new Mensaje().showModal(AlertType.ERROR, "Cargar Sistema", getStage(), "Error cargando el Sistema.");
+            Logger.getLogger(AdminSystemController.class.getName()).log(Level.SEVERE, bundle.getString("errorCargarSistema"), e);
+            new Mensaje().showModal(AlertType.ERROR, bundle.getString("cargarSistema"), getStage(), bundle.getString("errorCargarSistema"));
         }
     }
+
 
     private void chargeAreas() {
         try {
@@ -480,13 +479,14 @@ public class AdminUsersController extends Controller implements Initializable {
             if (respuesta.getEstado()) {
                 cmbAreas.setItems(FXCollections.observableArrayList((List<AreasDto>) respuesta.getResultado("Areas")));
             } else {
-                new Mensaje().showModal(AlertType.INFORMATION, "Cargar Areas", getStage(), respuesta.getMensaje());
+                new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("cargarAreas"), getStage(), respuesta.getMensaje());
             }
         } catch (Exception e) {
-            Logger.getLogger(AdminUsersController.class.getName()).log(Level.SEVERE, "Error cargando las áreas", e);
-            new Mensaje().showModal(AlertType.ERROR, "Cargar Areas", getStage(), "Error cargando las áreas.");
+            Logger.getLogger(AdminUsersController.class.getName()).log(Level.SEVERE, bundle.getString("errorCargarAreas"), e);
+            new Mensaje().showModal(AlertType.ERROR, bundle.getString("cargarAreas"), getStage(), bundle.getString("errorCargarAreas"));
         }
     }
+
 
     private void columnsTable() {
         // Configuración de la columna para el ID
@@ -545,15 +545,12 @@ public class AdminUsersController extends Controller implements Initializable {
 
     @FXML
     void selectionChangeTabUsuarios(Event event) {
-
         if (tptRoles.isSelected()) {
             if (this.usuariosDto.getId() == null) {
-                new Mensaje().showModal(AlertType.INFORMATION, "Roles de Usuario", getStage(),
-                        "Debe seleccionar un usuario.");
+                new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("rolesUsuario"), getStage(), bundle.getString("debeSeleccionarUsuario"));
                 tbpUsuarios.getSelectionModel().select(tptMantenimiento);
             } else {
-                new Mensaje().showModal(AlertType.INFORMATION, "Inclusion", getStage(),
-                        "Solo puede agregar un rol de un sistema a la vez.");
+                new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("inclusion"), getStage(), bundle.getString("soloUnRol"));
                 tbvUsers.getItems().clear();
                 tbvUsers.getColumns().clear();
                 if (tbvUsers.getColumns().isEmpty()) {
@@ -564,61 +561,54 @@ public class AdminUsersController extends Controller implements Initializable {
         }
     }
 
+
     @FXML
     void onActionBtnAddUser(ActionEvent event) {
-
         if (this.systems.getId() == null || this.systems.getName().isEmpty() || cmbRoles.getSelectedItem() == null) {
-            new Mensaje().showModal(AlertType.ERROR, "Agregar Rol", getStage(),
-                    "Es necesario cargar un sistema y seleccionar un rol.");
+            new Mensaje().showModal(AlertType.ERROR, bundle.getString("agregarRol"), getStage(), bundle.getString("necesarioSistemaRol"));
         } else if (tbvUsers.getItems() == null || !tbvUsers.getItems().stream().anyMatch(s -> s.equals(this.systems))) {
             this.usuariosDto.setModified(true);
             tbvUsers.getItems().add(this.systems);
             tbvUsers.refresh();
         }
-
         newSystem();
     }
 
+
     @FXML
     void onActionBtnDelete(ActionEvent event) {
-
         try {
             if (this.usuariosDto.getId() == null) {
-                new Mensaje().showModal(AlertType.INFORMATION, "Eliminar Usuario", getStage(),
-                        "No se ha seleccionado un usuario.");
+                new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("eliminarUsuario"), getStage(), bundle.getString("noSeleccionoUsuario"));
             } else {
                 UsersService service = new UsersService();
                 Respuesta respuesta = service.eliminarUsuario(this.usuariosDto.getId());
                 if (!respuesta.getEstado()) {
-                    new Mensaje().showModal(AlertType.INFORMATION, "Eliminar Usuario", getStage(),
-                            respuesta.getMensaje());
+                    new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("eliminarUsuario"), getStage(), respuesta.getMensaje());
                 } else {
-                    new Mensaje().showModal(AlertType.INFORMATION, "Eliminar Usuario", getStage(),
-                            "Usuario eliminado correctamente.");
+                    new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("eliminarUsuario"), getStage(), bundle.getString("usuarioEliminado"));
                     newUser();
                 }
             }
         } catch (Exception e) {
-            Logger.getLogger(AdminUsersController.class.getName()).log(Level.SEVERE, "Error eliminando el usuario ", e);
-            new Mensaje().showModal(AlertType.ERROR, "Eliminar Usuario", getStage(), "Error eliminando el usuario.");
+            Logger.getLogger(AdminUsersController.class.getName()).log(Level.SEVERE, bundle.getString("errorEliminarUsuario"), e);
+            new Mensaje().showModal(AlertType.ERROR, bundle.getString("eliminarUsuario"), getStage(), bundle.getString("errorEliminarUsuario"));
         }
-
     }
+
 
     @FXML
     void onActionBtnNew(ActionEvent event) {
-
         if (tptRoles.isSelected()) {
             newSystem();
         } else if (tptMantenimiento.isSelected()) {
-            if (new Mensaje().showConfirmation("Limpiar Usuario", getStage(),
-                    "¿Esta seguro que desea limpiar el registro?")) {
+            if (new Mensaje().showConfirmation(bundle.getString("limpiarUsuario"), getStage(), bundle.getString("confirmarLimpiarUsuario"))) {
                 newUser();
                 tbvRoles.getItems().clear();
             }
         }
-
     }
+
 
     @FXML
     void onActionBtnSearch(ActionEvent event) {
@@ -658,72 +648,41 @@ public class AdminUsersController extends Controller implements Initializable {
         try {
             String validation = validarRequeridos();
             if (!validation.isEmpty()) {
-                new Mensaje().showModal(AlertType.WARNING, "Guardar Usuario", getStage(), validation);
+                new Mensaje().showModal(AlertType.WARNING, bundle.getString("guardarUsuario"), getStage(), validation);
             } else {
-
                 if (this.usuariosDto.getId() == null) {
                     this.usuariosDto.setState("I");
                 }
-
                 List<RolesDto> rolesList = new ArrayList<>();
                 for (SystemsDto sistema : tbvUsers.getItems()) {
-                    RolesDto selectedRole = (RolesDto) tbcRol.getCellData(sistema); // Get the RolesDto from the cell
+                    RolesDto selectedRole = (RolesDto) tbcRol.getCellData(sistema);
                     if (selectedRole != null) {
                         rolesList.add(selectedRole);
                     }
                 }
-
-                // Assign the roles to the user
                 this.usuariosDto.setRoles(rolesList);
-
-                rolesList.forEach(rol -> System.out.println("Rol seleccionado: " + rol.getName()));
-
                 AreasDto area = cmbAreas.getSelectionModel().getSelectedItem();
-
-                System.out.println("Área seleccionada: " + area.getId());
-
                 if (area != null) {
                     this.usuariosDto.setAreas(area);
-                    System.out.println("Área seleccionada: " + area.getName());
-                } else {
-                    System.out.println("No se seleccionó un área.");
                 }
-
-                System.out.println("Usuario: " + this.usuariosDto.getAreas().getName());
-
-                // Guardar el usuario y sus roles seleccionados
                 UsersService service = new UsersService();
                 Respuesta respuesta = service.guardarUsuario(usuariosDto);
-
                 if (!respuesta.getEstado()) {
-                    new Mensaje().showModal(AlertType.INFORMATION, "Guardar Usuario", getStage(),
-                            respuesta.getMensaje());
+                    new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("guardarUsuario"), getStage(), respuesta.getMensaje());
                 } else {
                     unbindUser();
                     this.usuariosDto = (UsersDto) respuesta.getResultado("Usuario");
                     bindUser(false);
-                    new Mensaje().showModal(AlertType.INFORMATION, "Guardar Usuario", getStage(),
-                            "Usuario guardado correctamente.");
-
-                    File file = new File("photo.png");
-                    if (file.exists()) {
-                        boolean deleted = file.delete();
-                        if (deleted) {
-                            System.out.println("Imagen borrada correctamente.");
-                        } else {
-                            System.out.println("No se pudo borrar la imagen.");
-                        }
-                    }
+                    new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("guardarUsuario"), getStage(), bundle.getString("usuarioGuardado"));
                 }
-
                 AppContext.getInstance().set("Taken", false);
-
             }
         } catch (Exception e) {
-            Logger.getLogger(AdminUsersController.class.getName()).log(Level.SEVERE, "Error guardando el usuario", e);
-            new Mensaje().showModal(AlertType.ERROR, "Guardar Usuario", getStage(), "Error guardando el usuario.");
+            Logger.getLogger(AdminUsersController.class.getName()).log(Level.SEVERE, bundle.getString("errorGuardarUsuario"), e);
+            new Mensaje().showModal(AlertType.ERROR, bundle.getString("guardarUsuario"), getStage(), bundle.getString("errorGuardarUsuario"));
         }
     }
+
 
     @FXML
     void onActionImgvPhoto(MouseEvent event) {
@@ -735,7 +694,6 @@ public class AdminUsersController extends Controller implements Initializable {
     @FXML
     void onActionRoot(MouseEvent event) {
         Boolean photoTaken = (Boolean) AppContext.getInstance().get("Taken");
-
         if (photoTaken != null && photoTaken) {
             File file = new File("photo.png");
             if (file.exists()) {
@@ -746,13 +704,14 @@ public class AdminUsersController extends Controller implements Initializable {
                     usuariosDto.setPhoto(toByteArray(bufferedImage));
                 } catch (IOException e) {
                     e.printStackTrace();
-                    new Mensaje().showModal(AlertType.ERROR, "Error", getStage(), "Error al cargar la imagen.");
+                    new Mensaje().showModal(AlertType.ERROR, bundle.getString("errorCargaImagen"), getStage(), bundle.getString("errorCargaImagen"));
                 }
             } else {
-                new Mensaje().showModal(AlertType.WARNING, "Error", getStage(), "El archivo de la foto no existe.");
+                new Mensaje().showModal(AlertType.WARNING, bundle.getString("errorCargaImagen"), getStage(), bundle.getString("archivoFotoNoExiste"));
             }
         }
     }
+
 
     private byte[] toByteArray(BufferedImage bufferedImage) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

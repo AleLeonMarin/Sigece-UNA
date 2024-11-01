@@ -91,166 +91,159 @@ public class AdminSystemController extends Controller implements Initializable {
 
     List<Node> requeridos = new ArrayList<>();
 
+    ResourceBundle bundle;
+
     @FXML
     void onActionBtnAccept(ActionEvent event) {
         if (tptSistemas.isSelected()) {
             try {
                 String valid = validarRequeridos();
                 if (!valid.isEmpty()) {
-                    new Mensaje().showModal(AlertType.WARNING, "Guardar", getStage(), valid);
+                    new Mensaje().showModal(AlertType.WARNING, bundle.getString("guardar"), getStage(), valid);
                 } else {
                     SystemsService service = new SystemsService();
                     Respuesta res = service.guardarSystem(systems);
 
                     if (!res.getEstado()) {
-                        new Mensaje().showModal(AlertType.ERROR, "Guardar Sistema", getStage(), res.getMensaje());
+                        new Mensaje().showModal(AlertType.ERROR, bundle.getString("guardarSistema"), getStage(), res.getMensaje());
                     } else {
                         unbindSystems();
                         this.systems = (SystemsDto) res.getResultado("Sistema");
                         bindSystems(false);
                         chargeSistems();
-                        new Mensaje().showModal(AlertType.INFORMATION, "Guardar Sistema", getStage(),
-                                "Sistema guardado correctamente.");
+                        new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("guardarSistema"), getStage(),
+                                bundle.getString("sistemaGuardadoCorrectamente"));
                     }
                 }
             } catch (Exception e) {
                 Logger.getLogger(AdminSystemController.class.getName()).log(Level.SEVERE,
-                        "Error guardando sistema y roles", e);
-                new Mensaje().showModal(AlertType.ERROR, "Guardar Sistema", getStage(),
-                        "Error guardando el Sistema y roles.");
+                        bundle.getString("errorGuardandoSistema"), e);
+                new Mensaje().showModal(AlertType.ERROR, bundle.getString("guardarSistema"), getStage(),
+                        bundle.getString("errorGuardandoSistema"));
             }
         }
 
-        // Manejo de roles si la pestaña de roles está seleccionada
         if (tptRoles.isSelected()) {
             try {
                 String valid = validarRequeridos();
                 if (!valid.isEmpty()) {
-                    new Mensaje().showModal(AlertType.WARNING, "Guardar", getStage(), valid);
+                    new Mensaje().showModal(AlertType.WARNING, bundle.getString("guardar"), getStage(), valid);
                 } else {
                     if (txfID.getText() == null || txfID.getText().isBlank()) {
-                        new Mensaje().showModal(AlertType.WARNING, "Guardar Rol", getStage(),
-                                "Debe ingresar un ID de sistema válido.");
+                        new Mensaje().showModal(AlertType.WARNING, bundle.getString("guardarRol"), getStage(),
+                                bundle.getString("debeIngresarIDSistema"));
                         return;
                     }
 
-                    // Cargar sistema asociado y validar que exista
                     SystemsService systemsService = new SystemsService();
                     Respuesta sistemaRes = systemsService.obtenerSystem(Long.valueOf(txfID.getText()));
                     if (!sistemaRes.getEstado()) {
-                        new Mensaje().showModal(AlertType.ERROR, "Guardar Rol", getStage(),
-                                "No se pudo encontrar el sistema con el ID proporcionado.");
+                        new Mensaje().showModal(AlertType.ERROR, bundle.getString("guardarRol"), getStage(),
+                                bundle.getString("noSeEncuentraSistemaID"));
                         return;
                     }
 
                     SystemsDto sistema = (SystemsDto) sistemaRes.getResultado("Sistema");
 
-                    // Si el rol no tiene un sistema, lo asociamos al sistema obtenido
                     if (rol.getSystem() == null) {
                         rol.setSystem(sistema);
                     }
 
-                    // Guardar rol y verificar resultado
                     RolesService service = new RolesService();
                     Respuesta res = service.guardarRol(rol);
 
                     if (!res.getEstado()) {
-                        new Mensaje().showModal(AlertType.ERROR, "Guardar Rol", getStage(), res.getMensaje());
+                        new Mensaje().showModal(AlertType.ERROR, bundle.getString("guardarRol"), getStage(), res.getMensaje());
                     } else {
                         unbindRoles();
                         this.rol = (RolesDto) res.getResultado("Rol");
                         bindRoles(false);
                         chargeSistems();
-                        chargeSistem(Long.valueOf(txfID.getText())); // Recarga el sistema actual
-                        new Mensaje().showModal(AlertType.INFORMATION, "Guardar Rol", getStage(),
-                                "Rol guardado correctamente.");
+                        chargeSistem(Long.valueOf(txfID.getText()));
+                        new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("guardarRol"), getStage(),
+                                bundle.getString("rolGuardadoCorrectamente"));
                     }
                 }
             } catch (Exception e) {
                 Logger.getLogger(AdminSystemController.class.getName()).log(Level.SEVERE,
-                        "Error guardando el rol", e);
-                new Mensaje().showModal(AlertType.ERROR, "Guardar Rol", getStage(),
-                        "Error guardando el rol.");
+                        bundle.getString("errorGuardandoRol"), e);
+                new Mensaje().showModal(AlertType.ERROR, bundle.getString("guardarRol"), getStage(),
+                        bundle.getString("errorGuardandoRol"));
             }
         }
     }
 
+
     @FXML
     void onActionBtnDelete(ActionEvent event) {
-
         if (tptSistemas.isSelected()) {
             try {
                 if (this.systems.getId() == null) {
-                    new Mensaje().showModal(AlertType.WARNING, "Eliminar Sistema", getStage(),
-                            "Debe seleccionar un sistema.");
+                    new Mensaje().showModal(AlertType.WARNING, bundle.getString("eliminarSistema"), getStage(),
+                            bundle.getString("debeSeleccionarSistema"));
                 } else {
-
                     SystemsService service = new SystemsService();
                     Respuesta res = service.eliminarSystem(this.systems.getId());
                     if (!res.getEstado()) {
-                        new Mensaje().showModal(AlertType.ERROR, "Eliminar Sistema", getStage(), res.getMensaje());
+                        new Mensaje().showModal(AlertType.ERROR, bundle.getString("eliminarSistema"), getStage(), res.getMensaje());
                     } else {
-                        new Mensaje().showModal(AlertType.INFORMATION, "Eliminar Sistema", getStage(),
-                                "Sistema eliminado correctamente.");
+                        new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("eliminarSistema"), getStage(),
+                                bundle.getString("sistemaEliminadoCorrectamente"));
                         chargeSistems();
                         newSystem();
                     }
                 }
             } catch (Exception e) {
-                Logger.getLogger(AdminSystemController.class.getName()).log(Level.SEVERE, "Error eliminando sistema",
+                Logger.getLogger(AdminSystemController.class.getName()).log(Level.SEVERE, bundle.getString("errorEliminandoSistema"),
                         e);
-                new Mensaje().showModal(AlertType.ERROR, "Eliminar Sistema", getStage(),
-                        "Error eliminando el Sistema.");
+                new Mensaje().showModal(AlertType.ERROR, bundle.getString("eliminarSistema"), getStage(),
+                        bundle.getString("errorEliminandoSistema"));
             }
         }
         if (tptRoles.isSelected()) {
-
             try {
                 if (this.rol.getId() == null) {
-                    new Mensaje().showModal(AlertType.WARNING, "Eliminar Rol", getStage(),
-                            "Debe seleccionar un Rol.");
+                    new Mensaje().showModal(AlertType.WARNING, bundle.getString("eliminarRol"), getStage(),
+                            bundle.getString("debeSeleccionarRol"));
                 } else {
-
                     RolesService service = new RolesService();
                     Respuesta res = service.eliminarRol(this.rol.getId());
                     if (!res.getEstado()) {
-                        new Mensaje().showModal(AlertType.ERROR, "Eliminar Rol", getStage(), res.getMensaje());
+                        new Mensaje().showModal(AlertType.ERROR, bundle.getString("eliminarRol"), getStage(), res.getMensaje());
                     } else {
-                        new Mensaje().showModal(AlertType.INFORMATION, "Eliminar Rol", getStage(),
-                                "Rol eliminado correctamente.");
+                        new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("eliminarRol"), getStage(),
+                                bundle.getString("rolEliminadoCorrectamente"));
                         chargeSistems();
                         chargeSistem(Long.valueOf(txfID.getText()));
                         newRol();
                     }
                 }
             } catch (Exception e) {
-                Logger.getLogger(AdminSystemController.class.getName()).log(Level.SEVERE, "Error eliminando Rol",
+                Logger.getLogger(AdminSystemController.class.getName()).log(Level.SEVERE, bundle.getString("errorEliminandoRol"),
                         e);
-                new Mensaje().showModal(AlertType.ERROR, "Eliminar Rol", getStage(),
-                        "Error eliminando el Rol.");
+                new Mensaje().showModal(AlertType.ERROR, bundle.getString("eliminarRol"), getStage(),
+                        bundle.getString("errorEliminandoRol"));
             }
-
         }
-
     }
+
 
     @FXML
     void onActionBtnNew(ActionEvent event) {
-
         if (tptSistemas.isSelected()) {
-            if (new Mensaje().showConfirmation("Limpiar Sistema", getStage(),
-                    "¿Esta seguro que desea limpiar el registro?")) {
+            if (new Mensaje().showConfirmation(bundle.getString("limpiarSistema"), getStage(),
+                    bundle.getString("confirmacionLimpiarRegistro"))) {
                 newSystem();
             }
         }
         if (tptRoles.isSelected()) {
-            if (new Mensaje().showConfirmation("Limpiar Rol", getStage(),
-                    "¿Esta seguro que desea limpiar el registro?")) {
+            if (new Mensaje().showConfirmation(bundle.getString("limpiarRol"), getStage(),
+                    bundle.getString("confirmacionLimpiarRegistro"))) {
                 newRol();
             }
         }
-
     }
+
 
     @FXML
     void onKeyPressedTxfIdRol(KeyEvent event) {
@@ -268,16 +261,15 @@ public class AdminSystemController extends Controller implements Initializable {
 
     @FXML
     void onSelectiontptRoles(Event event) {
-
         if (tptRoles.isSelected()) {
             if (this.systems.getId() == null) {
-                new Mensaje().showModal(AlertType.INFORMATION, "Roles", getStage(),
-                        "Debe seleccionar un sistema.");
+                new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("roles"), getStage(),
+                        bundle.getString("debeSeleccionarSistema"));
                 tpbSistemas.getSelectionModel().select(tptSistemas);
             }
         }
-
     }
+
 
     private void createColumnsSystems() {
 
@@ -340,7 +332,7 @@ public class AdminSystemController extends Controller implements Initializable {
         if (validos) {
             return "";
         } else {
-            return "Campos requeridos o con problemas de formato [" + invalidos + "].";
+            return validos ? "" : bundle.getString("requiredFields") + "[" + invalidos + "].";
         }
     }
 
@@ -412,14 +404,14 @@ public class AdminSystemController extends Controller implements Initializable {
         Respuesta res = service.obtenerSystems();
 
         if (!res.getEstado()) {
-            new Mensaje().showModal(AlertType.ERROR, "Cargar Sistemas", getStage(), res.getMensaje());
+            new Mensaje().showModal(AlertType.ERROR, bundle.getString("cargarSistemas"), getStage(), res.getMensaje());
         } else {
-            // Limpiar la tabla y agregar los sistemas
             tbvSistemas.getItems().clear();
             List<SystemsDto> sistemas = (List<SystemsDto>) res.getResultado("Sistemas");
             tbvSistemas.getItems().addAll(sistemas);
         }
     }
+
 
     private void populateTextFieldsFromSystem() {
         SystemsDto selected = tbvSistemas.getSelectionModel().getSelectedItem();
@@ -445,23 +437,21 @@ public class AdminSystemController extends Controller implements Initializable {
             Respuesta res = service.obtenerSystem(id);
 
             if (!res.getEstado()) {
-                new Mensaje().showModal(AlertType.ERROR, "Cargar Sistema", getStage(), res.getMensaje());
+                new Mensaje().showModal(AlertType.ERROR, bundle.getString("cargarSistema"), getStage(), res.getMensaje());
             } else {
                 unbindSystems();
                 this.systems = (SystemsDto) res.getResultado("Sistema");
                 bindSystems(false);
 
-                // Limpiar y cargar los roles del sistema actual
                 ObservableList<RolesDto> rolesDelSistema = FXCollections.observableArrayList(systems.getRoles());
                 tbvRoles.setItems(rolesDelSistema);
-
-                System.out.println("Roles del sistema: " + rolesDelSistema.toString());
             }
         } catch (Exception e) {
-            Logger.getLogger(AdminSystemController.class.getName()).log(Level.SEVERE, "Error cargando sistema", e);
-            new Mensaje().showModal(AlertType.ERROR, "Cargar Sistema", getStage(), "Error cargando el Sistema.");
+            Logger.getLogger(AdminSystemController.class.getName()).log(Level.SEVERE, bundle.getString("errorCargarSistema"), e);
+            new Mensaje().showModal(AlertType.ERROR, bundle.getString("cargarSistema"), getStage(), bundle.getString("errorCargarSistema"));
         }
     }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

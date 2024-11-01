@@ -11,7 +11,6 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -22,116 +21,111 @@
 <?import javafx.scene.web.WebView?>
 
 <AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="643.0" prefWidth="746.0" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.mails.controller.AdminNotificationController">
-   <children>
-      <HBox alignment="CENTER" prefHeight="678.0" prefWidth="746.0" spacing="10.0" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <StackPane prefHeight="675.0" prefWidth="719.0" styleClass="stack-personal-pane" stylesheets="@Styles.css">
-               <HBox.margin>
-                  <Insets bottom="10.0" top="10.0" />
-               </HBox.margin>
-               <children>
-                  <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="586.0" prefWidth="690.0" snapToPixel="false" styleClass="stack-personal-pane" tabClosingPolicy="ALL_TABS">
-                    <tabs>
-                        <Tab closable="false" text="Procesos de Notificacion Disponibles">
-                          <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="581.0" prefWidth="686.0">
-                                 <children>
-                                    <TableView fx:id="tbvProcesosNotificacion" layoutX="14.0" layoutY="30.0" prefHeight="444.0" prefWidth="278.0">
-                                       <columns>
-                                          <TableColumn fx:id="tbcId" prefWidth="75.0" text="ID" />
-                                          <TableColumn fx:id="tbcNombre" prefWidth="202.0" text="NOMBRE" />
-                                       </columns>
-                                    </TableView>
-                                    <MFXTextField fx:id="txtNombre" floatMode="BORDER" floatingText="Nombre del proceso de notificación" layoutX="328.0" layoutY="83.0" prefHeight="38.0" prefWidth="333.0" />
-                                    <WebView fx:id="plantillaPreviewFinal" layoutX="322.0" layoutY="145.0" prefHeight="200.0" prefWidth="345.0" />
-                                    <Button fx:id="btnDelete" layoutX="94.0" layoutY="484.0" mnemonicParsing="false" onAction="#onActionBtnDelete" prefHeight="40.0" prefWidth="111.0" styleClass="image-delete-button" />
-                                    <Button fx:id="btnNuevo" layoutX="343.0" layoutY="367.0" mnemonicParsing="false" onAction="#onActionBtnNuevo" prefHeight="40.0" prefWidth="120.0" styleClass="image-add-button" />
-                                    <Button fx:id="btnSave" layoutX="481.0" layoutY="367.0" mnemonicParsing="false" onAction="#onActionBtnSave" prefHeight="40.0" prefWidth="120.0" styleClass="image-save-button" />
-                                    <Button fx:id="btnMaximazeView" layoutX="615.0" layoutY="367.0" mnemonicParsing="false" onAction="#onActionBtnMax" prefHeight="41.0" prefWidth="46.0" styleClass="image-max-button" />
-                                    <MFXButton fx:id="btnInfo" layoutX="390.0" layoutY="512.0" onAction="#onActionBtnInfo" prefHeight="24.0" prefWidth="284.0" styleClass="button-redStyle" text="Estadísticas del proceso de notificación">
-                                       <graphic>
-                                          <ImageView fitHeight="16.0" fitWidth="14.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../resources/informacion.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                       <font>
-                                          <Font size="6.0" />
-                                       </font>
-                                    </MFXButton>
-                                 </children>
-                              </AnchorPane>
-                          </content>
-                        </Tab>
-                      <Tab fx:id="tabConfigHTML" closable="false" text="Configuracion Plantilla HTML">
-                        <content>
-                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="469.0" prefWidth="658.0">
-                                 <children>
-                                    <TextArea fx:id="plantillaCode" layoutX="27.0" layoutY="14.0" prefHeight="467.0" prefWidth="457.0">
-                                       <font>
-                                          <Font name="Leelawadee UI" size="18.0" />
-                                       </font>
-                                    </TextArea>
-                                    <TableView fx:id="tbvVariables2" layoutX="512.0" layoutY="48.0" prefHeight="326.0" prefWidth="159.0">
-                                      <columns>
-                                        <TableColumn fx:id="tbcVariables2" prefWidth="75.0" text="VARIABLE" />
-                                          <TableColumn fx:id="tbcVariablesTipo2" prefWidth="83.0" text="TIPO" />
-                                      </columns>
-                                    </TableView>
-                                    <Label layoutX="20.0" layoutY="522.0" prefHeight="27.0" prefWidth="514.0" text="Por favor, asegúrese de que cada variable de notificación esté encerrada entre corchetes [ ]">
-                                       <graphic>
-                                          <ImageView fitHeight="22.0" fitWidth="14.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../resources/advertencia.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                       <font>
-                                          <Font size="10.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </AnchorPane>
-                        </content>
-                      </Tab>
-                        <Tab fx:id="tabConfigVariables" closable="false" text="Configuracion de Variables">
-                          <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                 <children>
-                                    <TableView fx:id="tbvVariables" layoutX="23.0" layoutY="41.0" prefHeight="333.0" prefWidth="421.0">
-                                       <columns>
-                                          <TableColumn fx:id="tbcVarName" prefWidth="117.0" text="Identificador" />
-                                          <TableColumn fx:id="tbcContent" prefWidth="151.0" text="Contenido " />
-                                          <TableColumn fx:id="tbcType" prefWidth="152.0" text="Tipo" />
-                                       </columns>
-                                    </TableView>
-                                    <MFXTextField fx:id="txtVarNombre" floatMode="BORDER" floatingText="Identificador" layoutX="31.0" layoutY="389.0" prefHeight="40.0" prefWidth="270.0" />
-                                    <MFXTextField fx:id="txtVarValor" floatMode="BORDER" floatingText="Contenido " layoutX="31.0" layoutY="448.0" prefHeight="40.0" prefWidth="270.0" />
-                                    <MFXComboBox fx:id="txtVarTipo" layoutX="31.0" layoutY="499.0" prefHeight="40.0" prefWidth="78.0" promptText="Tipo" />
-                                    <Button fx:id="btnNewVar" layoutX="494.0" layoutY="54.0" mnemonicParsing="false" onAction="#onActionBtnNewVar" prefHeight="45.0" prefWidth="95.0" styleClass="image-add-button" />
-                                    <Button fx:id="btnDeleteVar" layoutX="494.0" layoutY="99.0" mnemonicParsing="false" onAction="#onActionBtnDeleteVar" prefHeight="45.0" prefWidth="95.0" styleClass="image-delete-button" />
-                                    <Button fx:id="btnSaveBar" layoutX="188.0" layoutY="497.0" mnemonicParsing="false" onAction="#onActionBtnSaveVar" prefHeight="45.0" prefWidth="95.0" styleClass="image-save-button" />
-                                    <ToggleButton fx:id="btnMultimediaActive" layoutX="332.0" layoutY="454.0" mnemonicParsing="false" onAction="#clickBtnMultimedia" prefHeight="34.0" prefWidth="77.0" styleClass="button-blueStyle" text="Multimedia" />
-                                    <Button fx:id="btnAttachImage" layoutX="419.0" layoutY="453.0" mnemonicParsing="false" onAction="#clickBtnAttachImage" prefHeight="36.0" prefWidth="52.0" styleClass="button-blueStyle">
-                                       <graphic>
-                                          <ImageView fitHeight="31.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../resources/clip-de-papel.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                    </Button>
-                                    <MediaView fx:id="mediaView" fitHeight="200.0" fitWidth="200.0" layoutX="463.0" layoutY="177.0" />
-                                    <ImageView fx:id="imageView" fitHeight="138.0" fitWidth="177.0" layoutX="494.0" layoutY="385.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children></AnchorPane>
-                          </content>
-                        </Tab>
-                    </tabs>
-                  </TabPane>
-               </children>
-            </StackPane>
-         </children>
-      </HBox>
-   </children>
+    <children>
+        <HBox alignment="CENTER" prefHeight="678.0" prefWidth="746.0" spacing="10.0" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <StackPane prefHeight="675.0" prefWidth="719.0" styleClass="stack-personal-pane" stylesheets="@Styles.css">
+                    <HBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                    </HBox.margin>
+                    <children>
+                        <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="586.0" prefWidth="690.0" snapToPixel="false" styleClass="stack-personal-pane" tabClosingPolicy="ALL_TABS">
+                            <tabs>
+                                <Tab closable="false" text="%tab.notificacion">
+                                    <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="581.0" prefWidth="686.0">
+                                            <children>
+                                                <TableView fx:id="tbvProcesosNotificacion" layoutX="14.0" layoutY="30.0" prefHeight="444.0" prefWidth="278.0">
+                                                    <columns>
+                                                        <TableColumn fx:id="tbcId" prefWidth="75.0" text="%table.column.id" />
+                                                        <TableColumn fx:id="tbcNombre" prefWidth="202.0" text="%table.column.nombre" />
+                                                    </columns>
+                                                </TableView>
+                                                <MFXTextField fx:id="txtNombre" floatMode="BORDER" floatingText="%textfield.procesoNotificacion" layoutX="328.0" layoutY="83.0" prefHeight="38.0" prefWidth="333.0" />
+                                                <WebView fx:id="plantillaPreviewFinal" layoutX="322.0" layoutY="145.0" prefHeight="200.0" prefWidth="345.0" />
+                                                <Button fx:id="btnDelete" layoutX="94.0" layoutY="484.0" mnemonicParsing="false" onAction="#onActionBtnDelete" prefHeight="40.0" prefWidth="111.0" styleClass="image-delete-button" text="%button.delete" />
+                                                <Button fx:id="btnNuevo" layoutX="343.0" layoutY="367.0" mnemonicParsing="false" onAction="#onActionBtnNuevo" prefHeight="40.0" prefWidth="120.0" styleClass="image-add-button" text="%button.nuevo" />
+                                                <Button fx:id="btnSave" layoutX="481.0" layoutY="367.0" mnemonicParsing="false" onAction="#onActionBtnSave" prefHeight="40.0" prefWidth="120.0" styleClass="image-save-button" text="%button.save" />
+                                                <Button fx:id="btnMaximazeView" layoutX="615.0" layoutY="367.0" mnemonicParsing="false" onAction="#onActionBtnMax" prefHeight="41.0" prefWidth="46.0" styleClass="image-max-button" />
+                                                <MFXButton fx:id="btnInfo" layoutX="390.0" layoutY="512.0" onAction="#onActionBtnInfo" prefHeight="24.0" prefWidth="284.0" styleClass="button-redStyle" text="%button.info">
+                                                    <graphic>
+                                                        <ImageView fitHeight="16.0" fitWidth="14.0" pickOnBounds="true" preserveRatio="true">
+                                                            <image>
+                                                                <Image url="@../resources/informacion.png" />
+                                                            </image>
+                                                        </ImageView>
+                                                    </graphic>
+                                                    <font>
+                                                        <Font size="6.0" />
+                                                    </font>
+                                                </MFXButton>
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </Tab>
+                                <Tab fx:id="tabConfigHTML" closable="false" text="%tab.configHTML">
+                                    <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="469.0" prefWidth="658.0">
+                                            <children>
+                                                <TextArea fx:id="plantillaCode" layoutX="27.0" layoutY="14.0" prefHeight="467.0" prefWidth="457.0" promptText="%textarea.plantillaHTML" />
+                                                <TableView fx:id="tbvVariables2" layoutX="512.0" layoutY="48.0" prefHeight="326.0" prefWidth="159.0">
+                                                    <columns>
+                                                        <TableColumn fx:id="tbcVariables2" prefWidth="75.0" text="%table.column.varName" />
+                                                        <TableColumn fx:id="tbcVariablesTipo2" prefWidth="83.0" text="%table.column.type" />
+                                                    </columns>
+                                                </TableView>
+                                                <Label layoutX="20.0" layoutY="522.0" prefHeight="27.0" prefWidth="514.0" text="%label.variableNotification">
+                                                    <graphic>
+                                                        <ImageView fitHeight="22.0" fitWidth="14.0" pickOnBounds="true" preserveRatio="true">
+                                                            <image>
+                                                                <Image url="@../resources/advertencia.png" />
+                                                            </image>
+                                                        </ImageView>
+                                                    </graphic>
+                                                    <font>
+                                                        <Font size="10.0" />
+                                                    </font>
+                                                </Label>
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </Tab>
+                                <Tab fx:id="tabConfigVariables" closable="false" text="%tab.configVariables">
+                                    <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                            <children>
+                                                <TableView fx:id="tbvVariables" layoutX="23.0" layoutY="41.0" prefHeight="333.0" prefWidth="421.0">
+                                                    <columns>
+                                                        <TableColumn fx:id="tbcVarName" prefWidth="117.0" text="%table.column.varName" />
+                                                        <TableColumn fx:id="tbcContent" prefWidth="151.0" text="%table.column.content" />
+                                                        <TableColumn fx:id="tbcType" prefWidth="152.0" text="%table.column.type" />
+                                                    </columns>
+                                                </TableView>
+                                                <MFXTextField fx:id="txtVarNombre" floatMode="BORDER" floatingText="%textfield.varNombre" layoutX="31.0" layoutY="389.0" prefHeight="40.0" prefWidth="270.0" />
+                                                <MFXTextField fx:id="txtVarValor" floatMode="BORDER" floatingText="%textfield.varValor" layoutX="31.0" layoutY="448.0" prefHeight="40.0" prefWidth="270.0" />
+                                                <MFXComboBox fx:id="txtVarTipo" layoutX="31.0" layoutY="499.0" prefHeight="40.0" prefWidth="78.0" promptText="%comboBox.tipo" />
+                                                <Button fx:id="btnNewVar" layoutX="494.0" layoutY="54.0" mnemonicParsing="false" onAction="#onActionBtnNewVar" prefHeight="45.0" prefWidth="149.0" styleClass="image-add-button" text="%button.newVar" />
+                                                <Button fx:id="btnDeleteVar" layoutX="494.0" layoutY="99.0" mnemonicParsing="false" onAction="#onActionBtnDeleteVar" prefHeight="45.0" prefWidth="149.0" styleClass="image-delete-button" text="%button.deleteVar" />
+                                                <Button fx:id="btnSaveBar" layoutX="188.0" layoutY="497.0" mnemonicParsing="false" onAction="#onActionBtnSaveVar" prefHeight="45.0" prefWidth="138.0" styleClass="image-save-button" text="%button.saveVar" />
+                                                <Button fx:id="btnAttachImage" layoutX="317.0" layoutY="450.0" mnemonicParsing="false" onAction="#clickBtnAttachImage" prefHeight="36.0" prefWidth="52.0" styleClass="button-blueStyle">
+                                                    <graphic>
+                                                        <ImageView fitHeight="31.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
+                                                            <image>
+                                                                <Image url="@../resources/clip-de-papel.png" />
+                                                            </image>
+                                                        </ImageView>
+                                                    </graphic>
+                                                </Button>
+                                                <MediaView fx:id="mediaView" fitHeight="200.0" fitWidth="200.0" layoutX="463.0" layoutY="177.0" />
+                                                <ImageView fx:id="imageView" fitHeight="138.0" fitWidth="177.0" layoutX="494.0" layoutY="385.0" pickOnBounds="true" preserveRatio="true" />
+                                            </children></AnchorPane>
+                                    </content>
+                                </Tab>
+                            </tabs>
+                        </TabPane>
+                    </children>
+                </StackPane>
+            </children>
+        </HBox>
+    </children>
 </AnchorPane>

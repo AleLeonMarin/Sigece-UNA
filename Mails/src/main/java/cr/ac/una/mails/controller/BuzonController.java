@@ -88,8 +88,11 @@ public class BuzonController extends Controller implements Initializable {
     private ParametrosService parametrosService;
     private ParamethersDto parametros;
 
+    private ResourceBundle rb;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        this.rb = rb;
         parametrosService = new ParametrosService();
         correosService = new CorreosService();
         mensaje = new Mensaje();
@@ -104,7 +107,7 @@ public class BuzonController extends Controller implements Initializable {
 
         actualizarCorreos();
 
-        cmbEstado.getItems().addAll("Enviados", "Por enviar", "Todos");
+        cmbEstado.getItems().addAll(rb.getString("enviados"), rb.getString("porEnviar"), rb.getString("todos"));
 
 
     }
@@ -114,10 +117,10 @@ public class BuzonController extends Controller implements Initializable {
         if (respuesta.getEstado()) {
             parametros = (ParamethersDto) respuesta.getResultado("Parametros");
             if (parametros != null) {
-                spinnerCorreosXhora.setValue(parametros.getTimeout().intValue()); // Establece el valor inicial en el spinner
+                spinnerCorreosXhora.setValue(parametros.getTimeout().intValue());
             }
         } else {
-            mensaje.show(Alert.AlertType.ERROR, "Error", "Error al cargar los parámetros: " + respuesta.getMensaje());
+            mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitle"), rb.getString("errorLoadParams") + respuesta.getMensaje());
         }
     }
 
@@ -160,13 +163,13 @@ public class BuzonController extends Controller implements Initializable {
         if (correoSeleccionado != null) {
             Respuesta respuesta = correosService.eliminarCorreo(correoSeleccionado.getId());
             if (!respuesta.getEstado()) {
-                mensaje.show(Alert.AlertType.ERROR, "Error", "Error al eliminar el correo: " + respuesta.getMensaje());
+                mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitle"), rb.getString("errorDeleteMail") + respuesta.getMensaje());
             } else {
-                tbvMails.getItems().remove(correoSeleccionado); // Remover el correo de la tabla
-                mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "El correo ha sido eliminado correctamente.");
+                tbvMails.getItems().remove(correoSeleccionado);
+                mensaje.show(Alert.AlertType.INFORMATION, rb.getString("successTitle"), rb.getString("successDeleteMail"));
             }
         } else {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar un correo para eliminar.");
+            mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningSelectMailToDelete"));
         }
     }
 
@@ -207,9 +210,10 @@ public class BuzonController extends Controller implements Initializable {
 
             FlowController.getInstance().goViewInWindowModal("MaxViewHTML", this.getStage(), Boolean.TRUE);
         } else {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar un correo con contenido para mostrar.");
+            mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningSelectMailWithContent"));
         }
     }
+
 
 
     @FXML
@@ -217,11 +221,11 @@ public class BuzonController extends Controller implements Initializable {
         String terminoBusqueda = txtBusqueda.getText().trim().toLowerCase();
         String estadoSeleccionado = cmbEstado.getSelectionModel().getSelectedItem();
 
-        if (estadoSeleccionado != null && estadoSeleccionado.equalsIgnoreCase("Enviados")) {
+        if (estadoSeleccionado != null && estadoSeleccionado.equalsIgnoreCase(rb.getString("enviados"))) {
             estadoSeleccionado = "E";
-        } else if (estadoSeleccionado != null && estadoSeleccionado.equalsIgnoreCase("Por enviar")) {
+        } else if (estadoSeleccionado != null && estadoSeleccionado.equalsIgnoreCase(rb.getString("porEnviar"))) {
             estadoSeleccionado = "P";
-        }else {
+        } else {
             estadoSeleccionado = null;
         }
 
@@ -245,17 +249,16 @@ public class BuzonController extends Controller implements Initializable {
 
     @FXML
     void clickbtnSaveCMailXHora(ActionEvent event) {
-
         if (parametros != null) {
-            parametros.setTimeout(spinnerCorreosXhora.getValue().longValue()); // Actualiza solo el timeout
+            parametros.setTimeout(spinnerCorreosXhora.getValue().longValue());
             Respuesta respuesta = parametrosService.guardarParametros(parametros);
             if (respuesta.getEstado()) {
-                mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "Parámetro de timeout actualizado correctamente.");
+                mensaje.show(Alert.AlertType.INFORMATION, rb.getString("successTitle"), rb.getString("successUpdateTimeout"));
             } else {
-                mensaje.show(Alert.AlertType.ERROR, "Error", "Error al actualizar el parámetro de timeout: " + respuesta.getMensaje());
+                mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitle"), rb.getString("errorUpdateTimeout") + respuesta.getMensaje());
             }
         } else {
-            mensaje.show(Alert.AlertType.ERROR, "Error", "No se encontraron parámetros para actualizar.");
+            mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitle"), rb.getString("errorNoParamsFound"));
         }
     }
 

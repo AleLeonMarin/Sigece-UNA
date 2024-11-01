@@ -25,37 +25,37 @@
                                         <Image url="@../resources/profileBlank.png" />
                                     </image>
                                 </ImageView>
-                                <MFXButton fx:id="btnAdminUsers" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnAdminUsers" prefHeight="50.0" prefWidth="200.0" styleClass="jfx-btn-users" text="Administración de Usuarios" textAlignment="CENTER" wrapText="true">
+                                <MFXButton fx:id="btnAdminUsers" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnAdminUsers" prefHeight="50.0" prefWidth="200.0" styleClass="jfx-btn-users" text="%boton.adminUsuarios" textAlignment="CENTER" wrapText="true">
                                     <VBox.margin>
                                         <Insets top="35.0" />
                                     </VBox.margin>
-                           <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
-                           </graphic>
+                                    <graphic>
+                                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                                    </graphic>
                                 </MFXButton>
-                                <MFXButton fx:id="btnAdminSystems" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnAdminSystems" prefHeight="50.0" prefWidth="200.0" styleClass="jfx-btn-systems" text="Administración de Sistemas" textAlignment="CENTER" wrapText="true">
-                           <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
-                           </graphic></MFXButton>
-                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                           <children>
-                              <MFXButton fx:id="btnLogOut" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" graphicTextGap="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnLogOut" prefHeight="50.0" prefWidth="50.0" styleClass="jfx-btn-log-out" text="‎ ">
-                                 <HBox.margin>
-                                    <Insets left="20.0" />
-                                 </HBox.margin>
-                                 <graphic>
-                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
-                                 </graphic>
-                              </MFXButton>
-                           </children>
-                           <VBox.margin>
-                              <Insets top="170.0" />
-                           </VBox.margin>
-                        </HBox>
+                                <MFXButton fx:id="btnAdminSystems" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnAdminSystems" prefHeight="50.0" prefWidth="200.0" styleClass="jfx-btn-systems" text="%boton.adminSistemas" textAlignment="CENTER" wrapText="true">
+                                    <graphic>
+                                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                                    </graphic></MFXButton>
+                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                    <children>
+                                        <MFXButton fx:id="btnLogOut" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" graphicTextGap="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnLogOut" prefHeight="50.0" prefWidth="50.0" styleClass="jfx-btn-log-out" text="%boton.cerrarSesion">
+                                            <HBox.margin>
+                                                <Insets left="20.0" />
+                                            </HBox.margin>
+                                            <graphic>
+                                                <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                                            </graphic>
+                                        </MFXButton>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets top="170.0" />
+                                    </VBox.margin>
+                                </HBox>
                             </children>
                         </VBox>
                         <Separator orientation="VERTICAL" prefHeight="628.0" prefWidth="16.0" />
-                  <StackPane prefHeight="628.0" prefWidth="787.0" HBox.hgrow="ALWAYS" />
+                        <StackPane prefHeight="628.0" prefWidth="787.0" HBox.hgrow="ALWAYS" />
                     </children>
                 </HBox>
             </children>

@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import cr.ac.una.wssigeceuna.controller.SecurityFilter;
 import org.glassfish.jersey.server.ResourceConfig;
 import cr.ac.una.wssigeceuna.controller.JsonbContextResolver;
 import jakarta.ws.rs.ApplicationPath;
@@ -30,8 +32,8 @@ public class JakartaRestConfiguration extends ResourceConfig {
         Set<String> providerClassNames = new HashSet() {
             {
                 add(JsonbContextResolver.class.getName());
-                // add(ConstraintViolationExceptionMapper.class.getName());
-                // add(SecurityFilter.class.getName());
+                //add(ConstraintViolationExceptionMapper.class.getName());
+                add(SecurityFilter.class.getName());
             }
         };
 

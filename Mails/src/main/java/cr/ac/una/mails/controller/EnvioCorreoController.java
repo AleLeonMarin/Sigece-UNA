@@ -45,12 +45,14 @@ public class EnvioCorreoController extends Controller implements Initializable {
     private CorreosService correosService;
     private Mensaje mensaje;
 
-    MailsDto correo = new MailsDto();
+    private MailsDto correo = new MailsDto();
+    private ResourceBundle rb;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         correosService = new CorreosService();
         mensaje = new Mensaje();
+        this.rb = rb; // Guardar el recurso de idioma para acceder a mensajes
     }
 
     @Override
@@ -67,7 +69,6 @@ public class EnvioCorreoController extends Controller implements Initializable {
     @FXML
     void onActionBtnEnviar(ActionEvent event) {
         if (validarCampos()) {
-
             correo.setDestinatary(txtDireccionCorreo.getText());
             correo.setSubject(txtCorreoAsunto.getText());
             correo.setResult(txtCorreoContenido.getText());
@@ -79,17 +80,16 @@ public class EnvioCorreoController extends Controller implements Initializable {
             Respuesta respuesta = correosService.enviarCorreoAhora(correo);
 
             if (respuesta.getEstado()) {
-                mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "El correo fue enviado exitosamente.");
+                mensaje.show(Alert.AlertType.INFORMATION, rb.getString("successTitle"), rb.getString("successSendEmail"));
                 limpiarCampos();
             } else {
-                mensaje.show(Alert.AlertType.ERROR, "Error", "Hubo un problema al enviar el correo: " + respuesta.getMensaje());
+                mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitle"), rb.getString("errorSendEmail") + respuesta.getMensaje());
             }
         } else {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Por favor, rellena todos los campos.");
+            mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"), rb.getString("warningFillAllFields"));
         }
         correo = new MailsDto();
     }
-
 
     private boolean validarCampos() {
         return !txtDireccionCorreo.getText().isEmpty()
@@ -106,7 +106,7 @@ public class EnvioCorreoController extends Controller implements Initializable {
     @FXML
     void clickBtnAttach(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Selecciona Archivos Adjuntos");
+        fileChooser.setTitle(rb.getString("fileChooserTitleAttach"));
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
 
         if (selectedFiles != null) {
@@ -125,10 +125,10 @@ public class EnvioCorreoController extends Controller implements Initializable {
 
                     correo.setAttachments(attachments);
                 } catch (IOException e) {
-                    mensaje.show(Alert.AlertType.ERROR, "Error", "No se pudo adjuntar el archivo: " + file.getName());
+                    mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitle"), rb.getString("errorAttachFile") + file.getName());
                 }
             }
-            mensaje.show(Alert.AlertType.INFORMATION, "Archivos Adjuntos", "Se adjuntaron " + selectedFiles.size() + " archivos.");
+            mensaje.show(Alert.AlertType.INFORMATION, rb.getString("infoTitleAttach"), rb.getString("infoFilesAttached") + selectedFiles.size());
         }
     }
 }

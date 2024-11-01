@@ -506,5 +506,601 @@
 }
 
 
+.stack-personal-pane1 {
+    -fx-background-color: #808080;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 5);
+}
+.stack-personal-pane {
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 15;
+    -fx-padding: 0;
+    -fx-border-radius: 15;
+    -fx-border-color: #d0d0d0;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 5);
+}
 
+.image-profile {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 10, 0, 0, 2);
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+/* Botón de Register - Azul Claro */
+.jfx-btn-newUser {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #4a6fa5; /* Azul claro */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jfx-btn-newUser:pressed,
+.jfx-btn-newUser:hover,
+.jfx-btn-newUser:armed,
+.jfx-btn-newUser:focused {
+    -fx-background-color: #3a5c8f; /* Azul claro más oscuro al interactuar */
+    -fx-text-fill: white;
+}
+
+/* Botón de Sign In - Azul Claro */
+.jfx-btn-log {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #a3cef1; /* Azul claro */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jfx-btn-log:pressed,
+.jfx-btn-log:hover,
+.jfx-btn-log:armed,
+.jfx-btn-log:focused {
+    -fx-background-color: #87b7d9; /* Azul claro más oscuro al interactuar */
+    -fx-text-fill: white;
+}
+
+/* Botón de Forget Password - Azul Lavanda Pastel */
+.jfx-btn-change {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #7f91c1; /* Azul lavanda pastel */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jfx-btn-change:pressed,
+.jfx-btn-change:hover,
+.jfx-btn-change:armed,
+.jfx-btn-change:focused {
+    -fx-background-color: #6d7ba9; /* Azul lavanda más oscuro al interactuar */
+    -fx-text-fill: white;
+}
+
+.image-button {
+    -fx-background-image: url("../resources/go-home.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 10, 0, 0, 2);
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.image-button:hover,
+.image-button:pressed,
+.image-button:armed,
+.image-button:focused {
+    -fx-background-image: url("../resources/go-home.png");
+    -fx-background-color: #f0f0f0;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 10, 0, 0, 2);
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.jfx-btn-add > ImageView {
+    -fx-image: url("../resources/add-user.png");
+}
+
+.jfx-txfs-security,
+.jfx-txfs-security:focused,
+.jfx-txfs-security:hover,
+.jfx-txfs-security:armed,
+.jfx-txfs-security:selected,
+.jfx-txfs-security:unfocused {
+    -fx-background-color: transparent;
+    /* Fondo transparente */
+    -fx-border-color: transparent;
+    /* Borde transparente */
+    -fx-border-width: 0;
+    /* Ancho del borde a 0 */
+    -fx-border-style: none;
+    /* Sin estilo de borde */
+    -fx-padding: 0;
+    /* Sin relleno */
+    -fx-background-insets: 0;
+    /* Sin insets de fondo */
+    -fx-background-radius: 0;
+    /* Sin radio de fondo */
+}
+
+.jfx-txfs-security-container,
+.jfx-txfs-security-container:focused,
+.jfx-txfs-security-container:hover,
+.jfx-txfs-security-container:armed,
+.jfx-txfs-security-container:selected,
+.jfx-txfs-security-container:unfocused {
+    -fx-border-color: BLACK;
+    /* Borde transparente */
+    -fx-border-width: 0 0 1 0;
+    /* Línea inferior */
+    -fx-border-style: solid;
+    /* Estilo de línea sólido */
+    -fx-border-radius: 0;
+    /* Sin radio */
+}
+
+.jfx-btn-save > ImageView {
+    -fx-image: url("../resources/save.png");
+}
+.jfx-btn-delete > ImageView {
+    -fx-image: url("../resources/delete.png");
+}
+.jfx-btn-new > ImageView {
+    -fx-image: url("../resources/add.png");
+}
+.jfx-btn-search > ImageView {
+    -fx-image: url("../resources/search.png");
+}
+.jfx-btn-users > ImageView {
+    -fx-image: url("../resources/users.png");
+}
+.jfx-btn-systems > ImageView {
+    -fx-image: url("../resources/systems.png");
+}
+.jfx-btn-log-out > ImageView {
+    -fx-image: url("../resources/logout.png");
+}
+.jfx-btn-log > ImageView {
+    -fx-image: url("../resources/log.png");
+}
+.jfx-btn-newUser > ImageView {
+    -fx-image: url("../resources/new.png");
+}
+.jfx-btn-change > ImageView {
+    -fx-image: url("../resources/change.png");
+}
+.jfx-btn-load > ImageView {
+    -fx-image: url("../resources/load.png");
+}
+.jfx-btn-filter > ImageView {
+    -fx-image: url("../resources/filter.png");
+}
+.jxf-btn-take-photo > ImageView {
+    -fx-image: url("../resources/take.png");
+}
+.jfx-btn-on > ImageView {
+    -fx-image: url("../resources/on.png");
+}
+.jfx-btn-off > ImageView {
+    -fx-image: url("../resources/off.png");
+}
+
+/* Botón de Guardar - Verde Pastel Oscuro */
+.jfx-btn-save {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #6abf69; /* Verde pastel oscuro */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jfx-btn-save:pressed,
+.jfx-btn-save:hover,
+.jfx-btn-save:armed,
+.jfx-btn-save:focused {
+    -fx-background-color: #5ca862; /* Color de fondo al interactuar */
+    -fx-text-fill: white;
+}
+
+/* Botón de Borrar - Rojo Pastel */
+.jfx-btn-delete {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #ff6b6b; /* Rojo pastel */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jfx-btn-delete:pressed,
+.jfx-btn-delete:hover,
+.jfx-btn-delete:armed,
+.jfx-btn-delete:focused {
+    -fx-background-color: #e86464; /* Color de fondo al interactuar */
+    -fx-text-fill: white;
+}
+
+/* Botón de Nuevo - Verde Pastel Claro */
+.jfx-btn-new {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #a2d5a2; /* Verde pastel claro */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jfx-btn-new:pressed,
+.jfx-btn-new:hover,
+.jfx-btn-new:armed,
+.jfx-btn-new:focused {
+    -fx-background-color: #92c892; /* Color de fondo al interactuar */
+    -fx-text-fill: white;
+}
+
+/* Botón de Buscar - Azul Pastel */
+.jfx-btn-search {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #89cff0; /* Azul pastel */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jfx-btn-search:pressed,
+.jfx-btn-search:hover,
+.jfx-btn-search:armed,
+.jfx-btn-search:focused {
+    -fx-background-color: #79b5d7; /* Color de fondo al interactuar */
+    -fx-text-fill: white;
+}
+
+/* Botón de Users - Morado Pastel */
+.jfx-btn-users {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #d3a4f7; /* Morado pastel */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jfx-btn-users:pressed,
+.jfx-btn-users:hover,
+.jfx-btn-users:armed,
+.jfx-btn-users:focused {
+    -fx-background-color: #c28ae8; /* Color de fondo al interactuar */
+    -fx-text-fill: white;
+}
+
+/* Botón de Systems - Azul Intermedio */
+.jfx-btn-systems {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #6ea8da; /* Azul intermedio */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jfx-btn-systems:pressed,
+.jfx-btn-systems:hover,
+.jfx-btn-systems:armed,
+.jfx-btn-systems:focused {
+    -fx-background-color: #5e96c5; /* Color de fondo al interactuar */
+    -fx-text-fill: white;
+}
+
+/* Botón de Log Out - Azul Grisáceo Pastel */
+.jfx-btn-log-out {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #a0aec0; /* Azul grisáceo pastel */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jfx-btn-log-out:pressed,
+.jfx-btn-log-out:hover,
+.jfx-btn-log-out:armed,
+.jfx-btn-log-out:focused {
+    -fx-background-color: #718096; /* Color de fondo al interactuar, un azul grisáceo más oscuro */
+    -fx-text-fill: white;
+}
+
+/* Botón de Apply Filter - Verde Pastel */
+.jfx-btn-filter {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #a3d9a5; /* Verde pastel */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jfx-btn-filter:pressed,
+.jfx-btn-filter:hover,
+.jfx-btn-filter:armed,
+.jfx-btn-filter:focused {
+    -fx-background-color: #8fcf92; /* Verde pastel más oscuro al interactuar */
+    -fx-text-fill: white;
+}
+
+/* Botón de Load - Azul Cielo Pastel */
+.jfx-btn-load {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #b3daf1; /* Azul cielo pastel */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jfx-btn-load:pressed,
+.jfx-btn-load:hover,
+.jfx-btn-load:armed,
+.jfx-btn-load:focused {
+    -fx-background-color: #a1cbe4; /* Azul cielo ligeramente más oscuro al interactuar */
+    -fx-text-fill: white;
+}
+
+.jxf-btn-take-photo {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #ffcc80; /* Naranja pastel */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jxf-btn-take-photo:pressed,
+.jxf-btn-take-photo:hover,
+.jxf-btn-take-photo:armed,
+.jxf-btn-take-photo:focused {
+    -fx-background-color: #ffb74d; /* Color de fondo al interactuar */
+    -fx-text-fill: white;
+}
+
+.jfx-btn-off {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #e57373; /* Rojo pastel claro */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jfx-btn-off:pressed,
+.jfx-btn-off:hover,
+.jfx-btn-off:armed,
+.jfx-btn-off:focused {
+    -fx-background-color: #ef5350; /* Color de fondo al interactuar */
+    -fx-text-fill: white;
+}
+
+.jfx-btn-on {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #64b5f6; /* Azul pastel */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.jfx-btn-on:pressed,
+.jfx-btn-on:hover,
+.jfx-btn-on:armed,
+.jfx-btn-on:focused {
+    -fx-background-color: #42a5f5; /* Color de fondo al interactuar */
+    -fx-text-fill: white;
+}
+
+.jfx-tbvUser-btnDelete {
+    -fx-opacity: 0.8;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #da372c;
+    -fx-background-image: url("../resources/delete.png");
+}
+
+
+
+/* Clase base para estilo circular */
+.circular-button {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 80% 80%; /* Ajusta el tamaño de la imagen */
+    -fx-background-position: center;
+    -fx-background-radius: 50%; /* Hace que el botón sea circular */
+    -fx-background-color: transparent; /* Fondo transparente */
+    -fx-border-color: transparent; /* Sin borde */
+    -fx-padding: 10; /* Espaciado interno */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 0, 2); /* Sombra para darle un efecto elevado */
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-cursor: hand;
+}
+
+/* Estilo para el botón con la bandera de USA */
+.circular-button-usa {
+    -fx-background-image: url("../resources/usa.png");
+}
+
+/* Estilo para el botón con la bandera de Costa Rica */
+.circular-button-cr {
+    -fx-background-image: url("../resources/costa-rica.png");
+}
 

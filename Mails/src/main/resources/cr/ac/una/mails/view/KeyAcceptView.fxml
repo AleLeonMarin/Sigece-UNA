@@ -15,38 +15,38 @@
             <StackPane.margin>
                 <Insets left="170.0" right="170.0" />
             </StackPane.margin>
-         <children>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <Label prefHeight="40.0" prefWidth="214.0" text="Recuperar Contraseña" textFill="#0000006b">
-                     <font>
-                        <Font name="Segoe UI" size="20.0" />
-                     </font>
-                  </Label>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-                     <children>
-                        <MFXTextField fx:id="txtMail" floatMode="BORDER" floatingText="Correo electrónico " prefHeight="40.0" prefWidth="280.0" />
-                        <MFXButton fx:id="btnAcceptMail" onAction="#onActionBtnAcceptMail" prefHeight="35.0" prefWidth="70.0" styleClass="button-Register" text="Aceptar">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </MFXButton>
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-                     <children>
-                        <MFXTextField fx:id="txtKey" floatMode="BORDER" floatingText="Clave" prefHeight="40.0" prefWidth="280.0" />
-                        <MFXButton fx:id="btnAcceptKey" onAction="#onActionBtnAcceptKey" prefHeight="35.0" prefWidth="70.0" styleClass="button-Register" text="Aceptar">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </MFXButton>
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-         </children>
+            <children>
+                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                    <children>
+                        <Label prefHeight="40.0" prefWidth="214.0" text="%LblRecuperarContrasena" textFill="#0000006b">
+                            <font>
+                                <Font name="Segoe UI" size="20.0" />
+                            </font>
+                        </Label>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                            <children>
+                                <MFXTextField fx:id="txtMail" floatMode="BORDER" floatingText="%LblCorreo" prefHeight="40.0" prefWidth="280.0" />
+                                <MFXButton fx:id="btnAcceptMail" onAction="#onActionBtnAcceptMail" prefHeight="35.0" prefWidth="70.0" styleClass="button-Register" text="%BtnAceptar">
+                                    <HBox.margin>
+                                        <Insets />
+                                    </HBox.margin>
+                                </MFXButton>
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                            <children>
+                                <MFXTextField fx:id="txtKey" floatMode="BORDER" floatingText="%LblClave" prefHeight="40.0" prefWidth="280.0" />
+                                <MFXButton fx:id="btnAcceptKey" onAction="#onActionBtnAcceptKey" prefHeight="35.0" prefWidth="70.0" styleClass="button-Register" text="%BtnAceptar">
+                                    <HBox.margin>
+                                        <Insets />
+                                    </HBox.margin>
+                                </MFXButton>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
         </StackPane>
-        <MFXButton fx:id="btnGoBack" ellipsisString="" onAction="#onActionBtnGoBack" prefHeight="31.0" prefWidth="78.0" styleClass="button-ForgetPass" text="Regresar" translateX="-170.0" translateY="230.0" />
+        <MFXButton fx:id="btnGoBack" ellipsisString="" onAction="#onActionBtnGoBack" prefHeight="31.0" prefWidth="78.0" styleClass="button-ForgetPass" text="%BtnRegresar" translateX="-170.0" translateY="230.0" />
     </children>
 </StackPane>

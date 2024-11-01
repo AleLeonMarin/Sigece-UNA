@@ -25,41 +25,42 @@
                                         <Image url="@../resources/Logo.png" />
                                     </image>
                                 </ImageView>
-                                <MFXButton fx:id="btnAdminParameters" onAction="#onActionBtnAdminParameters" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Administración de Parametros" textAlignment="JUSTIFY">
+                                <MFXButton fx:id="btnAdminParameters" onAction="#onActionBtnAdminParameters" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="%BtnAdminParameters" textAlignment="JUSTIFY">
                                     <VBox.margin>
                                         <Insets top="35.0" />
                                     </VBox.margin>
                                 </MFXButton>
-                                <MFXButton fx:id="btnAdminProcess" ellipsisString="" onAction="#onActionBtnAdminProcess" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Procesos de Notificación" textOverrun="CLIP" />
-                                <MFXButton fx:id="btnMailBox" onAction="#onBtnMailBox" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Buzón de Correos" />
-                        <MFXButton fx:id="btnMassiveMails" onAction="#onActionBtnMassiveMails" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Generación de Correos Masivos" />
-                        <MFXButton fx:id="btnNewMail" onAction="#onActionBtnNewMail" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Envío de Correos" />
-                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                           <children>
-                              <MFXButton fx:id="btnLogOut" buttonType="RAISED" prefHeight="48.0" prefWidth="49.0" styleClass="button-blueStyle" text="‎ ">
-                                 <HBox.margin>
-                                    <Insets left="20.0" />
-                                 </HBox.margin>
-                                 <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../resources/logout.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </MFXButton>
-                           </children>
-                           <VBox.margin>
-                              <Insets top="170.0" />
-                           </VBox.margin>
-                        </HBox>
+                                <MFXButton fx:id="btnAdminProcess" ellipsisString="" onAction="#onActionBtnAdminProcess" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="%BtnAdminProcess" textOverrun="CLIP" />
+                                <MFXButton fx:id="btnMailBox" onAction="#onBtnMailBox" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="%BtnMailBox" />
+                                <MFXButton fx:id="btnMassiveMails" onAction="#onActionBtnMassiveMails" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="%BtnMassiveMails" />
+                                <MFXButton fx:id="btnNewMail" onAction="#onActionBtnNewMail" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="%BtnNewMail" />
+                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                    <children>
+                                        <MFXButton fx:id="btnLogOut" buttonType="RAISED" onAction="#onActionLogOut" prefHeight="48.0" prefWidth="49.0" styleClass="button-blueStyle" text="%BtnLogOut">
+                                            <HBox.margin>
+                                                <Insets left="20.0" />
+                                            </HBox.margin>
+                                            <graphic>
+                                                <ImageView fitHeight="32.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@../resources/logout.png" />
+                                                    </image>
+                                                </ImageView>
+                                            </graphic>
+                                        </MFXButton>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets top="170.0" />
+                                    </VBox.margin>
+                                </HBox>
                             </children>
                         </VBox>
                         <Separator orientation="VERTICAL" prefHeight="721.0" prefWidth="17.0" />
-                  <StackPane fx:id="stackPaneRoot" prefHeight="628.0" prefWidth="787.0">
-                     <children>
-                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" />
-                     </children></StackPane>
+                        <StackPane fx:id="stackPaneRoot" prefHeight="628.0" prefWidth="787.0">
+                            <children>
+                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" />
+                            </children>
+                        </StackPane>
                     </children>
                 </HBox>
             </children>

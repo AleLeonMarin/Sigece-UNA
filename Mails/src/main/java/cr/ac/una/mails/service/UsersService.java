@@ -55,4 +55,67 @@ public class UsersService {
         }
     }
 
+    public Respuesta getByPass(String password) {
+        try {
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("password", password);
+
+            Request request = new Request("UsersController/getByPass", "/{password}", parametros);
+            request.get();
+
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+
+            UsersDto user = (UsersDto) request.readEntity(UsersDto.class);
+            return new Respuesta(true, "", "", "Usuario", user);
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Error obteniendo el usuario por contraseña.", ex);
+            return new Respuesta(false, "Error obteniendo el usuario por contraseña.", "getByPass " + ex.getMessage());
+        }
+    }
+
+    public Respuesta updatePassword(String email, String newPass) {
+        try {
+            UsersDto usuarioDto = new UsersDto();
+            usuarioDto.setEmail(email);
+            usuarioDto.setPassword(newPass);
+
+            Request request = new Request("UsersController/updatePasswordByEmail");
+
+            request.put(usuarioDto);
+
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+
+            return new Respuesta(true, "", "", "Contraseña actualizada correctamente.", "");
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Error actualizando la contraseña.", ex);
+            return new Respuesta(false, "Error actualizando la contraseña.", "updatePassword " + ex.getMessage());
+        }
+    }
+
+    public Respuesta getByMail(String mail) {
+
+        try {
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("mail", mail);
+
+            Request request = new Request("UsersController/getByMail", "/{mail}", parametros);
+            request.get();
+
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+
+            UsersDto user = (UsersDto) request.readEntity(UsersDto.class);
+            return new Respuesta(true, "", "", "Usuario", user);
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Error obteniendo el usuario por correo.", ex);
+            return new Respuesta(false, "Error obteniendo el usuario por correo.", "getByMail " + ex.getMessage());
+
+        }
+    }
+
 }
