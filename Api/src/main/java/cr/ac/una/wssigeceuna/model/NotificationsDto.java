@@ -5,7 +5,6 @@ import java.util.List;
 import java.io.Serializable;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
-import jakarta.json.bind.annotation.JsonbTransient;
 
 @JsonbPropertyOrder({ "id", "name", "html", "version" })
 

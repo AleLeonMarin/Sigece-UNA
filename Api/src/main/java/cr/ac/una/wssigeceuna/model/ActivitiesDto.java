@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
-import jakarta.json.bind.annotation.JsonbTransient;
 
 @JsonbPropertyOrder({
         "id",
@@ -29,14 +28,17 @@ public class ActivitiesDto implements Serializable {
     @Schema(description = "Versión de la actividad", example = "1")
     private Long version;
 
-    @JsonbTransient
     private List<SubactivitiesDto> subactivities;
+
+    private List<GestionsDto> gestions;
 
     public ActivitiesDto() {
         subactivities = new ArrayList<>();
+        gestions = new ArrayList<>();
     }
 
     public ActivitiesDto(Activities activities) {
+        this();
         this.id = activities.getId();
         this.name = activities.getName();
         this.area = new AreasDto(activities.getArea());
@@ -88,5 +90,13 @@ public class ActivitiesDto implements Serializable {
 
     public void setSubactivities(List<SubactivitiesDto> subactivities) {
         this.subactivities = subactivities;
+    }
+
+    public List<GestionsDto> getGestions() {
+        return gestions;
+    }
+
+    public void setGestions(List<GestionsDto> gestions) {
+        this.gestions = gestions;
     }
 }

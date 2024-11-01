@@ -3,12 +3,10 @@ package cr.ac.una.wssigeceuna.model;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ByteArraySerializer;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
 import jakarta.json.bind.annotation.JsonbTransient;
-import java.util.Base64;
 
 @JsonbPropertyOrder({
     "id",

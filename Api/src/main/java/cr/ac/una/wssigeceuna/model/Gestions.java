@@ -111,7 +111,7 @@ public class Gestions implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "gestion")
     private List<Follows> follows;
 
-    @JoinColumn(name = "GES_SUB_ID", referencedColumnName = "gestion")
+    @JoinColumn(name = "GES_SUB_ID", referencedColumnName = "SUB_ID")
     @ManyToOne(optional = false)
     private Subactivities subactivities;
 
