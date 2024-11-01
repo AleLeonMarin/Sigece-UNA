@@ -12,6 +12,7 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 
 @Stateless
 @LocalBean
@@ -98,12 +99,15 @@ public class ActivitiesService {
 
     public Respuesta getActivity(Long id) {
         try {
-            Activities activity = em.find(Activities.class, id);
+            Query query = em.createNamedQuery("Activities.findByID", Activities.class);
+            query.setParameter("id", id);
+            Activities activity = (Activities) query.getSingleResult();
+            ActivitiesDto activityDto = new ActivitiesDto(activity);
             if (activity == null) {
                 return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
                         "No se encontró la actividad.", "getActivity NoResultException");
             }
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Actividad", new ActivitiesDto(activity));
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Actividad", activityDto);
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrió un error al obtener la actividad.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al obtener la actividad.",

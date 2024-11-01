@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXCheckbox?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
+<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" styleClass="stack-personal-pane1" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.admin.controller.GestionesController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" styleClass="stack-personal-pane1" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.admin.controller.GestionesController">
    <children>
       <StackPane prefHeight="150.0" prefWidth="200.0" styleClass="stack-personal-pane">
          <StackPane.margin>
@@ -23,17 +34,331 @@
                     <tabs>
                       <Tab text="Gestiones">
                         <content>
-                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="222.0" prefWidth="956.0" />
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="222.0" prefWidth="956.0">
+                                 <children>
+                                    <HBox layoutX="304.0" layoutY="184.0" prefHeight="609.0" prefWidth="936.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <StackPane prefHeight="150.0" prefWidth="200.0" styleClass="stack-personal-pane" HBox.hgrow="ALWAYS">
+                                             <HBox.margin>
+                                                <Insets bottom="10.0" left="10.0" top="10.0" />
+                                             </HBox.margin>
+                                             <children>
+                                                <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+                                                   <children>
+                                                      <Label styleClass="stackpane-label-black" text="Informacion de la Gestion">
+                                                         <font>
+                                                            <Font size="24.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <MFXTextField floatMode="BORDER" floatingText="ID">
+                                                         <styleClass>
+                                                            <String fx:value="jfx-txfs-security" />
+                                                            <String fx:value="jfx-txfs-security-container" />
+                                                         </styleClass>
+                                                      </MFXTextField>
+                                                      <MFXTextField floatMode="BORDER" floatingText="Asunto" layoutX="103.0" layoutY="48.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="300.0">
+                                                         <styleClass>
+                                                            <String fx:value="jfx-txfs-security" />
+                                                            <String fx:value="jfx-txfs-security-container" />
+                                                         </styleClass>
+                                                      </MFXTextField>
+                                                      <TextArea prefHeight="90.0" prefWidth="278.0" promptText="Descripcion" />
+                                                      <Separator prefWidth="200.0" />
+                                                      <Label styleClass="stackpane-label-black" text="Asignacion a Actividad o Subactividad" />
+                                                      <HBox alignment="CENTER" prefHeight="68.0" prefWidth="342.0" spacing="30.0">
+                                                         <children>
+                                                            <MFXCheckbox text="Actividad" />
+                                                            <MFXCheckbox text="Subactividad" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER" prefHeight="68.0" prefWidth="342.0" spacing="10.0">
+                                                         <children>
+                                                            <MFXComboBox floatMode="BORDER" floatingText="Actividades" />
+                                                            <MFXComboBox floatMode="BORDER" floatingText="Subactividades" />
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                   <StackPane.margin>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </StackPane.margin>
+                                                </VBox>
+                                             </children>
+                                          </StackPane>
+                                          <StackPane prefHeight="150.0" prefWidth="200.0" styleClass="stack-personal-pane" HBox.hgrow="ALWAYS">
+                                             <HBox.margin>
+                                                <Insets bottom="10.0" top="10.0" />
+                                             </HBox.margin>
+                                             <children>
+                                                <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+                                                   <StackPane.margin>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </StackPane.margin>
+                                                   <children>
+                                                      <Label styleClass="stackpane-label-black" text="Usuario Solicitante de la Gestion" />
+                                                      <MFXTextField floatMode="BORDER" floatingText="Solicitante" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="200.0">
+                                                         <styleClass>
+                                                            <String fx:value="jfx-txfs-security" />
+                                                            <String fx:value="jfx-txfs-security-container" />
+                                                         </styleClass>
+                                                      </MFXTextField>
+                                                      <Label layoutX="102.0" layoutY="48.0" styleClass="stackpane-label-black" text="Usuario Asignado a la Gestion" />
+                                                      <MFXComboBox floatingText="Asignado" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="200.0" />
+                                                      <Label layoutX="110.0" layoutY="118.0" styleClass="stackpane-label-black" text="Estado de la Gestion" />
+                                                      <VBox prefHeight="78.0" prefWidth="397.0" spacing="10.0">
+                                                         <children>
+                                                            <HBox alignment="CENTER" prefHeight="19.0" prefWidth="397.0" spacing="10.0">
+                                                               <children>
+                                                                  <MFXCheckbox text="En curso" />
+                                                                  <MFXCheckbox layoutX="10.0" layoutY="10.0" text="En espera" />
+                                                                  <MFXCheckbox layoutX="107.0" layoutY="10.0" text="En aprobacion" />
+                                                               </children>
+                                                            </HBox>
+                                                            <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="35.0" prefWidth="397.0" spacing="10.0">
+                                                               <children>
+                                                                  <MFXCheckbox layoutX="204.0" layoutY="10.0" prefHeight="28.0" prefWidth="113.0" text="Aprobada" textAlignment="CENTER" wrapText="true" />
+                                                                  <MFXCheckbox layoutX="301.0" layoutY="10.0" prefHeight="28.0" prefWidth="113.0" text="Rechazada" />
+                                                               </children>
+                                                            </HBox>
+                                                         </children>
+                                                      </VBox>
+                                                      <Label styleClass="stackpane-label-black" text="Fechas y Adjuntos">
+                                                         <font>
+                                                            <Font size="24.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <HBox alignment="CENTER" prefHeight="64.0" prefWidth="397.0" spacing="10.0" VBox.vgrow="NEVER">
+                                                         <children>
+                                                            <MFXDatePicker floatMode="BORDER" floatingText="Fecha de creacion" prefHeight="38.0" prefWidth="154.0" />
+                                                            <MFXDatePicker floatMode="BORDER" floatingText="Fecha de solucion" layoutX="10.0" layoutY="10.0" prefHeight="38.0" prefWidth="125.0" />
+                                                         </children>
+                                                      </HBox>
+                                                      <Label layoutX="142.0" layoutY="226.0" styleClass="stackpane-label-black" text="Adjuntar Documentos" />
+                                                      <MFXButton prefHeight="30.0" prefWidth="85.0" text="Adjuntar" />
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </StackPane>
+                                          <StackPane prefHeight="150.0" prefWidth="200.0" styleClass="stack-personal-pane" HBox.hgrow="ALWAYS">
+                                             <HBox.margin>
+                                                <Insets bottom="10.0" right="10.0" top="10.0" />
+                                             </HBox.margin>
+                                             <children>
+                                                <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                                                   <StackPane.margin>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </StackPane.margin>
+                                                   <children>
+                                                      <Label styleClass="stackpane-label-black" text="Aprobadores">
+                                                         <font>
+                                                            <Font size="24.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <HBox alignment="CENTER" prefHeight="43.0" prefWidth="418.0" spacing="10.0">
+                                                         <children>
+                                                            <MFXCheckbox text="1" />
+                                                            <MFXCheckbox text="2" />
+                                                            <MFXCheckbox layoutX="107.0" layoutY="10.0" text="4" />
+                                                            <MFXCheckbox layoutX="223.0" layoutY="18.0" text="6" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                                                         <children>
+                                                            <MFXComboBox floatMode="BORDER" floatingText="Aprobador 1" />
+                                                            <MFXComboBox floatMode="BORDER" floatingText="Aprobador 2" layoutX="10.0" layoutY="10.0" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER" layoutX="10.0" layoutY="71.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                                                         <children>
+                                                            <MFXComboBox floatMode="BORDER" floatingText="Aprobador 3" />
+                                                            <MFXComboBox floatMode="BORDER" floatingText="Aprobador 4" layoutX="10.0" layoutY="10.0" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER" layoutX="10.0" layoutY="223.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                                                         <children>
+                                                            <MFXComboBox floatMode="BORDER" floatingText="Aprobador 5" />
+                                                            <MFXComboBox floatMode="BORDER" floatingText="Aprobador 6" layoutX="10.0" layoutY="10.0" />
+                                                         </children>
+                                                      </HBox>
+                                                      <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../resources/Logo.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </StackPane>
+                                       </children>
+                                    </HBox>
+                                 </children></AnchorPane>
                         </content>
                       </Tab>
-                      <Tab text="Seguimientos">
-                        <content>
-                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                        </content>
-                      </Tab>
+                        <Tab text="Seguimientos">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <HBox layoutX="368.0" layoutY="291.0" prefHeight="609.0" prefWidth="1136.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <StackPane prefHeight="150.0" prefWidth="200.0" styleClass="stack-personal-pane" HBox.hgrow="ALWAYS">
+                                             <children>
+                                                <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                                                   <StackPane.margin>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </StackPane.margin>
+                                                   <children>
+                                                      <Label styleClass="stackpane-label-black" text="Historial de la Gestion" />
+                                                      <Separator prefWidth="200.0" />
+                                                      <MFXScrollPane prefHeight="491.0" prefWidth="342.0">
+                                                         <content>
+                                                            <VBox alignment="TOP_CENTER" prefHeight="482.0" prefWidth="311.0" />
+                                                         </content>
+                                                      </MFXScrollPane>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                             <HBox.margin>
+                                                <Insets bottom="10.0" left="10.0" top="10.0" />
+                                             </HBox.margin>
+                                          </StackPane>
+                                          <StackPane layoutX="20.0" layoutY="20.0" prefHeight="150.0" prefWidth="200.0" styleClass="stack-personal-pane" HBox.hgrow="ALWAYS">
+                                             <children>
+                                                <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
+                                                   <StackPane.margin>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </StackPane.margin>
+                                                   <children>
+                                                      <Label styleClass="stackpane-label-black" text="Informacion del Seguimiento" />
+                                                      <MFXTextField floatMode="BORDER" floatingText="ID">
+                                                         <styleClass>
+                                                            <String fx:value="jfx-txfs-security" />
+                                                            <String fx:value="jfx-txfs-security-container" />
+                                                         </styleClass></MFXTextField>
+                                                      <MFXTextField floatMode="BORDER" floatingText="Descripcion" layoutX="130.0" layoutY="280.0" prefWidth="300.0">
+                                                         <styleClass>
+                                                            <String fx:value="jfx-txfs-security" />
+                                                            <String fx:value="jfx-txfs-security-container" />
+                                                         </styleClass></MFXTextField>
+                                                      <Separator prefWidth="200.0" />
+                                                      <Label layoutX="85.0" layoutY="196.0" styleClass="stackpane-label-black" text="Fecha del Seguimiento" />
+                                                      <MFXDatePicker />
+                                                      <Separator prefWidth="200.0" />
+                                                      <Label layoutX="106.0" layoutY="338.0" styleClass="stackpane-label-black" text="Estado del Seguimiento" />
+                                                      <VBox alignment="CENTER" prefHeight="78.0" prefWidth="397.0" spacing="10.0">
+                                                         <children>
+                                                            <MFXCheckbox prefHeight="28.0" prefWidth="113.0" text="En Curso" />
+                                                            <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="35.0" prefWidth="397.0" spacing="10.0">
+                                                               <children>
+                                                                  <MFXCheckbox layoutX="204.0" layoutY="10.0" prefHeight="28.0" prefWidth="113.0" text="Aprobada" textAlignment="CENTER" wrapText="true" />
+                                                                  <MFXCheckbox layoutX="301.0" layoutY="10.0" prefHeight="28.0" prefWidth="113.0" text="Rechazada" />
+                                                               </children>
+                                                            </HBox>
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                             <HBox.margin>
+                                                <Insets bottom="10.0" top="10.0" />
+                                             </HBox.margin>
+                                          </StackPane>
+                                          <StackPane layoutX="946.0" layoutY="10.0" prefHeight="150.0" prefWidth="200.0" styleClass="stack-personal-pane" HBox.hgrow="ALWAYS">
+                                             <children>
+                                                <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+                                                   <StackPane.margin>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </StackPane.margin>
+                                                   <children>
+                                                      <Label styleClass="stackpane-label-black" text="Tipo de Seguimiento" />
+                                                      <HBox alignment="CENTER" prefHeight="35.0" prefWidth="397.0" spacing="10.0">
+                                                         <children>
+                                                            <MFXCheckbox layoutX="204.0" layoutY="10.0" prefHeight="28.0" prefWidth="113.0" text="Archivo" textAlignment="CENTER" wrapText="true" />
+                                                            <MFXCheckbox layoutX="301.0" layoutY="10.0" prefHeight="28.0" prefWidth="113.0" text="Texto" />
+                                                         </children>
+                                                      </HBox>
+                                                      <TextArea prefHeight="200.0" prefWidth="200.0" promptText="Texto" />
+                                                      <Separator prefWidth="200.0" />
+                                                      <Label layoutX="106.0" layoutY="150.0" text="Adjuntar Documentos" />
+                                                      <MFXButton text="Adjuntar" />
+                                                      <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../resources/Logo.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                             <HBox.margin>
+                                                <Insets bottom="10.0" right="10.0" top="10.0" />
+                                             </HBox.margin>
+                                          </StackPane>
+                                       </children>
+                                    </HBox>
+                                 </children></AnchorPane>
+                           </content>
+                        </Tab>
                         <Tab text="Aprobaciones">
                            <content>
-                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <HBox layoutX="294.0" layoutY="221.0" prefHeight="609.0" prefWidth="1136.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <StackPane prefHeight="150.0" prefWidth="200.0" styleClass="stack-personal-pane" HBox.hgrow="ALWAYS">
+                                             <HBox.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </HBox.margin>
+                                             <children>
+                                                <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+                                                   <StackPane.margin>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </StackPane.margin>
+                                                   <children>
+                                                      <Label styleClass="stackpane-label-black" text="Informacion de la Aprobacion" />
+                                                      <MFXTextField floatMode="BORDER" floatingText="ID" />
+                                                      <MFXTextField floatMode="BORDER" floatingText="Descripcion" minWidth="-Infinity" prefWidth="300.0" />
+                                                      <MFXTextField floatMode="BORDER" floatingText="Comentario" minWidth="-Infinity" prefWidth="300.0" />
+                                                      <TextArea prefHeight="137.0" prefWidth="512.0" promptText="Solucion" />
+                                                      <Label layoutX="174.0" layoutY="10.0" styleClass="stackpane-label-black" text="Fecha de Aprobacion" />
+                                                      <MFXDatePicker />
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </StackPane>
+                                          <StackPane prefHeight="150.0" prefWidth="200.0" styleClass="stack-personal-pane" HBox.hgrow="ALWAYS">
+                                             <HBox.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </HBox.margin>
+                                             <children>
+                                                <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+                                                   <StackPane.margin>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </StackPane.margin>
+                                                   <children>
+                                                      <Label styleClass="stackpane-label-black" text="Informacion del Aprobador" />
+                                                      <MFXTextField floatMode="BORDER" floatingText="Aprobador" minWidth="-Infinity" prefWidth="300.0" />
+                                                      <Separator prefWidth="200.0" />
+                                                      <Label layoutX="174.0" layoutY="10.0" styleClass="stackpane-label-black" text="Estado de la Aprobacion" />
+                                                      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                                         <children>
+                                                            <MFXCheckbox text="Aprobada" />
+                                                            <MFXCheckbox layoutX="10.0" layoutY="10.0" text="Rechazada" />
+                                                         </children>
+                                                      </HBox>
+                                                      <Separator layoutX="10.0" layoutY="82.0" prefWidth="200.0" />
+                                                      <Label layoutX="178.0" layoutY="85.0" styleClass="stackpane-label-black" text="Adjuntar Documentos" />
+                                                      <MFXButton text="Adjuntar" />
+                                                      <Separator layoutX="10.0" layoutY="203.0" prefWidth="200.0" />
+                                                      <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../resources/Logo.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </StackPane>
+                                       </children>
+                                    </HBox>
+                                 </children></AnchorPane>
                            </content>
                         </Tab>
                     </tabs>

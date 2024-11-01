@@ -20,7 +20,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

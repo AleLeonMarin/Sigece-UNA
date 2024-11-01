@@ -4,12 +4,8 @@ import java.io.Serializable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
-import jakarta.json.bind.annotation.JsonbTransient;
-import java.util.ArrayList;
-
 import java.util.Date;
 import java.util.List;
-import org.apache.commons.lang3.tuple.Pair;
 
 @JsonbPropertyOrder({
     "id",

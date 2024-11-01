@@ -16,12 +16,11 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.QueryHint;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
-import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +31,7 @@ import java.util.List;
 @Entity
 @Table(name = "SIS_SUBACTIVIDADES")
 @NamedQueries({
-        @NamedQuery(name = "Subactivities.findAll", query = "SELECT s FROM Subactivities s"),
+        @NamedQuery(name = "Subactivities.findAll", query = "SELECT s FROM Subactivities s", hints = @QueryHint(name = "eclipselink.refresh", value = "true")),
 /*
  * @NamedQuery(name = "SisSubactividades.findBySubId", query =
  * "SELECT s FROM SisSubactividades s WHERE s.subId = :subId"),

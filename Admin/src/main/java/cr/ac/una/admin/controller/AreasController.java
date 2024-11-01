@@ -151,17 +151,17 @@ public class AreasController extends Controller implements Initializable {
 
     private void bindActivities(Boolean isNew) {
         if (!isNew) {
-            txfIDAct.textProperty().bind(activity.id);
+            txfIDAct.textProperty().bind(this.activity.id);
         }
-        txfNombreAct.textProperty().bindBidirectional(activity.name);
+        txfNombreAct.textProperty().bindBidirectional(this.activity.name);
 
     }
 
     private void bindSubactivities(Boolean isNew) {
         if (!isNew) {
-            txfIDSub.textProperty().bind(subactivity.id);
+            txfIDSub.textProperty().bind(this.subactivity.id);
         }
-        txfNombreSub.textProperty().bindBidirectional(subactivity.name);
+        txfNombreSub.textProperty().bindBidirectional(this.subactivity.name);
 
     }
 
@@ -176,13 +176,13 @@ public class AreasController extends Controller implements Initializable {
 
     private void unbindActivities() {
         txfIDAct.textProperty().unbind();
-        txfNombreAct.textProperty().unbindBidirectional(activity.name);
+        txfNombreAct.textProperty().unbindBidirectional(this.activity.name);
 
     }
 
     private void unbindSubactivities() {
         txfIDSub.textProperty().unbind();
-        txfNombreSub.textProperty().unbindBidirectional(subactivity.name);
+        txfNombreSub.textProperty().unbindBidirectional(this.subactivity.name);
 
     }
 
@@ -247,7 +247,6 @@ public class AreasController extends Controller implements Initializable {
                 bindAreas(false);
 
                 ObservableList<ActivitiesDto> activities = FXCollections.observableArrayList(this.area.getActivities());
-                tbvActividades.getItems().clear();
                 tbvActividades.setItems(activities);
             }
         } catch (Exception e) {
@@ -265,12 +264,11 @@ public class AreasController extends Controller implements Initializable {
                 new Mensaje().showModal(AlertType.ERROR, "Cargar Actividad", getStage(), respuesta.getMensaje());
             } else {
                 unbindActivities();
-                this.activity = (ActivitiesDto) respuesta.getResultado("Actividad");
+                this.activity = (ActivitiesDto) respuesta.getResultado("Activity");
                 bindActivities(false);
 
                 ObservableList<SubactivitiesDto> subactivities = FXCollections
                         .observableArrayList(this.activity.getSubactivities());
-                tbvSubactividades.getItems().clear();
                 tbvSubactividades.setItems(subactivities);
             }
         } catch (Exception e) {
@@ -342,7 +340,7 @@ public class AreasController extends Controller implements Initializable {
                 new Mensaje().showModal(AlertType.ERROR, "Guardar Actividad", getStage(), respuesta.getMensaje());
             } else {
                 unbindActivities();
-                this.activity = (ActivitiesDto) respuesta.getResultado("Actividad");
+                this.activity = (ActivitiesDto) respuesta.getResultado("Activity");
                 bindActivities(false);
                 new Mensaje().showModal(AlertType.INFORMATION, "Guardar Actividad", getStage(),
                         "Actividad guardada correctamente.");
@@ -364,7 +362,7 @@ public class AreasController extends Controller implements Initializable {
                 new Mensaje().showModal(AlertType.ERROR, "Guardar Subactividad", getStage(), respuesta.getMensaje());
             } else {
                 unbindSubactivities();
-                this.subactivity = (SubactivitiesDto) respuesta.getResultado("Subactividad");
+                this.subactivity = (SubactivitiesDto) respuesta.getResultado("Subactivity");
                 bindSubactivities(false);
                 new Mensaje().showModal(AlertType.INFORMATION, "Guardar Subactividad", getStage(),
                         "Subactividad guardada correctamente.");
@@ -445,7 +443,7 @@ public class AreasController extends Controller implements Initializable {
                     if (newValue != null) {
                         this.area = newValue;
                         populateTxfArea();
-                        chargeArea(Long.valueOf(tbcIDArea.getText()));
+                        chargeArea(Long.valueOf(txfIDArea.getText()));
 
                         Platform.runLater(() -> tbvAreas.getSelectionModel().clearSelection());
                     }
@@ -459,7 +457,7 @@ public class AreasController extends Controller implements Initializable {
                     if (newValue != null) {
                         this.activity = newValue;
                         populateTxfActivity();
-                        chargeActivity(Long.valueOf(tbcIDAct.getText()));
+                        chargeActivity(Long.valueOf(txfIDAct.getText()));
 
                         Platform.runLater(() -> tbvActividades.getSelectionModel().clearSelection());
                     }
@@ -576,7 +574,7 @@ public class AreasController extends Controller implements Initializable {
     @FXML
     void onSelectionChangedTptSubactividades(Event event) {
         if (tptSubactividades.isSelected()) {
-            if (this.activity == null) {
+            if (this.activity.getId() == null) {
                 new Mensaje().showModal(AlertType.ERROR, "Seleccionar Actividad", getStage(),
                         "Debe seleccionar una actividad.");
                 tpbAreas.getSelectionModel().select(tptActividades);
@@ -588,7 +586,7 @@ public class AreasController extends Controller implements Initializable {
     @FXML
     void onSelectionChangedTptActividades(Event event) {
         if (tptActividades.isSelected()) {
-            if (this.area == null) {
+            if (this.area.getId() == null) {
                 new Mensaje().showModal(AlertType.ERROR, "Seleccionar Area", getStage(), "Debe seleccionar un area.");
                 tpbAreas.getSelectionModel().select(tptAreas);
             }
