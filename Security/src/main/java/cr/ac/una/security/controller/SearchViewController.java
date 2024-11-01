@@ -85,6 +85,8 @@ public class SearchViewController extends Controller implements Initializable {
 
     Object result;
 
+    ResourceBundle bundle;
+
     public Object getResult() {
         return result;
     }
@@ -108,36 +110,33 @@ public class SearchViewController extends Controller implements Initializable {
 
     public void loadSystems(String name) {
         Respuesta res = systemService.obtenerSystems();
-
         if (res.getEstado()) {
-            // Obtén el resultado y asegúrate de que no sea null
             List<SystemsDto> systemsList = (List<SystemsDto>) res.getResultado("Sistemas");
-
             ObservableList<SystemsDto> systemsDto = FXCollections.observableArrayList(systemsList);
             systems.clear();
 
-            // Filtra la lista si se especifica un nombre
             if (name != null && !name.isBlank()) {
                 String nameBuscado = name.toLowerCase();
                 ObservableList<SystemsDto> filteredSystems = systemsDto.stream()
                         .filter(p -> p.getName().toLowerCase().contains(nameBuscado))
                         .collect(Collectors.toCollection(FXCollections::observableArrayList));
                 tbvSystems.setItems(filteredSystems);
+            } else {
+                tbvSystems.setItems(systemsDto);
             }
 
             systems.addAll(systemsDto);
-            tbvSystems.setItems(systemsDto);
             tbvSystems.refresh();
         } else {
-            System.err.println("Error al obtener los sistemas: " + res.getMensaje());
+            new Mensaje().showModal(Alert.AlertType.ERROR, bundle.getString("errorTitle"),
+                    getStage(), bundle.getString("loadSystemsError") + ": " + res.getMensaje());
         }
     }
 
     public void loadUsers(String name, String lastNames, String idCard) {
         Respuesta res = userService.getUsers();
         if (res.getEstado()) {
-            ObservableList<UsersDto> usersDto = FXCollections
-                    .observableArrayList((List<UsersDto>) res.getResultado("Usuarios"));
+            ObservableList<UsersDto> usersDto = FXCollections.observableArrayList((List<UsersDto>) res.getResultado("Usuarios"));
             users.clear();
 
             if (idCard != null && !idCard.isBlank()) {
@@ -164,7 +163,8 @@ public class SearchViewController extends Controller implements Initializable {
             tbvUsers.refresh();
 
         } else {
-            new Mensaje().showModal(Alert.AlertType.ERROR, "Cargar Usuarios", getStage(), res.getMensaje());
+            new Mensaje().showModal(Alert.AlertType.ERROR, bundle.getString("errorTitle"),
+                    getStage(), bundle.getString("loadUsersError") + ": " + res.getMensaje());
         }
     }
 
@@ -206,6 +206,8 @@ public class SearchViewController extends Controller implements Initializable {
         tbcLastNames.setCellValueFactory(u -> u.getValue().lastNames);
 
         tbcSystem.setCellValueFactory(c -> c.getValue().name);
+
+        bundle = resources;
 
     }
 

@@ -39,9 +39,13 @@ public class ResetPasswordController extends Controller implements Initializable
     @FXML
     private MFXPasswordField repeatPassword;
 
+    ResourceBundle rb;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+
+            this.rb = rb;
+
     }
 
     @Override
@@ -51,32 +55,32 @@ public class ResetPasswordController extends Controller implements Initializable
     @FXML
     void onActionBtnAccept(ActionEvent event) {
         try {
-            if (fillPassWord.getText().isBlank() || repeatPassword.getText().isBlank()) {
-                new Mensaje().showModal(AlertType.ERROR, "Clave", getStage(), "Debe llenar todos los campos");
-            } else if (fillPassWord.getText().isBlank() || fillPassWord.getText().isEmpty()) {
-                new Mensaje().showModal(AlertType.ERROR, "Clave", getStage(), "Debe llenar el campo de clave");
-            } else if (repeatPassword.getText().isBlank() || repeatPassword.getText().isEmpty()) {
-                new Mensaje().showModal(AlertType.ERROR, "Clave", getStage(), "Debe llenar el campo de repetir clave");
-            } else if (!fillPassWord.getText().equals(repeatPassword.getText())) {
-                new Mensaje().showModal(AlertType.ERROR, "Clave", getStage(), "Las claves no coinciden");
-            } else {
 
+
+            if (fillPassWord.getText().isBlank() || repeatPassword.getText().isBlank()) {
+                new Mensaje().showModal(AlertType.ERROR, rb.getString("errorTitle"), getStage(), rb.getString("errorFillAllFields"));
+            } else if (fillPassWord.getText().isBlank() || fillPassWord.getText().isEmpty()) {
+                new Mensaje().showModal(AlertType.ERROR, rb.getString("errorTitle"), getStage(), rb.getString("errorFillPasswordField"));
+            } else if (repeatPassword.getText().isBlank() || repeatPassword.getText().isEmpty()) {
+                new Mensaje().showModal(AlertType.ERROR, rb.getString("errorTitle"), getStage(), rb.getString("errorFillRepeatPasswordField"));
+            } else if (!fillPassWord.getText().equals(repeatPassword.getText())) {
+                new Mensaje().showModal(AlertType.ERROR, rb.getString("errorTitle"), getStage(), rb.getString("errorPasswordsDoNotMatch"));
+            } else {
                 UsersDto user = (UsersDto) AppContext.getInstance().get("user");
                 UsersService service = new UsersService();
                 Respuesta respuesta = service.updatePassword(user.getEmail(), repeatPassword.getText());
                 if (respuesta.getEstado()) {
-                    new Mensaje().showModal(AlertType.INFORMATION, "Clave", getStage(),
-                            "Clave actualizada correctamente");
+                    new Mensaje().showModal(AlertType.INFORMATION, rb.getString("successTitle"), getStage(),
+                            rb.getString("successPasswordUpdated"));
                     FlowController.getInstance().goViewInWindow("LoginView");
                     this.getStage().close();
                 } else {
-                    new Mensaje().showModal(AlertType.ERROR, "Clave", getStage(), respuesta.getMensaje());
+                    new Mensaje().showModal(AlertType.ERROR, rb.getString("errorTitle"), getStage(), respuesta.getMensaje());
                 }
             }
         } catch (Exception e) {
-            new Mensaje().showModal(AlertType.ERROR, "Clave", getStage(), "Error al actualizar la clave");
+            new Mensaje().showModal(AlertType.ERROR, rb.getString("errorTitle"), getStage(), rb.getString("errorUpdatingPassword"));
         }
-
     }
 
 }
