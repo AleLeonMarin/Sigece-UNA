@@ -299,7 +299,7 @@ CREATE TABLE
             ges_fecha_solucion DATE NOT NULL,
             ges_asunto VARCHAR2 (500) NOT NULL,
             ges_descripcion VARCHAR2 (1000) NOT NULL,
-            ges_estado VARCHAR2 (1) DEFAULT 'E' NOT NULL CONSTRAINT sis_gestion_ck01 CHECK (ges_estado in ('A', 'R', 'C', 'E', 'R')),
+            ges_estado VARCHAR2 (1) DEFAULT 'E' NOT NULL CONSTRAINT sis_gestion_ck01 CHECK (ges_estado in ('A', 'R', 'C', 'E', 'S')),
             ges_solicitante_id NUMBER NOT NULL,
             ges_asignado_id NUMBER NOT NULL,
             ges_sub_id NUMBER ,

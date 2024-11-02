@@ -30,9 +30,9 @@
          <children>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <TabPane prefHeight="685.0" prefWidth="956.0" tabClosingPolicy="UNAVAILABLE">
+                  <TabPane fx:id="tbGestiones" prefHeight="685.0" prefWidth="956.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
-                      <Tab text="Gestiones">
+                      <Tab fx:id="tptGestiones" text="Gestiones">
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="222.0" prefWidth="956.0">
                                  <children>
@@ -50,31 +50,31 @@
                                                             <Font size="24.0" />
                                                          </font>
                                                       </Label>
-                                                      <MFXTextField floatMode="BORDER" floatingText="ID">
+                                                      <MFXTextField fx:id="txfIDGestion" floatMode="BORDER" floatingText="ID" onKeyPressed="#onKeyPressedTxfIDGestion">
                                                          <styleClass>
                                                             <String fx:value="jfx-txfs-security" />
                                                             <String fx:value="jfx-txfs-security-container" />
                                                          </styleClass>
                                                       </MFXTextField>
-                                                      <MFXTextField floatMode="BORDER" floatingText="Asunto" layoutX="103.0" layoutY="48.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="300.0">
+                                                      <MFXTextField fx:id="txfAsuntoGestion" floatMode="BORDER" floatingText="Asunto" layoutX="103.0" layoutY="48.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="300.0">
                                                          <styleClass>
                                                             <String fx:value="jfx-txfs-security" />
                                                             <String fx:value="jfx-txfs-security-container" />
                                                          </styleClass>
                                                       </MFXTextField>
-                                                      <TextArea prefHeight="90.0" prefWidth="278.0" promptText="Descripcion" />
+                                                      <TextArea fx:id="txaGestion" prefHeight="90.0" prefWidth="278.0" promptText="Descripcion" />
                                                       <Separator prefWidth="200.0" />
                                                       <Label styleClass="stackpane-label-black" text="Asignacion a Actividad o Subactividad" />
                                                       <HBox alignment="CENTER" prefHeight="68.0" prefWidth="342.0" spacing="30.0">
                                                          <children>
-                                                            <MFXCheckbox text="Actividad" />
-                                                            <MFXCheckbox text="Subactividad" />
+                                                            <MFXCheckbox fx:id="chkActividad" text="Actividad" />
+                                                            <MFXCheckbox fx:id="chkSubactividad" text="Subactividad" />
                                                          </children>
                                                       </HBox>
                                                       <HBox alignment="CENTER" prefHeight="68.0" prefWidth="342.0" spacing="10.0">
                                                          <children>
-                                                            <MFXComboBox floatMode="BORDER" floatingText="Actividades" />
-                                                            <MFXComboBox floatMode="BORDER" floatingText="Subactividades" />
+                                                            <MFXComboBox fx:id="cmbActividades" floatMode="BORDER" floatingText="Actividades" />
+                                                            <MFXComboBox fx:id="cmbSubactividades" floatMode="BORDER" floatingText="Subactividades" />
                                                          </children>
                                                       </HBox>
                                                    </children>
@@ -95,28 +95,28 @@
                                                    </StackPane.margin>
                                                    <children>
                                                       <Label styleClass="stackpane-label-black" text="Usuario Solicitante de la Gestion" />
-                                                      <MFXTextField floatMode="BORDER" floatingText="Solicitante" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="200.0">
+                                                      <MFXTextField fx:id="txfSolicitanteGestion" floatMode="BORDER" floatingText="Solicitante" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="200.0">
                                                          <styleClass>
                                                             <String fx:value="jfx-txfs-security" />
                                                             <String fx:value="jfx-txfs-security-container" />
                                                          </styleClass>
                                                       </MFXTextField>
                                                       <Label layoutX="102.0" layoutY="48.0" styleClass="stackpane-label-black" text="Usuario Asignado a la Gestion" />
-                                                      <MFXComboBox floatingText="Asignado" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="200.0" />
+                                                      <MFXComboBox fx:id="cmbAsiganadoGestion" floatingText="Asignado" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="200.0" />
                                                       <Label layoutX="110.0" layoutY="118.0" styleClass="stackpane-label-black" text="Estado de la Gestion" />
                                                       <VBox prefHeight="78.0" prefWidth="397.0" spacing="10.0">
                                                          <children>
                                                             <HBox alignment="CENTER" prefHeight="19.0" prefWidth="397.0" spacing="10.0">
                                                                <children>
-                                                                  <MFXCheckbox text="En curso" />
-                                                                  <MFXCheckbox layoutX="10.0" layoutY="10.0" text="En espera" />
-                                                                  <MFXCheckbox layoutX="107.0" layoutY="10.0" text="En aprobacion" />
+                                                                  <MFXCheckbox fx:id="chkCursoGestion" text="En curso" />
+                                                                  <MFXCheckbox fx:id="chkEsperaGestion" layoutX="10.0" layoutY="10.0" text="En espera" />
+                                                                  <MFXCheckbox fx:id="chkAprobacionGestion" layoutX="107.0" layoutY="10.0" text="En aprobacion" />
                                                                </children>
                                                             </HBox>
                                                             <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="35.0" prefWidth="397.0" spacing="10.0">
                                                                <children>
-                                                                  <MFXCheckbox layoutX="204.0" layoutY="10.0" prefHeight="28.0" prefWidth="113.0" text="Aprobada" textAlignment="CENTER" wrapText="true" />
-                                                                  <MFXCheckbox layoutX="301.0" layoutY="10.0" prefHeight="28.0" prefWidth="113.0" text="Rechazada" />
+                                                                  <MFXCheckbox fx:id="chkAprobadaGestion" layoutX="204.0" layoutY="10.0" prefHeight="28.0" prefWidth="113.0" text="Aprobada" textAlignment="CENTER" wrapText="true" />
+                                                                  <MFXCheckbox fx:id="chkRechazadaGestion" layoutX="301.0" layoutY="10.0" prefHeight="28.0" prefWidth="113.0" text="Rechazada" />
                                                                </children>
                                                             </HBox>
                                                          </children>
@@ -128,12 +128,12 @@
                                                       </Label>
                                                       <HBox alignment="CENTER" prefHeight="64.0" prefWidth="397.0" spacing="10.0" VBox.vgrow="NEVER">
                                                          <children>
-                                                            <MFXDatePicker floatMode="BORDER" floatingText="Fecha de creacion" prefHeight="38.0" prefWidth="154.0" />
-                                                            <MFXDatePicker floatMode="BORDER" floatingText="Fecha de solucion" layoutX="10.0" layoutY="10.0" prefHeight="38.0" prefWidth="125.0" />
+                                                            <MFXDatePicker fx:id="dpCreacionGestion" floatMode="BORDER" floatingText="Fecha de creacion" prefHeight="38.0" prefWidth="154.0" />
+                                                            <MFXDatePicker fx:id="dpSolucionGestion" floatMode="BORDER" floatingText="Fecha de solucion" layoutX="10.0" layoutY="10.0" prefHeight="38.0" prefWidth="125.0" />
                                                          </children>
                                                       </HBox>
                                                       <Label layoutX="142.0" layoutY="226.0" styleClass="stackpane-label-black" text="Adjuntar Documentos" />
-                                                      <MFXButton prefHeight="30.0" prefWidth="85.0" text="Adjuntar" />
+                                                      <MFXButton fx:id="btnAdjuntarGestion" onAction="#onActionBtnAdjuntarGestion" prefHeight="30.0" prefWidth="85.0" text="Adjuntar" />
                                                    </children>
                                                 </VBox>
                                              </children>
@@ -155,28 +155,28 @@
                                                       </Label>
                                                       <HBox alignment="CENTER" prefHeight="43.0" prefWidth="418.0" spacing="10.0">
                                                          <children>
-                                                            <MFXCheckbox text="1" />
-                                                            <MFXCheckbox text="2" />
-                                                            <MFXCheckbox layoutX="107.0" layoutY="10.0" text="4" />
-                                                            <MFXCheckbox layoutX="223.0" layoutY="18.0" text="6" />
+                                                            <MFXCheckbox fx:id="chkAprobador1" text="1" />
+                                                            <MFXCheckbox fx:id="chkAprobador2" text="2" />
+                                                            <MFXCheckbox fx:id="chkAprobador4" layoutX="107.0" layoutY="10.0" text="4" />
+                                                            <MFXCheckbox fx:id="chkAprobador6" layoutX="223.0" layoutY="18.0" text="6" />
                                                          </children>
                                                       </HBox>
                                                       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                                                          <children>
-                                                            <MFXComboBox floatMode="BORDER" floatingText="Aprobador 1" />
-                                                            <MFXComboBox floatMode="BORDER" floatingText="Aprobador 2" layoutX="10.0" layoutY="10.0" />
+                                                            <MFXComboBox fx:id="cmbAprobador1Gestion" floatMode="BORDER" floatingText="Aprobador 1" />
+                                                            <MFXComboBox fx:id="cmbAprobador2Gestion" floatMode="BORDER" floatingText="Aprobador 2" layoutX="10.0" layoutY="10.0" />
                                                          </children>
                                                       </HBox>
                                                       <HBox alignment="CENTER" layoutX="10.0" layoutY="71.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                                                          <children>
-                                                            <MFXComboBox floatMode="BORDER" floatingText="Aprobador 3" />
-                                                            <MFXComboBox floatMode="BORDER" floatingText="Aprobador 4" layoutX="10.0" layoutY="10.0" />
+                                                            <MFXComboBox fx:id="cmbAprobador3Gestion" floatMode="BORDER" floatingText="Aprobador 3" />
+                                                            <MFXComboBox fx:id="cmbAprobador4Gestion" floatMode="BORDER" floatingText="Aprobador 4" layoutX="10.0" layoutY="10.0" />
                                                          </children>
                                                       </HBox>
                                                       <HBox alignment="CENTER" layoutX="10.0" layoutY="223.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                                                          <children>
-                                                            <MFXComboBox floatMode="BORDER" floatingText="Aprobador 5" />
-                                                            <MFXComboBox floatMode="BORDER" floatingText="Aprobador 6" layoutX="10.0" layoutY="10.0" />
+                                                            <MFXComboBox fx:id="cmbAprobador5Gestion" floatMode="BORDER" floatingText="Aprobador 5" />
+                                                            <MFXComboBox fx:id="cmbAprobador6Gestion" floatMode="BORDER" floatingText="Aprobador 6" layoutX="10.0" layoutY="10.0" />
                                                          </children>
                                                       </HBox>
                                                       <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
@@ -193,7 +193,7 @@
                                  </children></AnchorPane>
                         </content>
                       </Tab>
-                        <Tab text="Seguimientos">
+                        <Tab fx:id="tptSeguimeinto" onSelectionChanged="#onSelecitonChangedTptSeguimiento" text="Seguimientos">
                            <content>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
@@ -210,7 +210,7 @@
                                                       <Separator prefWidth="200.0" />
                                                       <MFXScrollPane prefHeight="491.0" prefWidth="342.0">
                                                          <content>
-                                                            <VBox alignment="TOP_CENTER" prefHeight="482.0" prefWidth="311.0" />
+                                                            <VBox fx:id="vboxHistorial" alignment="TOP_CENTER" prefHeight="482.0" prefWidth="311.0" />
                                                          </content>
                                                       </MFXScrollPane>
                                                    </children>
@@ -228,28 +228,28 @@
                                                    </StackPane.margin>
                                                    <children>
                                                       <Label styleClass="stackpane-label-black" text="Informacion del Seguimiento" />
-                                                      <MFXTextField floatMode="BORDER" floatingText="ID">
+                                                      <MFXTextField fx:id="txfIDSeguimiento" floatMode="BORDER" floatingText="ID" onKeyPressed="#onKeyPressedTxfIdSeguimiento">
                                                          <styleClass>
                                                             <String fx:value="jfx-txfs-security" />
                                                             <String fx:value="jfx-txfs-security-container" />
                                                          </styleClass></MFXTextField>
-                                                      <MFXTextField floatMode="BORDER" floatingText="Descripcion" layoutX="130.0" layoutY="280.0" prefWidth="300.0">
+                                                      <MFXTextField fx:id="txfDescripcionSeguimiento" floatMode="BORDER" floatingText="Descripcion" layoutX="130.0" layoutY="280.0" prefWidth="300.0">
                                                          <styleClass>
                                                             <String fx:value="jfx-txfs-security" />
                                                             <String fx:value="jfx-txfs-security-container" />
                                                          </styleClass></MFXTextField>
                                                       <Separator prefWidth="200.0" />
                                                       <Label layoutX="85.0" layoutY="196.0" styleClass="stackpane-label-black" text="Fecha del Seguimiento" />
-                                                      <MFXDatePicker />
+                                                      <MFXDatePicker fx:id="dpFechaSeguimeinto" />
                                                       <Separator prefWidth="200.0" />
                                                       <Label layoutX="106.0" layoutY="338.0" styleClass="stackpane-label-black" text="Estado del Seguimiento" />
                                                       <VBox alignment="CENTER" prefHeight="78.0" prefWidth="397.0" spacing="10.0">
                                                          <children>
-                                                            <MFXCheckbox prefHeight="28.0" prefWidth="113.0" text="En Curso" />
+                                                            <MFXCheckbox fx:id="chkCursoSeguimiento" prefHeight="28.0" prefWidth="113.0" text="En Curso" />
                                                             <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="35.0" prefWidth="397.0" spacing="10.0">
                                                                <children>
-                                                                  <MFXCheckbox layoutX="204.0" layoutY="10.0" prefHeight="28.0" prefWidth="113.0" text="Aprobada" textAlignment="CENTER" wrapText="true" />
-                                                                  <MFXCheckbox layoutX="301.0" layoutY="10.0" prefHeight="28.0" prefWidth="113.0" text="Rechazada" />
+                                                                  <MFXCheckbox fx:id="chkAprobadaSeguimiento" layoutX="204.0" layoutY="10.0" prefHeight="28.0" prefWidth="113.0" text="Aprobada" textAlignment="CENTER" wrapText="true" />
+                                                                  <MFXCheckbox fx:id="chkRechazadaSeguimiento" layoutX="301.0" layoutY="10.0" prefHeight="28.0" prefWidth="113.0" text="Rechazada" />
                                                                </children>
                                                             </HBox>
                                                          </children>
@@ -271,14 +271,14 @@
                                                       <Label styleClass="stackpane-label-black" text="Tipo de Seguimiento" />
                                                       <HBox alignment="CENTER" prefHeight="35.0" prefWidth="397.0" spacing="10.0">
                                                          <children>
-                                                            <MFXCheckbox layoutX="204.0" layoutY="10.0" prefHeight="28.0" prefWidth="113.0" text="Archivo" textAlignment="CENTER" wrapText="true" />
-                                                            <MFXCheckbox layoutX="301.0" layoutY="10.0" prefHeight="28.0" prefWidth="113.0" text="Texto" />
+                                                            <MFXCheckbox fx:id="chkArchivoSeguimiento" layoutX="204.0" layoutY="10.0" prefHeight="28.0" prefWidth="113.0" text="Archivo" textAlignment="CENTER" wrapText="true" />
+                                                            <MFXCheckbox fx:id="chkTextoSeguimiento" layoutX="301.0" layoutY="10.0" prefHeight="28.0" prefWidth="113.0" text="Texto" />
                                                          </children>
                                                       </HBox>
-                                                      <TextArea prefHeight="200.0" prefWidth="200.0" promptText="Texto" />
+                                                      <TextArea fx:id="txaTextoSeguimiento" prefHeight="200.0" prefWidth="200.0" promptText="Texto" />
                                                       <Separator prefWidth="200.0" />
                                                       <Label layoutX="106.0" layoutY="150.0" text="Adjuntar Documentos" />
-                                                      <MFXButton text="Adjuntar" />
+                                                      <MFXButton fx:id="btnAdjuntarSeguimiento" onAction="#onActionBtnAdjuntarSeguimeinto" text="Adjuntar" />
                                                       <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
                                                             <Image url="@../resources/Logo.png" />
@@ -296,7 +296,7 @@
                                  </children></AnchorPane>
                            </content>
                         </Tab>
-                        <Tab text="Aprobaciones">
+                        <Tab fx:id="tptAprobaciones" onSelectionChanged="#onSelectionChangedTptAprobaciones" text="Aprobaciones">
                            <content>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
@@ -313,12 +313,12 @@
                                                    </StackPane.margin>
                                                    <children>
                                                       <Label styleClass="stackpane-label-black" text="Informacion de la Aprobacion" />
-                                                      <MFXTextField floatMode="BORDER" floatingText="ID" />
-                                                      <MFXTextField floatMode="BORDER" floatingText="Descripcion" minWidth="-Infinity" prefWidth="300.0" />
-                                                      <MFXTextField floatMode="BORDER" floatingText="Comentario" minWidth="-Infinity" prefWidth="300.0" />
-                                                      <TextArea prefHeight="137.0" prefWidth="512.0" promptText="Solucion" />
+                                                      <MFXTextField fx:id="txfIDAprobacion" floatMode="BORDER" floatingText="ID" />
+                                                      <MFXTextField fx:id="txfDescripcionAprobacion" floatMode="BORDER" floatingText="Descripcion" minWidth="-Infinity" prefWidth="300.0" />
+                                                      <MFXTextField fx:id="txfComentarioAprobacion" floatMode="BORDER" floatingText="Comentario" minWidth="-Infinity" prefWidth="300.0" />
+                                                      <TextArea fx:id="txaSolucionAprobacion" prefHeight="137.0" prefWidth="512.0" promptText="Solucion" />
                                                       <Label layoutX="174.0" layoutY="10.0" styleClass="stackpane-label-black" text="Fecha de Aprobacion" />
-                                                      <MFXDatePicker />
+                                                      <MFXDatePicker fx:id="dpFechaAprobacion" />
                                                    </children>
                                                 </VBox>
                                              </children>
@@ -334,18 +334,18 @@
                                                    </StackPane.margin>
                                                    <children>
                                                       <Label styleClass="stackpane-label-black" text="Informacion del Aprobador" />
-                                                      <MFXTextField floatMode="BORDER" floatingText="Aprobador" minWidth="-Infinity" prefWidth="300.0" />
+                                                      <MFXTextField fx:id="txfAprobadorAprobacion" floatMode="BORDER" floatingText="Aprobador" minWidth="-Infinity" prefWidth="300.0" />
                                                       <Separator prefWidth="200.0" />
                                                       <Label layoutX="174.0" layoutY="10.0" styleClass="stackpane-label-black" text="Estado de la Aprobacion" />
                                                       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                                          <children>
-                                                            <MFXCheckbox text="Aprobada" />
-                                                            <MFXCheckbox layoutX="10.0" layoutY="10.0" text="Rechazada" />
+                                                            <MFXCheckbox fx:id="chkAprobadaAprobacion" text="Aprobada" />
+                                                            <MFXCheckbox fx:id="chkRechazadaAprobacion" layoutX="10.0" layoutY="10.0" text="Rechazada" />
                                                          </children>
                                                       </HBox>
                                                       <Separator layoutX="10.0" layoutY="82.0" prefWidth="200.0" />
                                                       <Label layoutX="178.0" layoutY="85.0" styleClass="stackpane-label-black" text="Adjuntar Documentos" />
-                                                      <MFXButton text="Adjuntar" />
+                                                      <MFXButton fx:id="btnAdjuntarAprobacion" onAction="#onActionBtnAdjuntarAprobacion" text="Adjuntar" />
                                                       <Separator layoutX="10.0" layoutY="203.0" prefWidth="200.0" />
                                                       <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
@@ -368,27 +368,27 @@
                   </TabPane>
                   <HBox alignment="CENTER" prefHeight="87.0" prefWidth="656.0" spacing="15.0">
                      <children>
-                        <MFXButton minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="100.0" styleClass="jfx-btn-new" text="Nuevo">
+                        <MFXButton fx:id="btnNew" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnNew" prefHeight="50.0" prefWidth="100.0" styleClass="jfx-btn-new" text="Nuevo">
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                            </graphic>
                         </MFXButton>
-                        <MFXButton layoutX="10.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="100.0" styleClass="jfx-btn-save" text="Guardar">
+                        <MFXButton fx:id="btnSave" layoutX="10.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnSave" prefHeight="50.0" prefWidth="100.0" styleClass="jfx-btn-save" text="Guardar">
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                            </graphic>
                         </MFXButton>
-                        <MFXButton layoutX="101.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="100.0" styleClass="jfx-btn-search" text="Buscar">
+                        <MFXButton fx:id="bntSearch" layoutX="101.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnSearch" prefHeight="50.0" prefWidth="100.0" styleClass="jfx-btn-search" text="Buscar">
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                            </graphic>
                         </MFXButton>
-                        <MFXButton layoutX="192.0" layoutY="10.0" prefHeight="50.0" prefWidth="100.0" styleClass="jfx-btn-delete" text="Eliminar">
+                        <MFXButton fx:id="btnDelete" layoutX="192.0" layoutY="10.0" onAction="#onActionBtnDelete" prefHeight="50.0" prefWidth="100.0" styleClass="jfx-btn-delete" text="Eliminar">
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                            </graphic>
                         </MFXButton>
-                        <MFXButton layoutX="283.0" layoutY="10.0" prefHeight="50.0" prefWidth="100.0" styleClass="jfx-btn-log-out" text="Salir">
+                        <MFXButton fx:id="btnExit" layoutX="283.0" layoutY="10.0" onAction="#onActionBtnExit" prefHeight="50.0" prefWidth="100.0" styleClass="jfx-btn-log-out" text="Salir">
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                            </graphic>

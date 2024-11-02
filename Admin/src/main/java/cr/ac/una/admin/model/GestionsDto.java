@@ -3,7 +3,6 @@ package cr.ac.una.admin.model;
 import java.util.List;
 
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import java.util.ArrayList;
@@ -16,14 +15,17 @@ public class GestionsDto implements Serializable {
     public ObjectProperty<LocalDate> solutionDate;
     public SimpleStringProperty subject;
     public SimpleStringProperty description;
-    public SimpleBooleanProperty state;
+    public SimpleStringProperty state;
     public ObjectProperty<byte[]> archive;
     public Long version;
     public SubactivitiesDto Subactivities;
+    public ActivitiesDto activity;
     public UsersDto Requester;
     public UsersDto Assigned;
     List<FollowsDto> follows;
     List<ApprovalsDto> approvals;
+    List<UsersDto> approvers;
+    List<UsersDto> deletedApprovers;
 
     public GestionsDto() {
 
@@ -32,10 +34,13 @@ public class GestionsDto implements Serializable {
         this.solutionDate = new SimpleObjectProperty<>();
         this.subject = new SimpleStringProperty("");
         this.description = new SimpleStringProperty("");
-        this.state = new SimpleBooleanProperty();
+        this.state = new SimpleStringProperty("E");
         this.archive = new SimpleObjectProperty<>(new byte[0]);
+        this.activity = new ActivitiesDto();
         follows = new ArrayList<>();
         approvals = new ArrayList<>();
+        approvers = new ArrayList<>();
+        deletedApprovers = new ArrayList<>();
 
     }
 
@@ -83,12 +88,16 @@ public class GestionsDto implements Serializable {
         this.description.set(description);
     }
 
-    public Boolean getState() {
+    public String getState() {
         return state.get();
     }
 
-    public void setState(Boolean state) {
-        this.state.set(state);
+    public void setState(String state) {
+        if (state.equals("A") || state.equals("R") || state.equals("C") || state.equals("E") || state.equals("S")) {
+            this.state.set(state);
+        } else {
+            throw new IllegalArgumentException("Estado inválido: " + state);
+        }
     }
 
     public byte[] getArchive() {
@@ -113,6 +122,14 @@ public class GestionsDto implements Serializable {
 
     public void setSubactivities(SubactivitiesDto Subactivities) {
         this.Subactivities = Subactivities;
+    }
+
+    public ActivitiesDto getActivity() {
+        return activity;
+    }
+
+    public void setActivity(ActivitiesDto activity) {
+        this.activity = activity;
     }
 
     public UsersDto getRequester() {
@@ -145,6 +162,26 @@ public class GestionsDto implements Serializable {
 
     public void setApprovals(List<ApprovalsDto> approvals) {
         this.approvals = approvals;
+    }
+
+    public List<UsersDto> getApprovers() {
+        return approvers;
+    }
+
+    public void setApprovers(List<UsersDto> approvers) {
+        this.approvers = approvers;
+    }
+
+    public List<UsersDto> getDeletedApprovers() {
+        return deletedApprovers;
+    }
+
+    public void setDeletedApprovers(List<UsersDto> deletedApprovers) {
+        this.deletedApprovers = deletedApprovers;
+    }
+
+    public SimpleStringProperty activity() {
+        return activity();
     }
 
 }

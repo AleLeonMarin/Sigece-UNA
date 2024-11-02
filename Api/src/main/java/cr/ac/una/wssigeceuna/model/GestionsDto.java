@@ -54,6 +54,9 @@ public class GestionsDto implements Serializable {
     @Schema(description = "Subactividades de la gestion")
     private SubactivitiesDto Subactivities;
 
+    @Schema(description = "Actividad de la gestion")
+    private ActivitiesDto Activity;
+
     @Schema(description = "Solicitante de la gestion")
     private UsersDto Requester;
 
@@ -66,14 +69,21 @@ public class GestionsDto implements Serializable {
     @JsonbTransient
     List<ApprovalsDto> approvals;
 
+    List<UsersDto> approvers;
+
+    List<UsersDto> deletedApprovers;
+
     public GestionsDto() {
 
         follows = new ArrayList<>();
         approvals = new ArrayList<>();
+        approvers = new ArrayList<>();
+        deletedApprovers = new ArrayList<>();
 
     }
 
     public GestionsDto(Gestions gestions) {
+        this();
         this.id = gestions.getId();
         this.creationDate = gestions.getCreationDate();
         this.solutionDate = gestions.getSolutionDate();
@@ -159,6 +169,14 @@ public class GestionsDto implements Serializable {
         this.Subactivities = Subactivities;
     }
 
+    public ActivitiesDto getActivity() {
+        return Activity;
+    }
+
+    public void setActivity(ActivitiesDto Activity) {
+        this.Activity = Activity;
+    }
+
     public UsersDto getRequester() {
         return Requester;
     }
@@ -189,6 +207,22 @@ public class GestionsDto implements Serializable {
 
     public void setApprovals(List<ApprovalsDto> approvals) {
         this.approvals = approvals;
+    }
+
+    public List<UsersDto> getApprovers() {
+        return approvers;
+    }
+
+    public void setApprovers(List<UsersDto> approvers) {
+        this.approvers = approvers;
+    }
+
+    public List<UsersDto> getDeletedApprovers() {
+        return deletedApprovers;
+    }
+
+    public void setDeletedApprovers(List<UsersDto> deletedApprovers) {
+        this.deletedApprovers = deletedApprovers;
     }
 
 }

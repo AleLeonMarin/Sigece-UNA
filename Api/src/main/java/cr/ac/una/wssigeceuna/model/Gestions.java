@@ -36,27 +36,48 @@ import java.util.List;
 @Table(name = "SIS_GESTION")
 @NamedQueries({
         @NamedQuery(name = "Gestions.findAll", query = "SELECT s FROM Gestions s"),
+        @NamedQuery(name = "Gestions.findById", query = "SELECT s FROM Gestions s WHERE s.id = :id"),
 /*
- * @NamedQuery(name = "SisGestion.findByGesId", query =
- * "SELECT s FROM SisGestion s WHERE s.gesId = :gesId"),
+ * @NamedQuery(name =
+ * "SisGestion.findByGesId", query =
+ * "SELECT s FROM SisGestion s WHERE s.gesId = :gesId"
+ * ),
  * 
- * @NamedQuery(name = "SisGestion.findByGesFechaCreacion", query =
- * "SELECT s FROM SisGestion s WHERE s.gesFechaCreacion = :gesFechaCreacion"),
+ * @NamedQuery(name =
+ * "SisGestion.findByGesFechaCreacion",
+ * query =
+ * "SELECT s FROM SisGestion s WHERE s.gesFechaCreacion = :gesFechaCreacion"
+ * ),
  * 
- * @NamedQuery(name = "SisGestion.findByGesFechaSolucion", query =
- * "SELECT s FROM SisGestion s WHERE s.gesFechaSolucion = :gesFechaSolucion"),
+ * @NamedQuery(name =
+ * "SisGestion.findByGesFechaSolucion",
+ * query =
+ * "SELECT s FROM SisGestion s WHERE s.gesFechaSolucion = :gesFechaSolucion"
+ * ),
  * 
- * @NamedQuery(name = "SisGestion.findByGesAsunto", query =
- * "SELECT s FROM SisGestion s WHERE s.gesAsunto = :gesAsunto"),
+ * @NamedQuery(name =
+ * "SisGestion.findByGesAsunto",
+ * query =
+ * "SELECT s FROM SisGestion s WHERE s.gesAsunto = :gesAsunto"
+ * ),
  * 
- * @NamedQuery(name = "SisGestion.findByGesDescripcion", query =
- * "SELECT s FROM SisGestion s WHERE s.gesDescripcion = :gesDescripcion"),
+ * @NamedQuery(name =
+ * "SisGestion.findByGesDescripcion",
+ * query =
+ * "SELECT s FROM SisGestion s WHERE s.gesDescripcion = :gesDescripcion"
+ * ),
  * 
- * @NamedQuery(name = "SisGestion.findByGesEstado", query =
- * "SELECT s FROM SisGestion s WHERE s.gesEstado = :gesEstado"),
+ * @NamedQuery(name =
+ * "SisGestion.findByGesEstado",
+ * query =
+ * "SELECT s FROM SisGestion s WHERE s.gesEstado = :gesEstado"
+ * ),
  * 
- * @NamedQuery(name = "SisGestion.findByGesVersion", query =
- * "SELECT s FROM SisGestion s WHERE s.gesVersion = :gesVersion")
+ * @NamedQuery(name =
+ * "SisGestion.findByGesVersion",
+ * query =
+ * "SELECT s FROM SisGestion s WHERE s.gesVersion = :gesVersion"
+ * )
  */ })
 public class Gestions implements Serializable {
 
@@ -115,12 +136,12 @@ public class Gestions implements Serializable {
     @ManyToOne(optional = false)
     private Subactivities subactivities;
 
-    @JoinColumn(name = "GES_SOLICITANTE_ID", referencedColumnName = "gestionRequester")
     @ManyToOne(optional = false)
+    @JoinColumn(name = "GES_SOLICITANTE_ID", referencedColumnName = "USER_ID") // Cambiado de gestionRequester a USER_ID
     private Users requester;
 
-    @JoinColumn(name = "GES_ASIGNADO_ID", referencedColumnName = "gestionAssigned")
     @ManyToOne(optional = false)
+    @JoinColumn(name = "GES_ASIGNADO_ID", referencedColumnName = "USER_ID") // Cambiado de gestionAssigned a USER_ID
     private Users assigned;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "gestion")
@@ -266,6 +287,14 @@ public class Gestions implements Serializable {
 
     public void setApprovals(List<Approvals> approvals) {
         this.approvals = approvals;
+    }
+
+    public List<Users> getApprovers() {
+        return approvers;
+    }
+
+    public void setApprovers(List<Users> approvers) {
+        this.approvers = approvers;
     }
 
     @Override
