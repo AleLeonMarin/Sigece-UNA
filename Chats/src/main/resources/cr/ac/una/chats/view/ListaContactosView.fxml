@@ -8,22 +8,21 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-
 <AnchorPane id="AnchorPane" prefHeight="503.0" prefWidth="392.0" stylesheets="@Styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/22" fx:controller="cr.ac.una.chats.controller.ListaContactosController">
    <children>
       <TableView fx:id="tbvContactos" layoutX="44.0" layoutY="47.0" prefHeight="423.0" prefWidth="304.0">
          <columns>
-            <TableColumn fx:id="tbcContactos" prefWidth="303.0" text="Contactos de La Empresa" />
+            <TableColumn fx:id="tbcContactos" prefWidth="303.0" text="%table.contactosEmpresa" />
          </columns>
       </TableView>
       <HBox layoutX="8.0" layoutY="4.0" prefHeight="43.0" prefWidth="371.0" spacing="10.0">
          <children>
-            <MFXTextField fx:id="txtSearch" floatMode="DISABLED" prefHeight="0.0" prefWidth="282.0">
+            <MFXTextField fx:id="txtSearch" floatMode="DISABLED" prefHeight="0.0" prefWidth="282.0" promptText="%prompt.search">
                <HBox.margin>
                   <Insets top="5.0" />
                </HBox.margin>
             </MFXTextField>
-            <MFXButton fx:id="btnSearch" onAction="#onActionBtnSearch" prefHeight="25.0" prefWidth="69.0" styleClass="button-blueStyle" text="Buscar">
+            <MFXButton fx:id="btnSearch" onAction="#onActionBtnSearch" prefHeight="25.0" prefWidth="69.0" styleClass="button-blueStyle" text="%button.search">
                <HBox.margin>
                   <Insets top="5.0" />
                </HBox.margin>

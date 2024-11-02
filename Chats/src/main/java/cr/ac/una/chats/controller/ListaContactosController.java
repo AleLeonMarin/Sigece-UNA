@@ -42,8 +42,11 @@ public class ListaContactosController extends Controller implements Initializabl
     @FXML
     private MFXTextField txtSearch;
 
+    ResourceBundle bundle;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        bundle = rb;
         tbcContactos.setCellFactory(column -> new TableCell<UsersDto, String>() {
             @Override
             protected void updateItem(String item, boolean empty) {

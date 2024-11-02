@@ -85,6 +85,8 @@ public class RegisterController extends Controller implements Initializable {
 
     UsersDto usuariosDto;
 
+    private ResourceBundle bundle;
+
     List<Node> requeridos = new ArrayList<>();
 
     @Override
@@ -95,7 +97,7 @@ public class RegisterController extends Controller implements Initializable {
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(URL location, ResourceBundle rb) {
         txfCed.delegateSetTextFormatter(Formato.getInstance().cedulaFormat(15));
         txfTel.delegateSetTextFormatter(Formato.getInstance().integerFormatWithMaxLength(30));
         txfCel.delegateSetTextFormatter(Formato.getInstance().integerFormatWithMaxLength(30));
@@ -109,6 +111,8 @@ public class RegisterController extends Controller implements Initializable {
         this.usuariosDto = new UsersDto();
         newUser();
         indicateRequiredFields();
+
+        this.bundle = rb;
     }
 
     @FXML
@@ -120,11 +124,10 @@ public class RegisterController extends Controller implements Initializable {
 
     @FXML
     void onActionBtnRegister(ActionEvent event) {
-
         try {
             String validation = validarRequeridos();
             if (!validation.isEmpty()) {
-                new Mensaje().showModal(AlertType.WARNING, "Guardar Usuario", getStage(), validation);
+                new Mensaje().showModal(AlertType.WARNING, bundle.getString("userSave.title"), getStage(), validation);
             } else {
                 this.usuariosDto.setState("I"); // Set as inactive or similar
                 this.usuariosDto.setAreas(new AreasDto()); // Set a default area
@@ -132,14 +135,14 @@ public class RegisterController extends Controller implements Initializable {
                 Respuesta respuesta = service.guardarUsuario(usuariosDto);
 
                 if (!respuesta.getEstado()) {
-                    new Mensaje().showModal(AlertType.INFORMATION, "Guardar Usuario", getStage(),
+                    new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("userSave.title"), getStage(),
                             respuesta.getMensaje());
                 } else {
                     unbindUser();
                     this.usuariosDto = (UsersDto) respuesta.getResultado("Usuario");
                     bindUser(false);
-                    new Mensaje().showModal(AlertType.INFORMATION, "Guardar Usuario", getStage(),
-                            "Usuario guardado correctamente, revise su correo para activacion.");
+                    new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("userSave.title"), getStage(),
+                            bundle.getString("userSave.success"));
 
                     File file = new File("photo.png");
                     if (file.exists()) {
@@ -157,12 +160,10 @@ public class RegisterController extends Controller implements Initializable {
                     ((Stage) root.getScene().getWindow()).close();
                 }
             }
-        } catch (
-
-                Exception e) {
-            new Mensaje().showModal(AlertType.ERROR, "Guardar Usuario", getStage(), "Error guardando el usuario.");
+        } catch (Exception e) {
+            new Mensaje().showModal(AlertType.ERROR, bundle.getString("userSave.title"), getStage(),
+                    bundle.getString("userSave.error"));
         }
-
     }
 
     @FXML
@@ -183,17 +184,20 @@ public class RegisterController extends Controller implements Initializable {
                     BufferedImage bufferedImage = ImageIO.read(file);
                     Image image = SwingFXUtils.toFXImage(bufferedImage, null);
                     imgViewUser.setImage(image);
-                    // Actualiza la foto en el DTO si es necesario
                     usuariosDto.setPhoto(toByteArray(bufferedImage)); // Método de conversión a byte[]
                 } catch (IOException e) {
                     e.printStackTrace();
-                    new Mensaje().showModal(AlertType.ERROR, "Error", getStage(), "Error al cargar la imagen.");
+                    new Mensaje().showModal(AlertType.ERROR, bundle.getString("photoLoadError.title"), getStage(),
+                            bundle.getString("photoLoadError.message"));
                 }
             } else {
-                new Mensaje().showModal(AlertType.WARNING, "Error", getStage(), "El archivo de la foto no existe.");
+                new Mensaje().showModal(AlertType.WARNING, bundle.getString("photoFileError.title"), getStage(),
+                        bundle.getString("photoFileError.message"));
             }
         }
     }
+
+
 
     private Image byteToImage(byte[] bytes) {
         try {
@@ -279,7 +283,7 @@ public class RegisterController extends Controller implements Initializable {
         if (validos) {
             return "";
         } else {
-            return "Campos requeridos o con problemas de formato [" + invalidos + "].";
+            return validos ? "" : bundle.getString("requiredFields") + "[" + invalidos + "].";
         }
     }
 

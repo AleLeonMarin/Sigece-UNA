@@ -30,6 +30,7 @@ public class UsersDto {
     public List<RolesDto> rolesDtoEliminados;
     public AreasDto areas;
 
+    private String token;
 
     //
     // public List<FollowsDto> follows;
@@ -57,6 +58,7 @@ public class UsersDto {
         this.areas = new AreasDto();
         this.roles = FXCollections.observableArrayList();
         this.rolesDtoEliminados = FXCollections.observableArrayList();
+        this.token = "";
     }
 
     public Long getId() {
@@ -223,6 +225,14 @@ public class UsersDto {
                 ", status='" + status.get() + '\'' +
                 ", version=" + version.get() +
                 '}';
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
 

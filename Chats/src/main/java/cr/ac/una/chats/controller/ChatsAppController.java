@@ -66,9 +66,12 @@ public class ChatsAppController extends Controller implements Initializable {
     @FXML
     private MFXTextField txtEstado;
 
+    ResourceBundle bundle;
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        this.bundle = rb;
         idEmisor = obtenerIdEmisorActual();
         cargarUsuarios();
 
@@ -271,12 +274,12 @@ public class ChatsAppController extends Controller implements Initializable {
         String textoMensaje = txtMensaje.getText();
 
         if (textoMensaje.isEmpty()) {
-            new Mensaje().show(Alert.AlertType.WARNING, "Advertencia", "El campo de mensaje no puede estar vacío.");
+            new Mensaje().show(Alert.AlertType.WARNING, bundle.getString("warningTitle"), bundle.getString("warningEmptyMessageField"));
             return;
         }
 
         if (tbvContactos.getSelectionModel().getSelectedItem() == null) {
-            new Mensaje().show(Alert.AlertType.WARNING, "Advertencia", "No se ha seleccionado ningún chat.");
+            new Mensaje().show(Alert.AlertType.WARNING, bundle.getString("warningTitle"), bundle.getString("warningNoChatSelected"));
             return;
         }
 
@@ -351,76 +354,70 @@ public class ChatsAppController extends Controller implements Initializable {
 
     @FXML
     void onActionBtnDeleteChat(ActionEvent event) {
+
         if (currentChat == null) {
             tbvContactos.getItems().remove(tbvContactos.getSelectionModel().getSelectedItem());
             tbvContactos.refresh();
-            Mensaje mensaje = new Mensaje();
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "No hay ningún chat seleccionado para eliminar.");
+            new Mensaje().show(Alert.AlertType.WARNING, bundle.getString("warningTitle"), bundle.getString("warningNoChatToDelete"));
             return;
         }
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Eliminar chat");
-        alert.setHeaderText("¿Está seguro de que desea eliminar este chat?");
-        alert.setContentText("Esta acción no se puede deshacer.");
+        alert.setTitle(bundle.getString("deleteChatTitle"));
+        alert.setHeaderText(bundle.getString("deleteChatHeader"));
+        alert.setContentText(bundle.getString("deleteChatContent"));
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-
             Respuesta respuesta = chatsService.eliminarChat(currentChat.getId().toString());
 
             if (respuesta.getEstado()) {
-                Mensaje mensaje = new Mensaje();
-                mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "El chat ha sido eliminado correctamente.");
-
+                new Mensaje().show(Alert.AlertType.INFORMATION, bundle.getString("successTitle"), bundle.getString("successChatDeleted"));
                 tbvContactos.getItems().remove(tbvContactos.getSelectionModel().getSelectedItem());
                 tbvContactos.refresh();
 
                 currentChat = null;
                 vboxChats.getChildren().clear();
-                Label noChatLabel = new Label("El chat ha sido eliminado.");
+                Label noChatLabel = new Label(bundle.getString("noChatLabel"));
                 noChatLabel.setStyle("-fx-text-fill: gray; -fx-font-size: 14px;");
                 vboxChats.getChildren().add(noChatLabel);
             } else {
-                Mensaje mensaje = new Mensaje();
-                mensaje.show(Alert.AlertType.ERROR, "Error", "Ocurrió un error al eliminar el chat: " + respuesta.getMensaje());
+                new Mensaje().show(Alert.AlertType.ERROR, bundle.getString("errorTitle"), bundle.getString("errorDeletingChat") + respuesta.getMensaje());
             }
         } else {
-            System.out.println("Eliminación de chat cancelada.");
+            System.out.println(bundle.getString("chatDeletionCancelled"));
         }
     }
 
 
-    private void onActionEliminarMensaje(MessagesDto mensaje) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Eliminar mensaje");
-        alert.setHeaderText("¿Está seguro de que desea eliminar este mensaje?");
-        alert.setContentText("Esta acción no se puede deshacer.");
-        Optional<ButtonType> result = alert.showAndWait();
 
+    private void onActionEliminarMensaje(MessagesDto mensaje) {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(bundle.getString("deleteMessageTitle"));
+        alert.setHeaderText(bundle.getString("deleteMessageHeader"));
+        alert.setContentText(bundle.getString("deleteMessageContent"));
+
+        Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             MensajesService mensajesService = new MensajesService();
             Respuesta respuesta = mensajesService.eliminarMensaje(mensaje.getId());
 
             if (respuesta.getEstado()) {
-                Mensaje mensajeAlerta = new Mensaje();
-                mensajeAlerta.show(Alert.AlertType.INFORMATION, "Éxito", "El mensaje ha sido eliminado correctamente.");
+                new Mensaje().show(Alert.AlertType.INFORMATION, bundle.getString("successTitle"), bundle.getString("successMessageDeleted"));
                 currentChat.setMessages(currentChat.getMessages().stream()
                         .filter(m -> !m.equals(mensaje))
                         .collect(Collectors.toList()));
                 mostrarMensajesDelChat(currentChat.getMessages());
-
             } else {
-                Mensaje mensajeAlerta = new Mensaje();
-                mensajeAlerta.show(Alert.AlertType.ERROR, "Error", "Ocurrió un error al eliminar el mensaje: " + respuesta.getMensaje());
+                new Mensaje().show(Alert.AlertType.ERROR, bundle.getString("errorTitle"), bundle.getString("errorDeletingMessage") + respuesta.getMensaje());
             }
         }
-        //quitar seleccion de la tbv
-        tbvContactos.getSelectionModel().clearSelection();
     }
 
     @FXML
     void onActionBtnNewChat(ActionEvent event) {
+
         vboxChats.getChildren().clear();
         tbvContactos.getSelectionModel().clearSelection();
         currentChat = null;
@@ -439,19 +436,21 @@ public class ChatsAppController extends Controller implements Initializable {
                 usuariosList.add(usuarioSeleccionado);
                 tbvContactos.setItems(usuariosList);
                 tbvContactos.refresh();
-
             } else {
-                new Mensaje().show(Alert.AlertType.INFORMATION, "Información", "YA TIENES UN CHAT CON ESTE USUARIO.");
+                new Mensaje().show(Alert.AlertType.INFORMATION, bundle.getString("infoTitle"), bundle.getString("infoChatAlreadyExists"));
             }
         }
     }
 
 
+
     @FXML
     void onBtnGuardarEstado(ActionEvent event) {
         String nuevoEstado = txtEstado.getText();
+
+
         if (nuevoEstado == null || nuevoEstado.isEmpty()) {
-            new Mensaje().show(Alert.AlertType.WARNING, "Advertencia", "El estado no puede estar vacío.");
+            new Mensaje().show(Alert.AlertType.WARNING, bundle.getString("warningTitle"), bundle.getString("warningEmptyStatus"));
             return;
         }
 
@@ -461,9 +460,9 @@ public class ChatsAppController extends Controller implements Initializable {
 
         Respuesta respuesta = usuariosService.actualizarEstadoUsuario(usuarioActual);
         if (respuesta.getEstado()) {
-            new Mensaje().show(Alert.AlertType.INFORMATION, "Éxito", "El estado ha sido actualizado correctamente.");
+            new Mensaje().show(Alert.AlertType.INFORMATION, bundle.getString("successTitle"), bundle.getString("successStatusUpdated"));
         } else {
-            new Mensaje().show(Alert.AlertType.ERROR, "Error", "Ocurrió un error al actualizar el estado: " + respuesta.getMensaje());
+            new Mensaje().show(Alert.AlertType.ERROR, bundle.getString("errorTitle"), bundle.getString("errorUpdatingStatus") + respuesta.getMensaje());
         }
     }
 }
