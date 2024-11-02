@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cr.ac.una.admin.model.AreasDto;
 import cr.ac.una.admin.model.GestionsDto;
 import cr.ac.una.admin.util.Request;
 import cr.ac.una.admin.util.Respuesta;

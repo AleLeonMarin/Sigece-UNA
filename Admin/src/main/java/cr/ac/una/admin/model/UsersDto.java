@@ -1,7 +1,5 @@
 package cr.ac.una.admin.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -182,7 +180,7 @@ public class UsersDto {
     public void setStatus(String status) {
         this.status.set(status);
     }
-    
+
     public Boolean getModified() {
         return modified;
     }

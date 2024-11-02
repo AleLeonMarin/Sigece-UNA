@@ -1,6 +1,4 @@
- package cr.ac.una.wssigeceuna.controller;
-
-
+package cr.ac.una.wssigeceuna.controller;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -21,29 +19,29 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.ext.Provider;
 
-
-
-
-
 @Provider
 @Secure
 @Priority(Priorities.AUTHENTICATION)
 
 public class SecurityFilter implements ContainerRequestFilter {
-    
+
     private static final String AUTHORIZATION_SERVICE_PATH = "logIn";
+    private static final String AUTHORIZATION_SERVICE_PATH2 = "createUser";
     private static final String RENEWAL_SERVICE_PATH = "renovarToken";
     private final JwTokenHelper jwTokenHelper = JwTokenHelper.getInstance();
     private static final String AUTHENTICATION_SCHEME = "Bearer ";
 
-
     @Context
     private ResourceInfo resourceInfo;
-    
+
     @Override
     public void filter(ContainerRequestContext request) throws IOException {
         Method method = resourceInfo.getResourceMethod();
         if (method.getName().equals(AUTHORIZATION_SERVICE_PATH)) {
+            return;
+        }
+
+        if (method.getName().equals(AUTHORIZATION_SERVICE_PATH2)) {
             return;
         }
 
@@ -55,29 +53,26 @@ public class SecurityFilter implements ContainerRequestFilter {
             abortWithUnauthorized(request, "Authorization is missing in header");
             return;
 
-        }
-        else if (!isTokenBasedAuthentication(authorizationHeader)) {
+        } else if (!isTokenBasedAuthentication(authorizationHeader)) {
             abortWithUnauthorized(request, "Invalid authorization");
             return;
         }
-      
 
         // Extract the token from the Authorization header
         String token = authorizationHeader.substring(AUTHENTICATION_SCHEME.length()).trim();
-        
+
         try {
 
             // Validate the token
             try {
                 Claims claims = jwTokenHelper.claimKey(token);
-                
-                
-                //TODO revisar
-                if(claims.containsKey("rnw") && (Boolean) claims.get("rnw")==true && !method.getName().equals(RENEWAL_SERVICE_PATH))
-                {
+
+                // TODO revisar
+                if (claims.containsKey("rnw") && (Boolean) claims.get("rnw") == true
+                        && !method.getName().equals(RENEWAL_SERVICE_PATH)) {
                     abortWithUnauthorized(request, "INVALID");
                 }
-                
+
                 final SecurityContext currentSecurityContext = request.getSecurityContext();
                 request.setSecurityContext(new SecurityContext() {
 
@@ -112,11 +107,9 @@ public class SecurityFilter implements ContainerRequestFilter {
         } catch (Exception e) {
             abortWithUnauthorized(request, "Invalid authorization");
         }
-        
-        
+
     }
-    
-    
+
     private boolean isTokenBasedAuthentication(String authorizationHeader) {
 
         // Check if the Authorization header is valid
@@ -136,7 +129,5 @@ public class SecurityFilter implements ContainerRequestFilter {
                                 message)
                         .build());
     }
-    
-    
-    
+
 }

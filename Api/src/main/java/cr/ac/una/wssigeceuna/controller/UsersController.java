@@ -44,9 +44,9 @@ public class UsersController {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Obtiene un usuario por usuario y contraseña")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Usuario encontrado", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UsersDto.class))),
-        @ApiResponse(responseCode = "404", description = "Usuario no encontrado", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
-        @ApiResponse(responseCode = "500", description = "Error interno durante la obtención del usuario", content = @Content(mediaType = MediaType.TEXT_PLAIN))
+            @ApiResponse(responseCode = "200", description = "Usuario encontrado", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UsersDto.class))),
+            @ApiResponse(responseCode = "404", description = "Usuario no encontrado", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
+            @ApiResponse(responseCode = "500", description = "Error interno durante la obtención del usuario", content = @Content(mediaType = MediaType.TEXT_PLAIN))
     })
     public Response logIn(@PathParam("user") String user, @PathParam("password") String password) {
         try {
@@ -73,9 +73,9 @@ public class UsersController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Crea un usuario")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Usuario creado", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UsersDto.class))),
-        @ApiResponse(responseCode = "400", description = "Error en los datos de entrada", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
-        @ApiResponse(responseCode = "500", description = "Error interno durante la creación del usuario", content = @Content(mediaType = MediaType.TEXT_PLAIN))
+            @ApiResponse(responseCode = "200", description = "Usuario creado", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UsersDto.class))),
+            @ApiResponse(responseCode = "400", description = "Error en los datos de entrada", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
+            @ApiResponse(responseCode = "500", description = "Error interno durante la creación del usuario", content = @Content(mediaType = MediaType.TEXT_PLAIN))
     })
     public Response createUser(UsersDto user) {
         try {
@@ -85,6 +85,7 @@ public class UsersController {
             }
 
             UsersDto userDto = (UsersDto) res.getResultado("Usuario");
+            userDto.setToken(JwTokenHelper.getInstance().generatePrivateKey(userDto.getUser()));
             return Response.ok(userDto).build();
         } catch (Exception ex) {
             Logger.getLogger(UsersController.class.getName()).log(Level.SEVERE,
@@ -100,9 +101,9 @@ public class UsersController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Elimina un usuario")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Usuario eliminado", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
-        @ApiResponse(responseCode = "400", description = "Error en los datos de entrada", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
-        @ApiResponse(responseCode = "500", description = "Error interno durante la eliminación del usuario", content = @Content(mediaType = MediaType.TEXT_PLAIN))
+            @ApiResponse(responseCode = "200", description = "Usuario eliminado", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
+            @ApiResponse(responseCode = "400", description = "Error en los datos de entrada", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
+            @ApiResponse(responseCode = "500", description = "Error interno durante la eliminación del usuario", content = @Content(mediaType = MediaType.TEXT_PLAIN))
     })
     public Response deleteUser(@PathParam("id") Long id) {
         try {
@@ -126,9 +127,9 @@ public class UsersController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Obtiene un usuario por id")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Usuario encontrado", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UsersDto.class))),
-        @ApiResponse(responseCode = "404", description = "Usuario no encontrado", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
-        @ApiResponse(responseCode = "500", description = "Error interno durante la obtención del usuario", content = @Content(mediaType = MediaType.TEXT_PLAIN))
+            @ApiResponse(responseCode = "200", description = "Usuario encontrado", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UsersDto.class))),
+            @ApiResponse(responseCode = "404", description = "Usuario no encontrado", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
+            @ApiResponse(responseCode = "500", description = "Error interno durante la obtención del usuario", content = @Content(mediaType = MediaType.TEXT_PLAIN))
     })
     public Response getUser(@PathParam("id") Long id) {
         try {
@@ -153,9 +154,9 @@ public class UsersController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Obtiene todos los usuarios")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Usuarios encontrados", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UsersDto.class))),
-        @ApiResponse(responseCode = "404", description = "Usuarios no encontrados", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
-        @ApiResponse(responseCode = "500", description = "Error interno durante la obtención de los usuarios", content = @Content(mediaType = MediaType.TEXT_PLAIN))
+            @ApiResponse(responseCode = "200", description = "Usuarios encontrados", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UsersDto.class))),
+            @ApiResponse(responseCode = "404", description = "Usuarios no encontrados", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
+            @ApiResponse(responseCode = "500", description = "Error interno durante la obtención de los usuarios", content = @Content(mediaType = MediaType.TEXT_PLAIN))
     })
     public Response getUsers() {
         try {
@@ -380,25 +381,27 @@ public class UsersController {
     @Path("/renovar")
     @Operation(description = "Genera un nuevo token a partir de un token de renovación")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Renovación del token exitosa", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
-        @ApiResponse(responseCode = "401", description = "No se pudo renovar el token.", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
-        @ApiResponse(responseCode = "500", description = "Error renovando el token", content = @Content(mediaType = MediaType.TEXT_PLAIN))
+            @ApiResponse(responseCode = "200", description = "Renovación del token exitosa", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
+            @ApiResponse(responseCode = "401", description = "No se pudo renovar el token.", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
+            @ApiResponse(responseCode = "500", description = "Error renovando el token", content = @Content(mediaType = MediaType.TEXT_PLAIN))
     })
     public Response renovarToken() {
         try {
 
-            String usuarioRequest = securityContext.getUserPrincipal() != null ? securityContext.getUserPrincipal().getName() : null;  
+            String usuarioRequest = securityContext.getUserPrincipal() != null
+                    ? securityContext.getUserPrincipal().getName()
+                    : null;
             if (usuarioRequest != null && !usuarioRequest.isEmpty()) {
                 return Response.ok(JwTokenHelper.getInstance().generatePrivateKey(usuarioRequest)).build();
             } else {
-                return Response.status(CodigoRespuesta.ERROR_PERMISOS.getValue()).entity("No se pudo renovar el token.").build();
+                return Response.status(CodigoRespuesta.ERROR_PERMISOS.getValue()).entity("No se pudo renovar el token.")
+                        .build();
             }
         } catch (Exception ex) {
             Logger.getLogger(UsersController.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error renovando el token").build();
         }
     }
-
 
     /*
      * @GET

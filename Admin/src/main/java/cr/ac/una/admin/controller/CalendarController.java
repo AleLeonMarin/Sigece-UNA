@@ -17,7 +17,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.StackPane;
-import javafx.scene.input.MouseEvent;
 
 public class CalendarController extends Controller implements Initializable {
 
