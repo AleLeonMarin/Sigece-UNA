@@ -12,21 +12,34 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import cr.ac.una.admin.model.ActivitiesDto;
 import cr.ac.una.admin.model.ApprovalsDto;
 import cr.ac.una.admin.model.FollowsDto;
 import cr.ac.una.admin.model.GestionsDto;
 import cr.ac.una.admin.model.UsersDto;
+import cr.ac.una.admin.service.ActivitiesService;
+import cr.ac.una.admin.service.GestionService;
+import cr.ac.una.admin.service.UsersService;
 import cr.ac.una.admin.util.AppContext;
 import cr.ac.una.admin.util.FlowController;
 import cr.ac.una.admin.util.Formato;
+import cr.ac.una.admin.util.Mensaje;
+import cr.ac.una.admin.util.Respuesta;
 import javafx.fxml.Initializable;
 
 public class GestionesController extends Controller implements Initializable {
@@ -197,6 +210,9 @@ public class GestionesController extends Controller implements Initializable {
     private MFXTextField txfSolicitanteGestion;
 
     @FXML
+    private MFXTextField txfUsuarioSeguimiento;
+
+    @FXML
     private VBox vboxHistorial;
 
     UsersDto user;
@@ -206,6 +222,10 @@ public class GestionesController extends Controller implements Initializable {
     FollowsDto follow;
 
     ApprovalsDto approval;
+
+    private Map<String, UsersDto> usersMap = new HashMap<>();
+
+    private Map<String, ActivitiesDto> activityMap = new HashMap<>();
 
     @Override
     public void initialize() {
@@ -378,6 +398,9 @@ public class GestionesController extends Controller implements Initializable {
         txfAprobadorAprobacion.setText(user.getName() + " " + user.getLastNames());
         txfAprobadorAprobacion.setEditable(false);
 
+        txfUsuarioSeguimiento.setText(user.getName() + " " + user.getLastNames());
+        txfUsuarioSeguimiento.setEditable(false);
+
     }
 
     // format method
@@ -413,7 +436,6 @@ public class GestionesController extends Controller implements Initializable {
         txaGestion.textProperty().bindBidirectional(gestion.description);
         dpCreacionGestion.valueProperty().bindBidirectional(gestion.creationDate);
         dpSolucionGestion.valueProperty().bindBidirectional(gestion.solutionDate);
-        txfSolicitanteGestion.textProperty().bindBidirectional(gestion.Requester.name);
     }
 
     // unbinds
@@ -424,7 +446,6 @@ public class GestionesController extends Controller implements Initializable {
         txaGestion.textProperty().unbindBidirectional(gestion.description);
         dpCreacionGestion.valueProperty().unbindBidirectional(gestion.creationDate);
         dpSolucionGestion.valueProperty().unbindBidirectional(gestion.solutionDate);
-        txfSolicitanteGestion.textProperty().unbindBidirectional(gestion.Requester.name);
     }
 
     // new entity
@@ -435,6 +456,193 @@ public class GestionesController extends Controller implements Initializable {
         bindGestion(true);
         txfIDGestion.clear();
         txfIDGestion.requestFocus();
+        chkEsperaGestion.setSelected(true);
+    }
+
+    // selection checkBoxes methods
+
+    private void setState() {
+        if (chkCursoGestion.isSelected()) {
+            gestion.state.set("C");
+        } else if (chkEsperaGestion.isSelected()) {
+            gestion.state.set("E");
+        } else if (chkAprobacionGestion.isSelected()) {
+            gestion.state.set("A");
+        } else if (chkAprobadaGestion.isSelected()) {
+            gestion.state.set("P");
+        } else if (chkRechazadaGestion.isSelected()) {
+            gestion.state.set("R");
+        }
+    }
+
+    // set approvers method
+
+    private List<UsersDto> setApprovers() {
+        List<UsersDto> selectedApprovers = new ArrayList<>();
+
+        // Verificar y agregar los usuarios seleccionados de cada ComboBox basado en el
+        // nivel de aprobación
+        if (chkAprobador1.isSelected()) {
+            String selectedUser1 = cmbAprobador1Gestion.getSelectionModel().getSelectedItem();
+            if (selectedUser1 != null && usersMap.containsKey(selectedUser1)) {
+                selectedApprovers.add(usersMap.get(selectedUser1));
+            }
+        }
+
+        if (chkAprobador2.isSelected()) {
+            // Incluir el usuario 1 y 2 si el nivel de aprobación es 2
+            String selectedUser1 = cmbAprobador1Gestion.getSelectionModel().getSelectedItem();
+            String selectedUser2 = cmbAprobador2Gestion.getSelectionModel().getSelectedItem();
+
+            if (selectedUser1 != null && usersMap.containsKey(selectedUser1)) {
+                selectedApprovers.add(usersMap.get(selectedUser1));
+            }
+            if (selectedUser2 != null && usersMap.containsKey(selectedUser2)) {
+                selectedApprovers.add(usersMap.get(selectedUser2));
+            }
+        }
+
+        if (chkAprobador4.isSelected()) {
+            // Incluir los usuarios del 1 al 4 si el nivel de aprobación es 4
+            String selectedUser1 = cmbAprobador1Gestion.getSelectionModel().getSelectedItem();
+            String selectedUser2 = cmbAprobador2Gestion.getSelectionModel().getSelectedItem();
+            String selectedUser3 = cmbAprobador3Gestion.getSelectionModel().getSelectedItem();
+            String selectedUser4 = cmbAprobador4Gestion.getSelectionModel().getSelectedItem();
+
+            if (selectedUser1 != null && usersMap.containsKey(selectedUser1)) {
+                selectedApprovers.add(usersMap.get(selectedUser1));
+            }
+            if (selectedUser2 != null && usersMap.containsKey(selectedUser2)) {
+                selectedApprovers.add(usersMap.get(selectedUser2));
+            }
+            if (selectedUser3 != null && usersMap.containsKey(selectedUser3)) {
+                selectedApprovers.add(usersMap.get(selectedUser3));
+            }
+            if (selectedUser4 != null && usersMap.containsKey(selectedUser4)) {
+                selectedApprovers.add(usersMap.get(selectedUser4));
+            }
+        }
+
+        if (chkAprobador6.isSelected()) {
+            // Incluir los usuarios del 1 al 6 si el nivel de aprobación es 6
+            String selectedUser1 = cmbAprobador1Gestion.getSelectionModel().getSelectedItem();
+            String selectedUser2 = cmbAprobador2Gestion.getSelectionModel().getSelectedItem();
+            String selectedUser3 = cmbAprobador3Gestion.getSelectionModel().getSelectedItem();
+            String selectedUser4 = cmbAprobador4Gestion.getSelectionModel().getSelectedItem();
+            String selectedUser5 = cmbAprobador5Gestion.getSelectionModel().getSelectedItem();
+            String selectedUser6 = cmbAprobador6Gestion.getSelectionModel().getSelectedItem();
+
+            if (selectedUser1 != null && usersMap.containsKey(selectedUser1)) {
+                selectedApprovers.add(usersMap.get(selectedUser1));
+            }
+            if (selectedUser2 != null && usersMap.containsKey(selectedUser2)) {
+                selectedApprovers.add(usersMap.get(selectedUser2));
+            }
+            if (selectedUser3 != null && usersMap.containsKey(selectedUser3)) {
+                selectedApprovers.add(usersMap.get(selectedUser3));
+            }
+            if (selectedUser4 != null && usersMap.containsKey(selectedUser4)) {
+                selectedApprovers.add(usersMap.get(selectedUser4));
+            }
+            if (selectedUser5 != null && usersMap.containsKey(selectedUser5)) {
+                selectedApprovers.add(usersMap.get(selectedUser5));
+            }
+            if (selectedUser6 != null && usersMap.containsKey(selectedUser6)) {
+                selectedApprovers.add(usersMap.get(selectedUser6));
+            }
+        }
+
+        return selectedApprovers;
+    }
+
+    private void setApproversGestion() {
+        List<UsersDto> selectedApprovers = setApprovers();
+        gestion.setApprovers(selectedApprovers);
+    }
+
+    // selection Activity or subactivity
+
+    private void setActivity() {
+        if (chkActividad.isSelected()) {
+            String selectedActivity = cmbActividades.getSelectionModel().getSelectedItem();
+            if (selectedActivity != null && activityMap.containsKey(selectedActivity)) {
+                gestion.setActivity(activityMap.get(selectedActivity));
+            }
+        } else if (chkSubactividad.isSelected()) {
+            String selectedSubactivity = cmbSubactividades.getSelectionModel().getSelectedItem();
+            if (selectedSubactivity != null && activityMap.containsKey(selectedSubactivity)) {
+                gestion.setActivity(activityMap.get(selectedSubactivity));
+            }
+        }
+    }
+
+    // charging methods
+
+    private void chargeUsers() {
+        try {
+            UsersService service = new UsersService();
+            Respuesta respuesta = service.getUsers();
+            if (!respuesta.getEstado()) {
+                new Mensaje().showModal(AlertType.INFORMATION, "Usuarios", getStage(), respuesta.getMensaje());
+            } else {
+                // Obtener el usuario actualmente logeado desde AppContext
+                UsersDto currentUser = (UsersDto) AppContext.getInstance().get("user");
+                List<UsersDto> users = (List<UsersDto>) respuesta.getResultado("Users");
+
+                // Limpiar items previos en los ComboBox
+                cmbAsiganadoGestion.getItems().clear();
+                cmbAprobador1Gestion.getItems().clear();
+                cmbAprobador2Gestion.getItems().clear();
+                cmbAprobador3Gestion.getItems().clear();
+                cmbAprobador4Gestion.getItems().clear();
+                cmbAprobador5Gestion.getItems().clear();
+                cmbAprobador6Gestion.getItems().clear();
+
+                for (UsersDto user : users) {
+                    // Excluir el usuario logueado
+                    if (!user.getId().equals(currentUser.getId())) {
+                        String userName = user.getName() + " " + user.getLastNames();
+                        cmbAsiganadoGestion.getItems().add(userName);
+
+                        // Agregar el usuario a todos los ComboBox de aprobadores
+                        cmbAprobador1Gestion.getItems().add(userName);
+                        cmbAprobador2Gestion.getItems().add(userName);
+                        cmbAprobador3Gestion.getItems().add(userName);
+                        cmbAprobador4Gestion.getItems().add(userName);
+                        cmbAprobador5Gestion.getItems().add(userName);
+                        cmbAprobador6Gestion.getItems().add(userName);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Logger.getLogger(GestionesController.class.getName()).log(Level.SEVERE, "Error cargando los usuarios", e);
+            new Mensaje().showModal(AlertType.ERROR, "Cargar Usuarios", getStage(), "Error cargando los usuarios.");
+        }
+    }
+
+    // save methods
+
+    private void saveGestion() {
+        try {
+            setState();
+            setActivity();
+            setApproversGestion();
+            GestionService service = new GestionService();
+            Respuesta respuesta = service.createGestion(gestion);
+            if (!respuesta.getEstado()) {
+                new Mensaje().showModal(AlertType.INFORMATION, "Gestión", getStage(), respuesta.getMensaje());
+            } else {
+                new Mensaje().showModal(AlertType.INFORMATION, "Gestión", getStage(), respuesta.getMensaje());
+                unbindGestion();
+                this.gestion = (GestionsDto) respuesta.getResultado("Gestion");
+                bindGestion(false);
+                new Mensaje().showModal(AlertType.INFORMATION, "Gestión", getStage(), "Gestión guardada con éxito");
+            }
+        } catch (Exception e) {
+            Logger.getLogger(GestionesController.class.getName()).log(Level.SEVERE, "Error guardando la gestion", e);
+            new Mensaje().showModal(AlertType.ERROR, "Guardar Gestion", getStage(), "Error guardando la gestion.");
+        }
+
     }
 
     @FXML
@@ -456,6 +664,9 @@ public class GestionesController extends Controller implements Initializable {
 
     @FXML
     void onActionBtnAdjuntarSeguimeinto(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Seleccionar archivo");
+        File file = fileChooser.showOpenDialog(this.getStage());
 
     }
 
@@ -472,16 +683,26 @@ public class GestionesController extends Controller implements Initializable {
 
     @FXML
     void onActionBtnNew(ActionEvent event) {
+        if (tptGestiones.isSelected()) {
+            if (new Mensaje().showConfirmation("Nueva Gestion", getStage(), "Desea crear una nueva gestion?")) {
+                newGestion();
+            }
+        }
 
     }
 
     @FXML
     void onActionBtnSave(ActionEvent event) {
+        if (tptGestiones.isSelected()) {
+            saveGestion();
+        }
 
     }
 
     @FXML
     void onActionBtnSearch(ActionEvent event) {
+
+        new Mensaje().showModal(AlertType.INFORMATION, "Sin implementacion", getStage(), "Sin implementacion");
 
     }
 
@@ -509,6 +730,8 @@ public class GestionesController extends Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         format();
         initEntities();
+        newGestion();
+        chargeUsers();
 
     }
 

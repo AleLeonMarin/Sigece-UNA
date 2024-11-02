@@ -16,6 +16,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.QueryHint;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
@@ -30,9 +31,10 @@ import java.util.List;
 @Entity
 @Table(name = "SIS_ACTIVIDADES")
 @NamedQueries({
-    @NamedQuery(name = "Activities.findAll", query = "SELECT s FROM Activities s"),
-    @NamedQuery(name = "Activities.findByID", query = "SELECT s FROM Activities s WHERE s.id = :id"), 
- /* @NamedQuery(name = "SisActividades.findByActId", query =
+        @NamedQuery(name = "Activities.findAll", query = "SELECT s FROM Activities s", hints = @QueryHint(name = "eclipselink.refresh", value = "true")),
+        @NamedQuery(name = "Activities.findByID", query = "SELECT s FROM Activities s WHERE s.id = :id"),
+/*
+ * @NamedQuery(name = "SisActividades.findByActId", query =
  * "SELECT s FROM SisActividades s WHERE s.actId = :actId"),
  * 
  * @NamedQuery(name = "SisActividades.findByActNombre", query =
@@ -40,7 +42,7 @@ import java.util.List;
  * 
  * @NamedQuery(name = "SisActividades.findByActVersion", query =
  * "SELECT s FROM SisActividades s WHERE s.actVersion = :actVersion")
- */})
+ */ })
 public class Activities implements Serializable {
 
     private static final long serialVersionUID = 1L;
