@@ -18,6 +18,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -58,6 +59,9 @@ public class KeyAcceptController extends Controller implements Initializable {
         service = new UsersService();
         btnAcceptKey.setDisable(true);
         txtKey.setDisable(true);
+
+        txtKey.clear();
+        txtMail.clear();
     }
 
     @FXML
@@ -71,6 +75,7 @@ public class KeyAcceptController extends Controller implements Initializable {
                     new Mensaje().showModal(AlertType.INFORMATION, rb.getString("keyTitle"), getStage(), rb.getString("keySuccess"));
                     AppContext.getInstance().set("user", res.getResultado("Usuario"));
                     FlowController.getInstance().goViewInWindow("ResetPasswordView");
+                    ((Stage)btnAcceptKey.getScene().getWindow()).close();
                 } else {
                     new Mensaje().showModal(AlertType.ERROR, rb.getString("keyTitle"), getStage(), res.getMensaje());
                 }
@@ -102,6 +107,9 @@ public class KeyAcceptController extends Controller implements Initializable {
 
     @FXML
     void onActionBtnGoBack(ActionEvent event) {
-        getStage().close();
+        ((Stage) btnGoBack.getScene().getWindow()).close();
+        FlowController.getInstance().goViewInWindow("LoginView");
+
+
     }
 }

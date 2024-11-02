@@ -25,6 +25,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
+import cr.ac.una.wssigeceuna.util.PermitAll;
 
 @Secure
 @Path("/UsersController")
@@ -174,6 +175,7 @@ public class UsersController {
         }
     }
 
+    @PermitAll
     @GET
     @Path("/activateUser/{user}")
     @Produces(MediaType.TEXT_HTML)
@@ -314,6 +316,7 @@ public class UsersController {
         }
     }
 
+    @PermitAll
     @GET
     @Path("/getByMail/{mail}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -334,6 +337,7 @@ public class UsersController {
         }
     }
 
+    @PermitAll
     @GET
     @Path("/getByPass/{password}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -353,7 +357,8 @@ public class UsersController {
                     .build();
         }
     }
-
+    
+    @PermitAll
     @PUT
     @Path("/updatePasswordByEmail")
     @Consumes(MediaType.APPLICATION_JSON)

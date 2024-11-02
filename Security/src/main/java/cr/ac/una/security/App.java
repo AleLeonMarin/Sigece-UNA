@@ -25,6 +25,7 @@ public class App extends Application {
     }
 
     public static void restart(Locale newLocale) {
+
         currentLocale = newLocale;
         restartApp();
     }
@@ -37,6 +38,7 @@ public class App extends Application {
             FlowController.getInstance().goMain("LoginView");
             primaryStage.setTitle("SigeceUna");
             primaryStage.show();
+
         } catch (Exception e) {
             e.printStackTrace();
         }

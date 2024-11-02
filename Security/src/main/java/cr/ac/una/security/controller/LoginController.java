@@ -25,6 +25,7 @@
     import javafx.scene.control.Button;
 
     import cr.ac.una.security.App;
+    import javafx.stage.Stage;
 
 
     /**
@@ -77,7 +78,7 @@
         void onActionBtnChangePass(ActionEvent event) {
 
             FlowController.getInstance().goViewInWindow("KeyAcceptView");
-            getStage().close();
+            ((Stage)btnChangePass.getScene().getWindow()).close();
 
         }
 
@@ -124,17 +125,21 @@
         @FXML
         void onActionBtnRegister(ActionEvent event) {
             FlowController.getInstance().goViewInWindow("RegisterView");
-            getStage().close();
+            ((Stage)btnRegister.getScene().getWindow()).close();
         }
 
         @FXML
         void onActionBtnCostaRica(ActionEvent event) {
+            ((Stage) btnCostaRica.getScene().getWindow()).close();
             App.restart(new Locale("es"));
+            FlowController.getInstance().limpiarLoader("RegisterView");
         }
 
         @FXML
         void onActionBtnUsa(ActionEvent event) {
+            ((Stage) btnUsa.getScene().getWindow()).close();
             App.restart(new Locale("en"));
+            FlowController.getInstance().limpiarLoader("RegisterView");
         }
 
     }

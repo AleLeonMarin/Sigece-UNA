@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.security.Principal;
 import cr.ac.una.wssigeceuna.util.JwTokenHelper;
+import cr.ac.una.wssigeceuna.util.PermitAll;
 import cr.ac.una.wssigeceuna.util.Secure;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -36,7 +37,13 @@ public class SecurityFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext request) throws IOException {
+        
+        System.out.println("Entrando al filtro de seguridad...");
+        
         Method method = resourceInfo.getResourceMethod();
+        
+        System.out.println("Método llamado: " + method.getName());
+        
         if (method.getName().equals(AUTHORIZATION_SERVICE_PATH)) {
             return;
         }
@@ -44,7 +51,12 @@ public class SecurityFilter implements ContainerRequestFilter {
         if (method.getName().equals(AUTHORIZATION_SERVICE_PATH2)) {
             return;
         }
-
+        
+        
+         if (method.isAnnotationPresent(PermitAll.class) || resourceInfo.getResourceClass().isAnnotationPresent(PermitAll.class)) {
+        System.out.println("Método permitido sin autenticación: " + method.getName());
+        return;
+        }
         // Get the Authorization header from the request
         String authorizationHeader = request.getHeaderString(HttpHeaders.AUTHORIZATION);
 
