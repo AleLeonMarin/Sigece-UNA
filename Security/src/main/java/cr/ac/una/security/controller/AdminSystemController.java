@@ -456,6 +456,8 @@ public class AdminSystemController extends Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        this.bundle = resources;
+
         txfID.delegateSetTextFormatter(Formato.getInstance().integerFormat());
         txfIdRol.delegateSetTextFormatter(Formato.getInstance().integerFormat());
 

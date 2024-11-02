@@ -32,22 +32,22 @@
                   <Separator prefHeight="0.0" prefWidth="272.0" />
                   <HBox alignment="CENTER" prefHeight="96.0" prefWidth="481.0" spacing="30.0">
                      <children>
-                        <MFXButton fx:id="btnActivate" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnActivate" prefHeight="50.0" prefWidth="120.0" styleClass="jfx-btn-on" text="Encender Camara" textAlignment="CENTER" wrapText="true">
+                        <MFXButton fx:id="btnActivate" onAction="#onActionBtnActivate" prefHeight="50.0" prefWidth="120.0" styleClass="jfx-btn-on" text="%boton.encenderCamara" wrapText="true">
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                            </graphic>
                         </MFXButton>
-                        <MFXButton fx:id="btnTake" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnTake" prefHeight="50.0" prefWidth="120.0" styleClass="jxf-btn-take-photo" text="Tomar Foto" textAlignment="CENTER" wrapText="true">
+                        <MFXButton fx:id="btnTake" onAction="#onActionBtnTake" prefHeight="50.0" prefWidth="120.0" styleClass="jxf-btn-take-photo" text="%boton.tomarFoto" wrapText="true">
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                            </graphic>
                         </MFXButton>
-                        <MFXButton fx:id="btnStop" onAction="#onActionBtnStop" prefHeight="50.0" prefWidth="120.0" styleClass="jfx-btn-off" text="Apagar Camara" textAlignment="CENTER" wrapText="true">
+                        <MFXButton fx:id="btnStop" onAction="#onActionBtnStop" prefHeight="50.0" prefWidth="120.0" styleClass="jfx-btn-off" text="%boton.apagarCamara" wrapText="true">
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                            </graphic>
                         </MFXButton>
-                        <MFXButton fx:id="btnExit" layoutX="192.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnExit" prefHeight="50.0" prefWidth="120.0" styleClass="jfx-btn-log-out" text="Salir" wrapText="true">
+                        <MFXButton fx:id="btnExit" onAction="#onActionBtnExit" prefHeight="50.0" prefWidth="120.0" styleClass="jfx-btn-log-out" text="%boton.salir" wrapText="true">
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                            </graphic>

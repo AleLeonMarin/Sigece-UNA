@@ -23,7 +23,7 @@ public class UsersService {
             params.put("user", user);
             params.put("password", password);
             Request request = new Request("UsersController/logIn", "/{user}/{password}", params);
-            request.get();
+            request.getToken();
 
             if (request.isError()) {
                 return new Respuesta(false, request.getError(), "");
@@ -258,6 +258,21 @@ public class UsersService {
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Error actualizando la contraseña.", ex);
             return new Respuesta(false, "Error actualizando la contraseña.", "updatePassword " + ex.getMessage());
+        }
+    }
+
+    public Respuesta renovarToken() {
+        try {
+            Request request = new Request("UsersController/renovar");
+            request.getRenewal();
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+            String token = (String) request.readEntity(String.class);
+            return new Respuesta(true, "", "", "Token", token);
+        } catch (Exception ex) {
+            Logger.getLogger(UsersService.class.getName()).log(Level.SEVERE, "Error obteniendo el token", ex);
+            return new Respuesta(false, "Error renovando el token.", "renovarToken " + ex.getMessage());
         }
     }
 

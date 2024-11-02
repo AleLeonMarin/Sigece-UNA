@@ -20,7 +20,7 @@ public class UsersService {
             params.put("user", user);
             params.put("password", password);
             Request request = new Request("UsersController/logIn", "/{user}/{password}", params);
-            request.get();
+            request.getToken();
 
             if (request.isError()) {
                 return new Respuesta(false, request.getError(), "");

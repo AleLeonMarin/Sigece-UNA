@@ -6,18 +6,40 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * JavaFX App
  */
 public class App extends Application {
 
+    private static Stage primaryStage;
+    private static Locale currentLocale = new Locale("en");
+
     @Override
-    public void start(Stage stage) throws IOException {
-        FlowController.getInstance().InitializeFlow(stage, null);
-        FlowController.getInstance().goMain("LoginView");
-        stage.getIcons().add(new Image(getClass().getResource("/cr/ac/una/admin/resources/admin.jpg").toExternalForm()));
-        stage.setTitle("SigeceUna");
+
+    public void start(Stage stage) {
+        primaryStage = stage;
+        restartApp();
+    }
+
+    public static void restart(Locale newLocale) {
+        currentLocale = newLocale;
+        restartApp();
+    }
+
+
+    private static void restartApp() {
+        try {
+            ResourceBundle bundle = ResourceBundle.getBundle("cr.ac.una.admin.resources.MessagesBundle", currentLocale);
+            FlowController.getInstance().InitializeFlow(primaryStage, bundle);
+            FlowController.getInstance().goMain("LoginView");
+            primaryStage.setTitle("SigeceUna");
+            primaryStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

@@ -96,6 +96,11 @@
                     if (respuesta.getEstado()) {
 
                         UsersDto usuario = (UsersDto) respuesta.getResultado("Usuario");
+                        AppContext.getInstance().set("user", usuario);
+
+                        AppContext.getInstance().set("Token", usuario.getToken());
+                        System.out.println("token: " + usuario.getToken());
+
                         if (usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Admin"))
                                 && usuario.getState().equals("A")) {
                             FlowController.getInstance().goMain("SecurityAppView");

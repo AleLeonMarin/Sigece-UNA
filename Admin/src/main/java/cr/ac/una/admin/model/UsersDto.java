@@ -50,6 +50,8 @@ public class UsersDto {
 
     public List<ApprovalsDto> approvals;
 
+    private String token;
+
     public UsersDto() {
         this.id = new SimpleStringProperty("");
         this.name = new SimpleStringProperty("");
@@ -69,6 +71,8 @@ public class UsersDto {
         this.follows = FXCollections.observableArrayList();
         this.gestions = FXCollections.observableArrayList();
         this.approvals = FXCollections.observableArrayList();
+
+        this.token = "";
     }
 
     public Long getId() {
@@ -233,6 +237,14 @@ public class UsersDto {
 
     public void setApprovals(List<ApprovalsDto> approvals) {
         this.approvals = approvals;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
 }
