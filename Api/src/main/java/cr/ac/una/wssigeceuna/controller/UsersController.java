@@ -9,12 +9,14 @@ import cr.ac.una.wssigeceuna.service.UsersService;
 import cr.ac.una.wssigeceuna.util.CodigoRespuesta;
 import cr.ac.una.wssigeceuna.util.JwTokenHelper;
 import cr.ac.una.wssigeceuna.util.Respuesta;
+import cr.ac.una.wssigeceuna.util.Secure;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
@@ -24,13 +26,15 @@ import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 
+@Secure
 @Path("/UsersController")
 @Tag(name = "UsersController", description = "Operaciones sobre los usuarios")
+@SecurityRequirement(name = "jwt-auth")
 public class UsersController {
 
     @EJB
     UsersService usersService;
-    
+
     @Context
     SecurityContext securityContext;
 
@@ -79,8 +83,6 @@ public class UsersController {
             if (!res.getEstado()) {
                 return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
             }
-
-
 
             UsersDto userDto = (UsersDto) res.getResultado("Usuario");
             return Response.ok(userDto).build();
@@ -373,7 +375,7 @@ public class UsersController {
                     .build();
         }
     }
-    
+
     @GET
     @Path("/renovar")
     @Operation(description = "Genera un nuevo token a partir de un token de renovación")
@@ -382,12 +384,13 @@ public class UsersController {
         @ApiResponse(responseCode = "401", description = "No se pudo renovar el token.", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
         @ApiResponse(responseCode = "500", description = "Error renovando el token", content = @Content(mediaType = MediaType.TEXT_PLAIN))
     })
-    public Response renovarToken(){
+    public Response renovarToken() {
         try {
-            String usuarioRequest = securityContext.getUserPrincipal().getName();
+
+            String usuarioRequest = securityContext.getUserPrincipal() != null ? securityContext.getUserPrincipal().getName() : null;  
             if (usuarioRequest != null && !usuarioRequest.isEmpty()) {
                 return Response.ok(JwTokenHelper.getInstance().generatePrivateKey(usuarioRequest)).build();
-            } else{
+            } else {
                 return Response.status(CodigoRespuesta.ERROR_PERMISOS.getValue()).entity("No se pudo renovar el token.").build();
             }
         } catch (Exception ex) {
