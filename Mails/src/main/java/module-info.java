@@ -19,6 +19,7 @@ module cr.ac.una.mails {
     requires webcam.capture;
     requires javafx.media;
     requires org.apache.commons.codec;
+    requires org.apache.tika.core;
 
     opens cr.ac.una.mails.model;
 
