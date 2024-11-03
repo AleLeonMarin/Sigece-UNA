@@ -1,11 +1,13 @@
 package cr.ac.una.admin.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cr.ac.una.admin.model.SubactivitiesDto;
 import cr.ac.una.admin.util.Request;
 import cr.ac.una.admin.util.Respuesta;
+import jakarta.ws.rs.core.GenericType;
 
 public class SubactivitiesService {
 
@@ -38,6 +40,24 @@ public class SubactivitiesService {
             }
 
             return new Respuesta(true, "", "");
+        } catch (Exception e) {
+            return new Respuesta(false, e.getMessage(), "");
+        }
+    }
+
+    public Respuesta getSubactivities() {
+        try {
+            Request request = new Request("SubactivitiesController/getSubactivities");
+            request.get();
+
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+
+            List<SubactivitiesDto> subactivity = (List<SubactivitiesDto>) request
+                    .readEntity(new GenericType<List<SubactivitiesDto>>() {
+                    });
+            return new Respuesta(true, "", "", "Subactivity", subactivity);
         } catch (Exception e) {
             return new Respuesta(false, e.getMessage(), "");
         }

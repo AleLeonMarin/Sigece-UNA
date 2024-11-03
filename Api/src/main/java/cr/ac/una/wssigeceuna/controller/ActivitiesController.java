@@ -80,4 +80,23 @@ public class ActivitiesController {
         }
     }
 
+    @GET
+    @Path("/getActivities")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getActivities() {
+        try {
+            Respuesta res = activitiesService.getActivities();
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+
+            return Response.ok(res.getResultado("Actividades")).build();
+        } catch (Exception ex) {
+            Logger.getLogger(ActivitiesController.class.getName()).log(Level.SEVERE,
+                    "Ocurrió un error al obtener las actividades.", ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue())
+                    .entity("Ocurrió un error al obtener las actividades.").build();
+        }
+    }
+
 }

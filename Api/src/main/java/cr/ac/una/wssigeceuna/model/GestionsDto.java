@@ -6,7 +6,7 @@ import jakarta.json.bind.annotation.JsonbTransient;
 import java.util.List;
 import java.util.ArrayList;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 @JsonbPropertyOrder({
         "id",
@@ -31,10 +31,10 @@ public class GestionsDto implements Serializable {
     private Long id;
 
     @Schema(description = "Fecha de creacion de la gestion", example = "2021-09-01")
-    private Date creationDate;
+    private LocalDate creationDate;
 
     @Schema(description = "Fecha de solucion de la gestion", example = "2021-09-01")
-    private Date solutionDate;
+    private LocalDate solutionDate;
 
     @Schema(description = "Asunto de la gestion", example = "Asunto de prueba")
     private String subject;
@@ -92,9 +92,7 @@ public class GestionsDto implements Serializable {
         this.state = gestions.getState();
         this.archive = gestions.getArchive();
         this.version = gestions.getVersion();
-        this.Subactivities = new SubactivitiesDto(gestions.getSubactivities());
-        this.Requester = new UsersDto(gestions.getRequester());
-        this.Assigned = new UsersDto(gestions.getAssigned());
+        
     }
 
     public Long getId() {
@@ -105,19 +103,19 @@ public class GestionsDto implements Serializable {
         this.id = id;
     }
 
-    public Date getCreationDate() {
+    public LocalDate getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
     }
 
-    public Date getSolutionDate() {
+    public LocalDate getSolutionDate() {
         return solutionDate;
     }
 
-    public void setSolutionDate(Date solutionDate) {
+    public void setSolutionDate(LocalDate solutionDate) {
         this.solutionDate = solutionDate;
     }
 

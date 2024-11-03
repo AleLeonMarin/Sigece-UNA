@@ -31,7 +31,7 @@ public class GestionService {
     public Respuesta createGestion(GestionsDto gestion) {
         try {
             Gestions gestions;
-            if (gestion.getId() != null || gestion.getId() > 0) {
+            if (gestion.getId() != null && gestion.getId() > 0) {
                 gestions = em.find(Gestions.class, gestion.getId());
                 if (gestions == null) {
                     return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,

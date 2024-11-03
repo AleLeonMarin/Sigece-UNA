@@ -20,12 +20,10 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.persistence.Version;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -93,13 +91,11 @@ public class Gestions implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "GES_FECHA_CREACION")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date creationDate;
+    private LocalDate creationDate;
 
     @Basic(optional = false)
     @Column(name = "GES_FECHA_SOLUCION")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date solutionDate;
+    private LocalDate solutionDate;
 
     @Basic(optional = false)
     @Column(name = "GES_ASUNTO")
@@ -172,17 +168,6 @@ public class Gestions implements Serializable {
         this.state = gestionsDto.getState();
         this.archive = gestionsDto.getArchive();
         this.version = gestionsDto.getVersion();
-        this.subactivities = new Subactivities(gestionsDto.getSubactivities());
-        this.requester = new Users(gestionsDto.getRequester());
-        this.assigned = new Users(gestionsDto.getAssigned());
-        this.follows = new ArrayList<>();
-        gestionsDto.getFollows().forEach(followsDto -> {
-            this.follows.add(new Follows(followsDto));
-        });
-        this.approvals = new ArrayList<>();
-        gestionsDto.getApprovals().forEach(approvalsDto -> {
-            this.approvals.add(new Approvals(approvalsDto));
-        });
     }
 
     public Long getId() {
@@ -193,19 +178,19 @@ public class Gestions implements Serializable {
         this.id = id;
     }
 
-    public Date getCreationDate() {
+    public LocalDate getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
     }
 
-    public Date getSolutionDate() {
+    public LocalDate getSolutionDate() {
         return solutionDate;
     }
 
-    public void setSolutionDate(Date solutionDate) {
+    public void setSolutionDate(LocalDate solutionDate) {
         this.solutionDate = solutionDate;
     }
 

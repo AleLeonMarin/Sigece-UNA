@@ -1,5 +1,7 @@
 package cr.ac.una.wssigeceuna.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -112,6 +114,24 @@ public class ActivitiesService {
             LOG.log(Level.SEVERE, "Ocurrió un error al obtener la actividad.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al obtener la actividad.",
                     "getActivity " + ex.getMessage());
+        }
+    }
+
+    public Respuesta getActivities() {
+        try {
+            Query query = em.createNamedQuery("Activities.findAll", Activities.class);
+            List<Activities> activities = query.getResultList();
+            List<ActivitiesDto> activitiesDto = new ArrayList<>();
+
+            activities.forEach((activity) -> {
+                activitiesDto.add(new ActivitiesDto(activity));
+            });
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Actividades", activitiesDto);
+
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrió un error al obtener las actividades.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al obtener las actividades.",
+                    "getActivities " + ex.getMessage());
         }
     }
 

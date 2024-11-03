@@ -31,9 +31,11 @@ import cr.ac.una.admin.model.ActivitiesDto;
 import cr.ac.una.admin.model.ApprovalsDto;
 import cr.ac.una.admin.model.FollowsDto;
 import cr.ac.una.admin.model.GestionsDto;
+import cr.ac.una.admin.model.SubactivitiesDto;
 import cr.ac.una.admin.model.UsersDto;
 import cr.ac.una.admin.service.ActivitiesService;
 import cr.ac.una.admin.service.GestionService;
+import cr.ac.una.admin.service.SubactivitiesService;
 import cr.ac.una.admin.service.UsersService;
 import cr.ac.una.admin.util.AppContext;
 import cr.ac.una.admin.util.FlowController;
@@ -565,8 +567,10 @@ public class GestionesController extends Controller implements Initializable {
     private void setActivity() {
         if (chkActividad.isSelected()) {
             String selectedActivity = cmbActividades.getSelectionModel().getSelectedItem();
+            System.out.println(selectedActivity);
             if (selectedActivity != null && activityMap.containsKey(selectedActivity)) {
                 gestion.setActivity(activityMap.get(selectedActivity));
+                System.out.println(gestion.getActivity().getId());
             }
         } else if (chkSubactividad.isSelected()) {
             String selectedSubactivity = cmbSubactividades.getSelectionModel().getSelectedItem();
@@ -586,8 +590,8 @@ public class GestionesController extends Controller implements Initializable {
                 new Mensaje().showModal(AlertType.INFORMATION, "Usuarios", getStage(), respuesta.getMensaje());
             } else {
                 // Obtener el usuario actualmente logeado desde AppContext
-                UsersDto currentUser = (UsersDto) AppContext.getInstance().get("user");
-                List<UsersDto> users = (List<UsersDto>) respuesta.getResultado("Users");
+                UsersDto currentUser = (UsersDto) AppContext.getInstance().get("User");
+                List<UsersDto> users = (List<UsersDto>) respuesta.getResultado("Usuarios");
 
                 // Limpiar items previos en los ComboBox
                 cmbAsiganadoGestion.getItems().clear();
@@ -620,6 +624,59 @@ public class GestionesController extends Controller implements Initializable {
         }
     }
 
+    private void chargeActivity() {
+        try {
+            ActivitiesService service = new ActivitiesService();
+            Respuesta respuesta = service.getActivities();
+            if (!respuesta.getEstado()) {
+                new Mensaje().showModal(AlertType.INFORMATION, "Actividades", getStage(), respuesta.getMensaje());
+            } else {
+                List<ActivitiesDto> activities = (List<ActivitiesDto>) respuesta.getResultado("Activity");
+
+                // Limpiar items previos en los ComboBox
+                cmbActividades.getItems().clear();
+
+                for (ActivitiesDto activity : activities) {
+                    String activityName = activity.getName();
+                    cmbActividades.getItems().add(activityName);
+
+                }
+            }
+        } catch (Exception e) {
+            Logger.getLogger(GestionesController.class.getName()).log(Level.SEVERE, "Error cargando las actividades",
+                    e);
+            new Mensaje().showModal(AlertType.ERROR, "Cargar Actividades", getStage(),
+                    "Error cargando las actividades.");
+        }
+    }
+
+    private void chargeSubactivity() {
+        try {
+            SubactivitiesService service = new SubactivitiesService();
+            Respuesta respuesta = service.getSubactivities();
+            if (!respuesta.getEstado()) {
+                new Mensaje().showModal(AlertType.INFORMATION, "Subactividades", getStage(), respuesta.getMensaje());
+            } else {
+                List<SubactivitiesDto> subactivities = (List<SubactivitiesDto>) respuesta
+                        .getResultado("Subactivity");
+
+                // Limpiar items previos en los ComboBox
+                cmbSubactividades.getItems().clear();
+
+                for (SubactivitiesDto subactivity : subactivities) {
+                    String subactivityName = subactivity.getName();
+                    cmbSubactividades.getItems().add(subactivityName);
+
+                }
+            }
+        } catch (Exception e) {
+            Logger.getLogger(GestionesController.class.getName()).log(Level.SEVERE, "Error cargando las subactividades",
+                    e);
+            new Mensaje().showModal(AlertType.ERROR, "Cargar Subactividades", getStage(),
+                    "Error cargando las subactividades.");
+        }
+    }
+
     // save methods
 
     private void saveGestion() {
@@ -627,6 +684,11 @@ public class GestionesController extends Controller implements Initializable {
             setState();
             setActivity();
             setApproversGestion();
+            UsersDto user = (UsersDto) AppContext.getInstance().get("User");
+            this.gestion.setRequester(user);
+            System.out.println(gestion.getRequester().getId());
+            System.out.println(gestion.getActivity().getId());
+            System.out.println(gestion.getState());
             GestionService service = new GestionService();
             Respuesta respuesta = service.createGestion(gestion);
             if (!respuesta.getEstado()) {
@@ -732,6 +794,8 @@ public class GestionesController extends Controller implements Initializable {
         initEntities();
         newGestion();
         chargeUsers();
+        chargeActivity();
+        chargeSubactivity();
 
     }
 
