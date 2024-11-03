@@ -304,7 +304,7 @@ CREATE TABLE
             ges_asignado_id NUMBER NOT NULL,
             ges_sub_id NUMBER ,
             ges_act_id NUMBER ,
-            ges_archivo CLOB NOT NULL,
+            ges_archivo CLOB ,
             ges_version NUMBER DEFAULT 1 NOT NULL
         );
 

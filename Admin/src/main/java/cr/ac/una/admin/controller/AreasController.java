@@ -342,6 +342,8 @@ public class AreasController extends Controller implements Initializable {
                 unbindActivities();
                 this.activity = (ActivitiesDto) respuesta.getResultado("Activity");
                 bindActivities(false);
+                chargeArea();
+                chargeArea(Long.valueOf(txfIDArea.getText()));
                 new Mensaje().showModal(AlertType.INFORMATION, "Guardar Actividad", getStage(),
                         "Actividad guardada correctamente.");
             }
@@ -364,6 +366,9 @@ public class AreasController extends Controller implements Initializable {
                 unbindSubactivities();
                 this.subactivity = (SubactivitiesDto) respuesta.getResultado("Subactivity");
                 bindSubactivities(false);
+                chargeArea();
+                chargeArea(Long.valueOf(txfIDArea.getText()));
+                chargeActivity(Long.valueOf(txfIDAct.getText()));
                 new Mensaje().showModal(AlertType.INFORMATION, "Guardar Subactividad", getStage(),
                         "Subactividad guardada correctamente.");
             }

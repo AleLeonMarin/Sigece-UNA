@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import cr.ac.una.wssigeceuna.model.Activities;
 import cr.ac.una.wssigeceuna.model.Follows;
 import cr.ac.una.wssigeceuna.model.FollowsDto;
 import cr.ac.una.wssigeceuna.model.Gestions;
 import cr.ac.una.wssigeceuna.model.GestionsDto;
+import cr.ac.una.wssigeceuna.model.Subactivities;
 import cr.ac.una.wssigeceuna.model.Users;
 import cr.ac.una.wssigeceuna.model.UsersDto;
 import cr.ac.una.wssigeceuna.util.CodigoRespuesta;
@@ -64,6 +66,13 @@ public class GestionService {
                 gestions = em.merge(gestions);
             } else {
                 gestions = new Gestions(gestion);
+                gestions.setRequester(em.find(Users.class, gestion.getRequester().getId()));
+                gestions.setAssigned(em.find(Users.class, gestion.getAssigned().getId()));
+                if (gestion.getActivity() != null) {
+                    gestions.setActivity(em.find(Activities.class, gestion.getActivity().getId()));
+                } else if (gestion.getSubactivities() != null) {
+                    gestions.setSubactivities(em.find(Subactivities.class, gestion.getSubactivities().getId()));
+                }
                 em.persist(gestions);
 
                 for (UsersDto u : gestion.getApprovers()) {
