@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+import org.apache.tika.Tika;
 import java.util.stream.IntStream;
 
 import cr.ac.una.mails.model.MailsDto;
@@ -37,6 +38,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.apache.tika.mime.MimeTypes;
 
 public class BuzonController extends Controller implements Initializable {
 
@@ -45,6 +47,8 @@ public class BuzonController extends Controller implements Initializable {
 
     @FXML
     private MFXButton btnSendAgain;
+
+    private Tika tika = new Tika();
 
     @FXML
     private MFXButton btnSendNow;
@@ -282,27 +286,19 @@ public class BuzonController extends Controller implements Initializable {
         }
     }
 
-    private String obtenerExtensionDesdeContentId(String contentId) {
-        if (contentId != null && contentId.contains(".")) {
-            return contentId.substring(contentId.lastIndexOf("."));
-        }
-
-        return ".pdf";
-    }
 
     @FXML
     void onActionBtnDownloadAttachment(ActionEvent event) {
         MailsDto correoSeleccionado = tbvMails.getSelectionModel().getSelectedItem();
         if (correoSeleccionado != null && !correoSeleccionado.getAttachments().isEmpty()) {
             List<byte[]> attachments = correoSeleccionado.getAttachments();
-            List<String> contentIds = correoSeleccionado.getContentIds();
 
             for (int i = 0; i < attachments.size(); i++) {
                 byte[] fileContent = attachments.get(i);
-                String fileName = contentIds != null && i < contentIds.size() ? contentIds.get(i) : "attachment_" + i;
+                String fileName = "attachment_" + (i + 1);
 
-                // Obtener la extensión del archivo desde el contentId o asignar ".pdf" por defecto
-                String extension = obtenerExtensionDesdeContentId(fileName);
+                // Detectar la extensión correcta del archivo con Tika
+                String extension = obtenerExtensionConTika(fileContent);
                 fileName += extension;
 
                 try {
@@ -317,6 +313,28 @@ public class BuzonController extends Controller implements Initializable {
         } else {
             mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"),
                     rb.getString("warningNoAttachment"));
+        }
+    }
+
+    private String obtenerExtensionConTika(byte[] fileContent) {
+        Path tempFile = null;
+        try {
+            // Crear archivo temporal para detección
+            tempFile = Files.createTempFile("tempfile", null);
+            Files.write(tempFile, fileContent);
+
+            String mimeType = tika.detect(tempFile);
+            System.out.println("Detected MIME type: " + mimeType);
+            return MimeTypes.getDefaultMimeTypes().forName(mimeType).getExtension(); // Obtener extensión
+        } catch (Exception e) {
+            return ".bin"; // Si falla, devolver binario
+        } finally {
+            if (tempFile != null) {
+                try {
+                    Files.delete(tempFile);
+                } catch (IOException ignored) {
+                }
+            }
         }
     }
 

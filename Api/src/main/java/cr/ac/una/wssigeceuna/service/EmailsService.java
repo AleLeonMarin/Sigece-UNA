@@ -29,12 +29,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.zip.ZipInputStream;
+import org.apache.tika.Tika;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.tika.mime.MimeTypes;
 
 @Stateless
 @LocalBean
 public class EmailsService {
+    
+    private Tika tika = new Tika();
 
     @PersistenceContext(unitName = "SigeceUnaWsPU")
     private EntityManager em;
@@ -74,7 +80,7 @@ public class EmailsService {
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(messageBodyPart);
 
-            if (attachments != null) {
+             if (attachments != null) {
                 for (int i = 0; i < attachments.size(); i++) {
                     byte[] fileData = attachments.get(i);
 
@@ -84,27 +90,13 @@ public class EmailsService {
 
                     attachmentPart.setDataHandler(new DataHandler(source));
 
-                    // Verificar si existe un contentId para el archivo actual
                     if (contentIds != null && i < contentIds.size() && contentIds.get(i) != null) {
                         String contentId = contentIds.get(i);
                         attachmentPart.setHeader("Content-ID", "<" + contentId + ">");
-                        attachmentPart.setDisposition(MimeBodyPart.INLINE);  // Incrustado en el HTML
+                        attachmentPart.setDisposition(MimeBodyPart.INLINE); 
                     } else {
-                        // Si no hay contentId, tratar como archivo adjunto normal
                         attachmentPart.setDisposition(MimeBodyPart.ATTACHMENT);
-                        String fileName = "attachment_" + (i + 1); // Nombre genérico o personalizado
-
-                        // Asignar extensión
-                        if ("video/mp4".equals(mimeType)) {
-                            fileName += ".mp4";
-                        } else if ("image/png".equals(mimeType)) {
-                            fileName += ".png";
-                        } else if ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet".equals(mimeType)) {
-                             fileName += ".xlsx";
-                        } else if ("application/vnd.ms-excel".equals(mimeType)) {
-                        fileName += ".xls";
-                        }
-
+                        String fileName = "attachment_" + (i + 1) + obtenerExtensionConTika(fileData);
                         attachmentPart.setFileName(fileName);
                     }
 
@@ -114,7 +106,6 @@ public class EmailsService {
 
             mail.setContent(multipart);
 
-            // Enviar mensaje
             Transport transport = session.getTransport("smtp");
             transport.connect(sender, password);
             transport.sendMessage(mail, mail.getAllRecipients());
@@ -207,51 +198,38 @@ public class EmailsService {
         }
     }
 
-    public String detectMimeType(byte[] fileData) {
+  private String detectMimeType(byte[] fileData) {
         try (InputStream is = new ByteArrayInputStream(fileData)) {
-            // Intentar detección de tipo MIME a través de URLConnection
-            String mimeType = URLConnection.guessContentTypeFromStream(is);
-
-            if (mimeType == null) {
-                // Intentar detectar archivos de Microsoft Office basados en encabezado ZIP
-                try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(fileData))) {
-                    if (zis.getNextEntry() != null) {
-                        if (containsOfficeHeader(fileData, "[Content_Types].xml")) {
-                            return "application/vnd.openxmlformats-officedocument.wordprocessingml.document"; // DOCX
-                        } else if (containsOfficeHeader(fileData, "ppt/")) {
-                            return "application/vnd.openxmlformats-officedocument.presentationml.presentation"; // PPTX
-                        } else if (containsOfficeHeader(fileData, "xl/")) {
-                            return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"; // XLSX
-                        }
-                    }
-                }
-
-                // Verificar encabezados para tipos de archivos adicionales
-                if (fileData.length > 4 && fileData[0] == 0x25 && fileData[1] == 0x50 && fileData[2] == 0x44 && fileData[3] == 0x46) {
-                    mimeType = "application/pdf"; // PDF
-                } else if (fileData.length > 3 && fileData[0] == (byte) 0xFF && fileData[1] == (byte) 0xD8 && fileData[2] == (byte) 0xFF) {
-                    mimeType = "image/jpeg"; // JPEG
-                } else if (fileData.length > 8 && fileData[0] == (byte) 0x89 && fileData[1] == (byte) 0x50 && fileData[2] == (byte) 0x4E && fileData[3] == (byte) 0x47) {
-                    mimeType = "image/png"; // PNG
-                } else if (fileData.length > 6 && fileData[0] == (byte) 0x47 && fileData[1] == (byte) 0x49 && fileData[2] == (byte) 0x46) {
-                    mimeType = "image/gif"; // GIF
-                } else if (fileData.length > 8 && fileData[4] == 0x66 && fileData[5] == 0x74 && fileData[6] == 0x79 && fileData[7] == 0x70) {
-                    mimeType = "video/mp4"; // MP4
-                } else if (fileData.length > 7 && fileData[0] == (byte) 0xD0 && fileData[1] == (byte) 0xCF && fileData[2] == (byte) 0x11 && fileData[3] == (byte) 0xE0) {
-                    mimeType = "application/vnd.ms-excel";
-                } else {
-                    mimeType = "application/octet-stream";
-                }
-            }
-            return mimeType;
+            String mimeType = tika.detect(is);
+            return mimeType != null ? mimeType : "application/octet-stream";
         } catch (IOException e) {
             return "application/octet-stream";
         }
     }
 
-    private boolean containsOfficeHeader(byte[] fileData, String header) {
-        String content = new String(fileData);
-        return content.contains(header);
+   
+  
+    private String obtenerExtensionConTika(byte[] fileContent) {
+        Path tempFile = null;
+        try {
+            tempFile = Files.createTempFile("tempfile", null);
+            Files.write(tempFile, fileContent);
+
+            String mimeType = tika.detect(tempFile);
+            System.out.println("Detected MIME type: " + mimeType);
+            return MimeTypes.getDefaultMimeTypes().forName(mimeType).getExtension();
+        } catch (Exception e) {
+            return ".bin";
+        } finally {
+            if (tempFile != null) {
+                try {
+                    Files.delete(tempFile);
+                } catch (IOException ignored) {
+                }
+            }
+        }
     }
+
+
 
 }
