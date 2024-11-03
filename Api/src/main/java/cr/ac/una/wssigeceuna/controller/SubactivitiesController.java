@@ -60,4 +60,23 @@ public class SubactivitiesController {
         }
     }
 
+    @GET
+    @Path("/getSubactivities")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSubactivities() {
+        try {
+            Respuesta res = subactivitiesService.getSubactivities();
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+
+            return Response.ok(res.getResultado("Subactividades")).build();
+        } catch (Exception ex) {
+            Logger.getLogger(SubactivitiesController.class.getName()).log(Level.SEVERE,
+                    "Ocurrió un error al obtener las subactividades.", ex);
+            return Response.status(cr.ac.una.wssigeceuna.util.CodigoRespuesta.ERROR_INTERNO.getValue())
+                    .entity("Ocurrió un error al obtener las subactividades.").build();
+        }
+    }
+
 }

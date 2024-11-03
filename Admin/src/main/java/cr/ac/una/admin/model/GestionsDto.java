@@ -36,11 +36,14 @@ public class GestionsDto implements Serializable {
         this.description = new SimpleStringProperty("");
         this.state = new SimpleStringProperty("E");
         this.archive = new SimpleObjectProperty<>(new byte[0]);
-        this.activity = new ActivitiesDto();
         follows = new ArrayList<>();
         approvals = new ArrayList<>();
         approvers = new ArrayList<>();
         deletedApprovers = new ArrayList<>();
+        activity = new ActivitiesDto();
+        Requester = new UsersDto();
+        Assigned = new UsersDto();
+        Subactivities = new SubactivitiesDto();
 
     }
 

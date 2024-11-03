@@ -1,11 +1,13 @@
 package cr.ac.una.admin.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cr.ac.una.admin.model.ActivitiesDto;
 import cr.ac.una.admin.util.Request;
 import cr.ac.una.admin.util.Respuesta;
+import jakarta.ws.rs.core.GenericType;
 
 public class ActivitiesService {
 
@@ -55,6 +57,24 @@ public class ActivitiesService {
             }
 
             ActivitiesDto activity = (ActivitiesDto) request.readEntity(ActivitiesDto.class);
+            return new Respuesta(true, "", "", "Activity", activity);
+        } catch (Exception e) {
+            return new Respuesta(false, e.getMessage(), "");
+        }
+    }
+
+    public Respuesta getActivities() {
+        try {
+            Request request = new Request("ActivitiesController/getActivities");
+            request.get();
+
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+
+            List<ActivitiesDto> activity = (List<ActivitiesDto>) request
+                    .readEntity(new GenericType<List<ActivitiesDto>>() {
+                    });
             return new Respuesta(true, "", "", "Activity", activity);
         } catch (Exception e) {
             return new Respuesta(false, e.getMessage(), "");

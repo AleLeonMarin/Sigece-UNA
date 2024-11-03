@@ -1,5 +1,7 @@
 package cr.ac.una.wssigeceuna.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -7,12 +9,15 @@ import cr.ac.una.wssigeceuna.model.Activities;
 import cr.ac.una.wssigeceuna.model.RolesDto;
 import cr.ac.una.wssigeceuna.model.Subactivities;
 import cr.ac.una.wssigeceuna.model.SubactivitiesDto;
+import cr.ac.una.wssigeceuna.model.Users;
+import cr.ac.una.wssigeceuna.model.UsersDto;
 import cr.ac.una.wssigeceuna.util.CodigoRespuesta;
 import cr.ac.una.wssigeceuna.util.Respuesta;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 
 @Stateless
 @LocalBean
@@ -86,11 +91,30 @@ public class SubactivitiesService {
                         "deleteSubactivity NoResultException");
             }
             em.flush();
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Subactividad", new SubactivitiesDto(subactivity));
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Subactividad",
+                    new SubactivitiesDto(subactivity));
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrió un error al eliminar la subactividad.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al eliminar la subactividad.",
                     "deleteSubactivity " + ex.getMessage());
+        }
+    }
+
+    public Respuesta getSubactivities() {
+        try {
+            Query query = em.createNamedQuery("Subactivities.findAll", Subactivities.class);
+            List<Subactivities> subactivities = query.getResultList();
+            List<SubactivitiesDto> subactivities2 = new ArrayList<>();
+
+            for (Subactivities subactivity : subactivities) {
+                SubactivitiesDto subactivityDto = new SubactivitiesDto(subactivity);
+                subactivities2.add(subactivityDto);
+            }
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Subactividades", subactivities2);
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar los usuarios.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar los usuarios.",
+                    "getAllUsers " + ex.getMessage());
         }
     }
 
