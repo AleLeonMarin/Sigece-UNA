@@ -29,9 +29,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.zip.ZipInputStream;
 import org.apache.tika.Tika;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.tika.mime.MimeTypes;
 
 @Stateless
 @LocalBean
@@ -77,7 +80,7 @@ public class EmailsService {
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(messageBodyPart);
 
-            if (attachments != null) {
+             if (attachments != null) {
                 for (int i = 0; i < attachments.size(); i++) {
                     byte[] fileData = attachments.get(i);
 
@@ -87,27 +90,13 @@ public class EmailsService {
 
                     attachmentPart.setDataHandler(new DataHandler(source));
 
-                    // Verificar si existe un contentId para el archivo actual
                     if (contentIds != null && i < contentIds.size() && contentIds.get(i) != null) {
                         String contentId = contentIds.get(i);
                         attachmentPart.setHeader("Content-ID", "<" + contentId + ">");
-                        attachmentPart.setDisposition(MimeBodyPart.INLINE);  // Incrustado en el HTML
+                        attachmentPart.setDisposition(MimeBodyPart.INLINE); 
                     } else {
-                        // Si no hay contentId, tratar como archivo adjunto normal
                         attachmentPart.setDisposition(MimeBodyPart.ATTACHMENT);
-                        String fileName = "attachment_" + (i + 1); // Nombre genérico o personalizado
-
-                        // Asignar extensión
-                        if ("video/mp4".equals(mimeType)) {
-                            fileName += ".mp4";
-                        } else if ("image/png".equals(mimeType)) {
-                            fileName += ".png";
-                        } else if ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet".equals(mimeType)) {
-                             fileName += ".xlsx";
-                        } else if ("application/vnd.ms-excel".equals(mimeType)) {
-                        fileName += ".xls";
-                        }
-
+                        String fileName = "attachment_" + (i + 1) + obtenerExtensionConTika(fileData);
                         attachmentPart.setFileName(fileName);
                     }
 
@@ -117,7 +106,6 @@ public class EmailsService {
 
             mail.setContent(multipart);
 
-            // Enviar mensaje
             Transport transport = session.getTransport("smtp");
             transport.connect(sender, password);
             transport.sendMessage(mail, mail.getAllRecipients());
@@ -210,12 +198,35 @@ public class EmailsService {
         }
     }
 
-   public String detectMimeType(byte[] fileData) {
+  private String detectMimeType(byte[] fileData) {
         try (InputStream is = new ByteArrayInputStream(fileData)) {
             String mimeType = tika.detect(is);
             return mimeType != null ? mimeType : "application/octet-stream";
         } catch (IOException e) {
             return "application/octet-stream";
+        }
+    }
+
+   
+  
+    private String obtenerExtensionConTika(byte[] fileContent) {
+        Path tempFile = null;
+        try {
+            tempFile = Files.createTempFile("tempfile", null);
+            Files.write(tempFile, fileContent);
+
+            String mimeType = tika.detect(tempFile);
+            System.out.println("Detected MIME type: " + mimeType);
+            return MimeTypes.getDefaultMimeTypes().forName(mimeType).getExtension();
+        } catch (Exception e) {
+            return ".bin";
+        } finally {
+            if (tempFile != null) {
+                try {
+                    Files.delete(tempFile);
+                } catch (IOException ignored) {
+                }
+            }
         }
     }
 
