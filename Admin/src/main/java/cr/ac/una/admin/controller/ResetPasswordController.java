@@ -72,7 +72,7 @@ public class ResetPasswordController extends Controller implements Initializable
                 if (respuesta.getEstado()) {
                     new Mensaje().showModal(AlertType.INFORMATION, rb.getString("successTitle"), getStage(),
                             rb.getString("successPasswordUpdated"));
-                    FlowController.getInstance().goViewInWindow("LoginView");
+                    FlowController.getInstance().goMain("LoginView");
                     this.getStage().close();
                 } else {
                     new Mensaje().showModal(AlertType.ERROR, rb.getString("errorTitle"), getStage(), respuesta.getMensaje());

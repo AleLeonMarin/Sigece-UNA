@@ -120,15 +120,12 @@
     </dependencies>
     <build>
         <resources>
+
             <resource>
-                <directory>config</directory>
-                <includes>
-                    <include>properties.ini</include>
-                </includes>
+                <directory>src/main/resources</directory>
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
-
             </resource>
             <resource>
                 <directory>config</directory>
@@ -137,6 +134,7 @@
                     <include>properties.ini</include>
                 </includes>
             </resource>
+
         </resources>
         <plugins>
         

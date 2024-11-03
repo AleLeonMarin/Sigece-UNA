@@ -124,14 +124,14 @@
 
         @FXML
         void onActionBtnCostaRica(ActionEvent event) {
-            ResourceBundle bundle = ResourceBundle.getBundle("cr.ac.una.mails.resources.MessagesBundle", new Locale("es"));
+            ResourceBundle bundle = ResourceBundle.getBundle("cr.ac.una.chats.resources.MessagesBundle", new Locale("es"));
             FlowController.getInstance().reiniciarVistasConNuevoIdioma(bundle);
             App.restart(new Locale("es"));
         }
 
         @FXML
         void onActionBtnUsa(ActionEvent event) {
-            ResourceBundle bundle = ResourceBundle.getBundle("cr.ac.una.mails.resources.MessagesBundle", new Locale("en"));
+            ResourceBundle bundle = ResourceBundle.getBundle("cr.ac.una.chats.resources.MessagesBundle", new Locale("en"));
             FlowController.getInstance().reiniciarVistasConNuevoIdioma(bundle);
             App.restart(new Locale("en"));
         }

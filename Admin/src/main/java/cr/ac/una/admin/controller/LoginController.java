@@ -26,6 +26,7 @@
  import cr.ac.una.admin.model.RolesDto;
 
  import cr.ac.una.admin.App;
+ import javafx.stage.Stage;
 
 
  /**
@@ -78,7 +79,7 @@
      void onActionBtnChangePass(ActionEvent event) {
 
          FlowController.getInstance().goViewInWindow("KeyAcceptView");
-         getStage().close();
+         ((Stage)btnChangePass.getScene().getWindow()).close();
 
      }
 
@@ -125,22 +126,26 @@
          }
      }
 
-
-
      @FXML
      void onActionBtnRegister(ActionEvent event) {
          FlowController.getInstance().goViewInWindow("RegisterView");
-         getStage().close();
+         ((Stage)btnRegister.getScene().getWindow()).close();
      }
 
      @FXML
      void onActionBtnCostaRica(ActionEvent event) {
+         ResourceBundle bundle = ResourceBundle.getBundle("cr.ac.una.admin.resources.MessagesBundle", new Locale("es"));
+         FlowController.getInstance().reiniciarVistasConNuevoIdioma(bundle);
          App.restart(new Locale("es"));
      }
 
      @FXML
      void onActionBtnUsa(ActionEvent event) {
+         ResourceBundle bundle = ResourceBundle.getBundle("cr.ac.una.admin.resources.MessagesBundle", new Locale("en"));
+         FlowController.getInstance().reiniciarVistasConNuevoIdioma(bundle);
          App.restart(new Locale("en"));
      }
+
+
 
  }
