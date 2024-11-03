@@ -146,7 +146,7 @@ public class AdminNotificationController extends Controller implements Initializ
     @FXML
     private MediaView mediaView;
 
-    private MediaPlayer mediaPlayer;  // Declarar mediaPlayer a nivel de clase
+    private MediaPlayer mediaPlayer;
 
 
     @FXML
@@ -639,9 +639,6 @@ public class AdminNotificationController extends Controller implements Initializ
         }
     }
 
-
-
-
     /**
      * Obtiene la extensión del archivo.
      */
@@ -724,11 +721,5 @@ public class AdminNotificationController extends Controller implements Initializ
             mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitle"), rb.getString("errorMultimediaLoad") + e.getMessage());
         }
     }
-
-
-
-
-
-
 
 }

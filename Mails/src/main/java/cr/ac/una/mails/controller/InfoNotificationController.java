@@ -52,7 +52,7 @@ public class InfoNotificationController extends Controller implements Initializa
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        this.rb = rb; // Asignar el ResourceBundle para el acceso a los mensajes localizados
+        this.rb = rb;
     }
 
     @Override

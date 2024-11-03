@@ -56,10 +56,11 @@
                         <Insets left="40.0" top="10.0" />
                      </VBox.margin>
                      <columns>
-                        <TableColumn fx:id="tbcDestinatario" prefWidth="182.0" text="%table.column.destinatario" />
-                        <TableColumn fx:id="tbcEstado" prefWidth="99.0" text="%table.column.estado" />
-                        <TableColumn fx:id="tbcFecha" prefWidth="209.0" text="%table.column.fecha" />
-                        <TableColumn fx:id="tbcId" prefWidth="38.0" text="%table.column.id" />
+                        <TableColumn fx:id="tbcDestinatario" prefWidth="132.0" text="%table.column.destinatario" />
+                        <TableColumn fx:id="tbcEstado" prefWidth="109.0" text="%table.column.estado" />
+                        <TableColumn fx:id="tbcFecha" prefWidth="178.0" text="%table.column.fecha" />
+                        <TableColumn fx:id="tbcId" minWidth="0.0" prefWidth="0.0" text="%table.column.id" />
+                        <TableColumn fx:id="tbcAdjuntos" prefWidth="109.0" text="\%table.column.attachment" />
                      </columns>
                   </TableView>
                   <HBox alignment="CENTER" prefHeight="60.0" prefWidth="563.0" spacing="20.0">
@@ -71,6 +72,7 @@
                         </MFXButton>
                         <MFXButton fx:id="btnShowContent" onAction="#onActionBtnShowContent" prefHeight="30.0" prefWidth="112.0" styleClass="button-blueStyle" text="%button.verContenido" />
                         <MFXButton fx:id="btnSendNow" onAction="#onActionBtnSendNow" prefHeight="30.0" prefWidth="162.0" styleClass="button-blueStyle" text="%button.actualizarCorreos" />
+                        <MFXButton fx:id="btnDownloadAttachment" onAction="#onActionBtnDownloadAttachment" prefHeight="31.0" prefWidth="122.0" styleClass="button-redStyle" text="\%btn.attachments" />
                      </children>
                      <VBox.margin>
                         <Insets top="10.0" />
@@ -80,7 +82,7 @@
             </VBox>
          </children>
       </StackPane>
-      <Button fx:id="btnNewMail" layoutX="664.0" layoutY="501.0" mnemonicParsing="false" onAction="#onActionBtnNewMail" prefHeight="66.0" prefWidth="62.0" styleClass="image-newMail-button" text="%button.nuevoCorreo" />
+      <Button fx:id="btnNewMail" layoutX="664.0" layoutY="501.0" mnemonicParsing="false" onAction="#onActionBtnNewMail" prefHeight="66.0" prefWidth="62.0" styleClass="image-newMail-button" />
       <Label layoutX="293.0" layoutY="546.0" prefHeight="17.0" prefWidth="174.0" text="%label.correosPorHora" textAlignment="CENTER" textFill="#000000b6">
          <font>
             <Font name="Segoe UI" size="13.0" />

@@ -14,7 +14,7 @@ public class JwTokenHelper {
 
     private static JwTokenHelper jwTokenHelper = null;
     private static final long EXPIRATION_LIMIT = 10;
-    private static final long EXPIRATION_RENEWAL_LIMIT = 10;
+    private static final long EXPIRATION_RENEWAL_LIMIT = 20;
     private static final String AUTHENTICATION_SCHEME = "Bearer ";
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 

@@ -129,4 +129,8 @@ public class MailsDto {
                 ", notification=" + notification +
                 '}';
     }
+
+    public boolean hasAttachments() {
+        return attachments != null && !attachments.isEmpty();
+    }
 }

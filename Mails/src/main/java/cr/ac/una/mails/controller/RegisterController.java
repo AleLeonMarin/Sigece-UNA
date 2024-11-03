@@ -85,9 +85,9 @@ public class RegisterController extends Controller implements Initializable {
 
     UsersDto usuariosDto;
 
-    private ResourceBundle bundle;
-
     List<Node> requeridos = new ArrayList<>();
+
+    ResourceBundle bundle;
 
     @Override
     public void initialize() {
@@ -117,9 +117,9 @@ public class RegisterController extends Controller implements Initializable {
 
     @FXML
     void onActionBtnGoback(ActionEvent event) {
-        FlowController.getInstance().goViewInWindow("LoginView");
-        ((Stage) root.getScene().getWindow()).close();
+        FlowController.getInstance().goMain("LoginView");
 
+        ((Stage) root.getScene().getWindow()).close();
     }
 
     @FXML
@@ -206,9 +206,9 @@ public class RegisterController extends Controller implements Initializable {
                 return new Image(bis);
             }
         } catch (Exception e) {
-            e.printStackTrace(); // Puedes cambiarlo a un logger para mejor manejo
+            e.printStackTrace();
         }
-        return null; // Si la imagen no es válida o los bytes están vacíos, retornamos null
+        return null;
     }
 
     private void bindUser(boolean newUser) {

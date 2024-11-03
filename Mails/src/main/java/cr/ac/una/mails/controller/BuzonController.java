@@ -1,7 +1,14 @@
 package cr.ac.una.mails.controller;
 
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -19,6 +26,7 @@ import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXSpinner;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import io.github.palexdev.materialfx.controls.models.spinner.IntegerSpinnerModel;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -73,6 +81,10 @@ public class BuzonController extends Controller implements Initializable {
     @FXML
     private TableView<MailsDto> tbvMails;
 
+    @FXML
+    private TableColumn<MailsDto, Boolean> tbcAdjuntos;
+
+
     private CorreosService correosService;
     private ObservableList<MailsDto> correosList;
 
@@ -89,6 +101,10 @@ public class BuzonController extends Controller implements Initializable {
     private ParamethersDto parametros;
 
     private ResourceBundle rb;
+
+    @FXML
+    private MFXButton btnDownloadAttachment;
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -131,6 +147,10 @@ public class BuzonController extends Controller implements Initializable {
         tbcEstado.setCellValueFactory(new PropertyValueFactory<>("state"));
         tbcFecha.setCellValueFactory(new PropertyValueFactory<>("date"));
         tbcId.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        tbcAdjuntos.setCellValueFactory(mail -> new SimpleObjectProperty<>(mail.getValue().hasAttachments()));
+
+
 
         tbvMails.setItems(correosList);
 
@@ -261,5 +281,46 @@ public class BuzonController extends Controller implements Initializable {
             mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitle"), rb.getString("errorNoParamsFound"));
         }
     }
+
+    private String obtenerExtensionDesdeContentId(String contentId) {
+        if (contentId != null && contentId.contains(".")) {
+            return contentId.substring(contentId.lastIndexOf("."));
+        }
+
+        return ".pdf";
+    }
+
+    @FXML
+    void onActionBtnDownloadAttachment(ActionEvent event) {
+        MailsDto correoSeleccionado = tbvMails.getSelectionModel().getSelectedItem();
+        if (correoSeleccionado != null && !correoSeleccionado.getAttachments().isEmpty()) {
+            List<byte[]> attachments = correoSeleccionado.getAttachments();
+            List<String> contentIds = correoSeleccionado.getContentIds();
+
+            for (int i = 0; i < attachments.size(); i++) {
+                byte[] fileContent = attachments.get(i);
+                String fileName = contentIds != null && i < contentIds.size() ? contentIds.get(i) : "attachment_" + i;
+
+                // Obtener la extensión del archivo desde el contentId o asignar ".pdf" por defecto
+                String extension = obtenerExtensionDesdeContentId(fileName);
+                fileName += extension;
+
+                try {
+                    Files.write(Paths.get(System.getProperty("user.home"), "Downloads", fileName), fileContent);
+                    mensaje.show(Alert.AlertType.INFORMATION, rb.getString("successTitle"),
+                            rb.getString("successDownloadAttachment") + " " + fileName);
+                } catch (IOException e) {
+                    mensaje.show(Alert.AlertType.ERROR, rb.getString("errorTitle"),
+                            rb.getString("errorDownloadAttachment") + e.getMessage());
+                }
+            }
+        } else {
+            mensaje.show(Alert.AlertType.WARNING, rb.getString("warningTitle"),
+                    rb.getString("warningNoAttachment"));
+        }
+    }
+
+
+
 
 }

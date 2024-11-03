@@ -17,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -59,6 +60,8 @@ public class MailAppController extends Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        initialize();
+
     }
 
     @Override
@@ -72,7 +75,7 @@ public class MailAppController extends Controller implements Initializable {
             btnMassiveMails.setVisible(true);
             btnMailBox.setVisible(true);
             btnNewMail.setVisible(true);
-        } else if (usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Normal de Correos Masivos"))) {
+        } else if (usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Normal de correos masivos"))) {
             btnAdminParameters.setVisible(false);
             btnAdminProcess.setVisible(false);
             btnMassiveMails.setVisible(true);
@@ -118,11 +121,7 @@ public class MailAppController extends Controller implements Initializable {
 
     @FXML
     void onActionLogOut(ActionEvent event) {
-
-        AppContext.getInstance().set("Usuario", null);
-
-        FlowController.getInstance().salir();
-
+        ((Stage)root.getScene().getWindow()).close();
         FlowController.getInstance().goMain("LoginView");
 
     }
