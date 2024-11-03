@@ -130,16 +130,18 @@
 
         @FXML
         void onActionBtnCostaRica(ActionEvent event) {
-            ((Stage) btnCostaRica.getScene().getWindow()).close();
+            ResourceBundle bundle = ResourceBundle.getBundle("cr.ac.una.security.resources.MessagesBundle", new Locale("es"));
+            FlowController.getInstance().reiniciarVistasConNuevoIdioma(bundle);
             App.restart(new Locale("es"));
-            FlowController.getInstance().limpiarLoader("RegisterView");
         }
 
         @FXML
         void onActionBtnUsa(ActionEvent event) {
-            ((Stage) btnUsa.getScene().getWindow()).close();
+            ResourceBundle bundle = ResourceBundle.getBundle("cr.ac.una.security.resources.MessagesBundle", new Locale("en"));
+            FlowController.getInstance().reiniciarVistasConNuevoIdioma(bundle);
             App.restart(new Locale("en"));
-            FlowController.getInstance().limpiarLoader("RegisterView");
         }
+
+
 
     }

@@ -15,28 +15,28 @@
             <children>
                 <HBox fx:id="root" prefHeight="100.0" prefWidth="200.0">
                     <children>
-                        <VBox alignment="TOP_CENTER" prefHeight="721.0" prefWidth="276.0" spacing="20.0">
+                        <VBox alignment="TOP_CENTER" prefHeight="623.0" prefWidth="275.0" spacing="15.0">
                             <children>
-                                <ImageView fx:id="imgViewUserPhotProf" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                <ImageView fx:id="imgViewUserPhotProf" fitHeight="125.0" fitWidth="191.0" pickOnBounds="true" preserveRatio="true">
                                     <VBox.margin>
-                                        <Insets top="10.0" />
+                                        <Insets top="20.0" />
                                     </VBox.margin>
                                     <image>
-                                        <Image url="@../resources/Logo.png" />
+                                        <Image url="@../resources/Logo%20(2).png" />
                                     </image>
                                 </ImageView>
-                                <MFXButton fx:id="btnAdminParameters" onAction="#onActionBtnAdminParameters" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="%BtnAdminParameters" textAlignment="JUSTIFY">
+                                <MFXButton fx:id="btnAdminParameters" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnAdminParameters" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="%BtnAdminParameters" textAlignment="JUSTIFY">
                                     <VBox.margin>
                                         <Insets top="35.0" />
                                     </VBox.margin>
                                 </MFXButton>
-                                <MFXButton fx:id="btnAdminProcess" ellipsisString="" onAction="#onActionBtnAdminProcess" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="%BtnAdminProcess" textOverrun="CLIP" />
-                                <MFXButton fx:id="btnMailBox" onAction="#onBtnMailBox" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="%BtnMailBox" />
-                                <MFXButton fx:id="btnMassiveMails" onAction="#onActionBtnMassiveMails" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="%BtnMassiveMails" />
-                                <MFXButton fx:id="btnNewMail" onAction="#onActionBtnNewMail" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="%BtnNewMail" />
-                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                <MFXButton fx:id="btnAdminProcess" ellipsisString="" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnAdminProcess" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="%BtnAdminProcess" textOverrun="CLIP" />
+                                <MFXButton fx:id="btnMailBox" minHeight="-Infinity" minWidth="-Infinity" onAction="#onBtnMailBox" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="%BtnMailBox" />
+                                <MFXButton fx:id="btnMassiveMails" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnMassiveMails" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="%BtnMassiveMails" />
+                                <MFXButton fx:id="btnNewMail" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnNewMail" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="%BtnNewMail" />
+                                <HBox alignment="CENTER" prefHeight="84.0" prefWidth="274.0">
                                     <children>
-                                        <MFXButton fx:id="btnLogOut" buttonType="RAISED" onAction="#onActionLogOut" prefHeight="48.0" prefWidth="49.0" styleClass="button-blueStyle" text="%BtnLogOut">
+                                        <MFXButton fx:id="btnLogOut" buttonType="RAISED" onAction="#onActionLogOut" prefHeight="48.0" prefWidth="137.0" styleClass="button-blueStyle" text="%BtnLogOut">
                                             <HBox.margin>
                                                 <Insets left="20.0" />
                                             </HBox.margin>
@@ -50,7 +50,7 @@
                                         </MFXButton>
                                     </children>
                                     <VBox.margin>
-                                        <Insets top="170.0" />
+                                        <Insets top="100.0" />
                                     </VBox.margin>
                                 </HBox>
                             </children>

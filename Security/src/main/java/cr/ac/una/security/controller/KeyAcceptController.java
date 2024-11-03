@@ -108,7 +108,7 @@ public class KeyAcceptController extends Controller implements Initializable {
     @FXML
     void onActionBtnGoBack(ActionEvent event) {
         ((Stage) btnGoBack.getScene().getWindow()).close();
-        FlowController.getInstance().goViewInWindow("LoginView");
+        FlowController.getInstance().goMain("LoginView");
 
 
     }

@@ -117,7 +117,7 @@ public class RegisterController extends Controller implements Initializable {
 
     @FXML
     void onActionBtnGoback(ActionEvent event) {
-        FlowController.getInstance().goViewInWindow("LoginView");
+        FlowController.getInstance().goMain("LoginView");
 
         ((Stage) root.getScene().getWindow()).close();
     }

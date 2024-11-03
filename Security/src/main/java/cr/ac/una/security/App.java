@@ -25,10 +25,13 @@ public class App extends Application {
     }
 
     public static void restart(Locale newLocale) {
-
         currentLocale = newLocale;
+        ResourceBundle bundle = ResourceBundle.getBundle("cr.ac.una.security.resources.MessagesBundle", currentLocale);
+        FlowController.setIdioma(bundle);
         restartApp();
     }
+
+
 
 
     private static void restartApp() {

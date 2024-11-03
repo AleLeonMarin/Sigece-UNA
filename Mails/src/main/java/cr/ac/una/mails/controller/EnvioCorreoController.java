@@ -52,7 +52,7 @@ public class EnvioCorreoController extends Controller implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         correosService = new CorreosService();
         mensaje = new Mensaje();
-        this.rb = rb; // Guardar el recurso de idioma para acceder a mensajes
+        this.rb = rb;
     }
 
     @Override

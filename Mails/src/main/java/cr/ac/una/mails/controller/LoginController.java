@@ -25,6 +25,7 @@
     import javafx.scene.control.Button;
 
     import cr.ac.una.mails.App;
+    import javafx.stage.Stage;
 
 
     /**
@@ -77,13 +78,13 @@
         void onActionBtnChangePass(ActionEvent event) {
 
             FlowController.getInstance().goViewInWindow("KeyAcceptView");
-            getStage().close();
+            ((Stage)btnChangePass.getScene().getWindow()).close();
 
         }
 
         @FXML
         void onActionBtnLogIn(ActionEvent event) {
-            try {
+
                 if (textMail.getText().isEmpty() || textPassword.getText().isBlank()) {
                     new Mensaje().showModal(AlertType.ERROR, bundle.getString("userValidation.title"), getStage(),
                             bundle.getString("userValidation.emptyUser"));
@@ -100,10 +101,12 @@
                         AppContext.getInstance().set("Token", usuario.getToken());
                         System.out.println("token: " + usuario.getToken());
 
-                        if (usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Admin"))
-                                && usuario.getState().equals("A")) {
+                        if (usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Administrador de correos masivos"))
+                                && usuario.getState().equals("A") ||
+                                usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Normal de correos masivos")
+                                && usuario.getState().equals("A"))) {
+                            AppContext.getInstance().set("Usuario", usuario);
                             FlowController.getInstance().goMain("MailAppView");
-                            getStage().close();
                         } else {
                             new Mensaje().showModal(AlertType.ERROR, bundle.getString("userValidation.title"), getStage(),
                                     bundle.getString("userValidation.noPermission"));
@@ -113,27 +116,29 @@
                                 bundle.getString("userValidation.invalidCredentials"));
                     }
                 }
-            } catch (Exception e) {
-                Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, "Error al intentar ingresar al sistema", e);
-                new Mensaje().showModal(AlertType.ERROR, bundle.getString("loginError.title"), getStage(),
-                        bundle.getString("loginError.general"));
-            }
+
         }
 
         @FXML
         void onActionBtnRegister(ActionEvent event) {
             FlowController.getInstance().goViewInWindow("RegisterView");
-            getStage().close();
+            ((Stage)btnRegister.getScene().getWindow()).close();
         }
 
         @FXML
         void onActionBtnCostaRica(ActionEvent event) {
+            ResourceBundle bundle = ResourceBundle.getBundle("cr.ac.una.mails.resources.MessagesBundle", new Locale("es"));
+            FlowController.getInstance().reiniciarVistasConNuevoIdioma(bundle);
             App.restart(new Locale("es"));
         }
 
         @FXML
         void onActionBtnUsa(ActionEvent event) {
+            ResourceBundle bundle = ResourceBundle.getBundle("cr.ac.una.mails.resources.MessagesBundle", new Locale("en"));
+            FlowController.getInstance().reiniciarVistasConNuevoIdioma(bundle);
             App.restart(new Locale("en"));
         }
+
+
 
     }
