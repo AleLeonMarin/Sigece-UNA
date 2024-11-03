@@ -57,7 +57,7 @@
                         <Separator orientation="VERTICAL" prefHeight="628.0" prefWidth="16.0" />
                         <StackPane prefHeight="628.0" prefWidth="787.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <ImageView fitHeight="230.0" fitWidth="198.0" pickOnBounds="true" preserveRatio="true" translateX="300.0" translateY="247.0">
+                        <ImageView fitHeight="230.0" fitWidth="198.0" pickOnBounds="true" preserveRatio="true" translateX="300.0" translateY="244.0">
                            <image>
                               <Image url="@../resources/vector.png" />
                            </image>
