@@ -71,8 +71,9 @@ public class SecurityAppController extends Controller implements Initializable {
 
     @FXML
     void onActionBtnLogOut(ActionEvent event) {
+        ((Stage)root.getScene().getWindow()).close();
         FlowController.getInstance().goMain("LoginView");
-       ((Stage)root.getScene().getWindow()).close();
+
     }
 
 
