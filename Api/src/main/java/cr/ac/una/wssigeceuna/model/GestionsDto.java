@@ -79,6 +79,10 @@ public class GestionsDto implements Serializable {
         approvals = new ArrayList<>();
         approvers = new ArrayList<>();
         deletedApprovers = new ArrayList<>();
+        Activity = new ActivitiesDto();
+        Requester = new UsersDto();
+        Assigned = new UsersDto();
+        Subactivities = new SubactivitiesDto();
 
     }
 

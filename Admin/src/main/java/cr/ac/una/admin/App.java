@@ -2,10 +2,8 @@ package cr.ac.una.admin;
 
 import cr.ac.una.admin.util.FlowController;
 import javafx.application.Application;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 

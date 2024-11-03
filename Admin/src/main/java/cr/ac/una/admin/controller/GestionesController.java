@@ -13,6 +13,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -229,6 +230,10 @@ public class GestionesController extends Controller implements Initializable {
 
     private Map<String, ActivitiesDto> activityMap = new HashMap<>();
 
+    private Map<String, SubactivitiesDto> subactivityMap = new HashMap<>();
+
+    private Map<String, UsersDto> assigned = new HashMap<>();
+
     @Override
     public void initialize() {
 
@@ -402,6 +407,10 @@ public class GestionesController extends Controller implements Initializable {
 
         txfUsuarioSeguimiento.setText(user.getName() + " " + user.getLastNames());
         txfUsuarioSeguimiento.setEditable(false);
+
+        chargeUsers();
+        chargeActivity();
+        chargeSubactivity();
 
     }
 
@@ -580,6 +589,15 @@ public class GestionesController extends Controller implements Initializable {
         }
     }
 
+    // assigned method
+
+    private void setAssigned() {
+        String selectedAssigned = cmbAsiganadoGestion.getSelectionModel().getSelectedItem();
+        if (selectedAssigned != null && assigned.containsKey(selectedAssigned)) {
+            gestion.setAssigned(assigned.get(selectedAssigned));
+        }
+    }
+
     // charging methods
 
     private void chargeUsers() {
@@ -592,6 +610,16 @@ public class GestionesController extends Controller implements Initializable {
                 // Obtener el usuario actualmente logeado desde AppContext
                 UsersDto currentUser = (UsersDto) AppContext.getInstance().get("User");
                 List<UsersDto> users = (List<UsersDto>) respuesta.getResultado("Usuarios");
+
+                usersMap.clear();
+                for (UsersDto user : users) {
+                    usersMap.put(user.getName() + " " + user.getLastNames(), user);
+                }
+
+                assigned.clear();
+                for (UsersDto user : users) {
+                    assigned.put(user.getName() + " " + user.getLastNames(), user);
+                }
 
                 // Limpiar items previos en los ComboBox
                 cmbAsiganadoGestion.getItems().clear();
@@ -633,6 +661,11 @@ public class GestionesController extends Controller implements Initializable {
             } else {
                 List<ActivitiesDto> activities = (List<ActivitiesDto>) respuesta.getResultado("Activity");
 
+                activityMap.clear();
+                for (ActivitiesDto activity : activities) {
+                    activityMap.put(activity.getName(), activity);
+                }
+
                 // Limpiar items previos en los ComboBox
                 cmbActividades.getItems().clear();
 
@@ -660,6 +693,12 @@ public class GestionesController extends Controller implements Initializable {
                 List<SubactivitiesDto> subactivities = (List<SubactivitiesDto>) respuesta
                         .getResultado("Subactivity");
 
+                subactivityMap.clear();
+
+                for (SubactivitiesDto subactivity : subactivities) {
+                    subactivityMap.put(subactivity.getName(), subactivity);
+                }
+
                 // Limpiar items previos en los ComboBox
                 cmbSubactividades.getItems().clear();
 
@@ -677,10 +716,28 @@ public class GestionesController extends Controller implements Initializable {
         }
     }
 
+    private void chargeGestion(Long id) {
+        try {
+            GestionService service = new GestionService();
+            Respuesta respuesta = service.getGestion(id);
+            if (!respuesta.getEstado()) {
+                new Mensaje().showModal(AlertType.INFORMATION, "Gestiones", getStage(), respuesta.getMensaje());
+            } else {
+                unbindGestion();
+                gestion = (GestionsDto) respuesta.getResultado("Gestion");
+                bindGestion(false);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(GestionesController.class.getName()).log(Level.SEVERE, "Error cargando la gestion", e);
+            new Mensaje().showModal(AlertType.ERROR, "Cargar Gestion", getStage(), "Error cargando la gestion.");
+        }
+    }
+
     // save methods
 
     private void saveGestion() {
         try {
+            setAssigned();
             setState();
             setActivity();
             setApproversGestion();
@@ -770,6 +827,9 @@ public class GestionesController extends Controller implements Initializable {
 
     @FXML
     void onKeyPressedTxfIDGestion(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER && !txfIDGestion.getText().isBlank()) {
+            chargeGestion(Long.valueOf(txfIDGestion.getText()));
+        }
 
     }
 
@@ -793,9 +853,6 @@ public class GestionesController extends Controller implements Initializable {
         format();
         initEntities();
         newGestion();
-        chargeUsers();
-        chargeActivity();
-        chargeSubactivity();
 
     }
 

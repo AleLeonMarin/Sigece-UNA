@@ -242,6 +242,14 @@ public class Gestions implements Serializable {
         this.follows = follows;
     }
 
+    public Activities getActivity() {
+        return activity;
+    }
+
+    public void setActivity(Activities activity) {
+        this.activity = activity;
+    }
+
     public Subactivities getSubactivities() {
         return subactivities;
     }
