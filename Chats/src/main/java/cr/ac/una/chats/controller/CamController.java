@@ -42,7 +42,7 @@ public class CamController extends Controller implements Initializable {
 
         webCam.updateImageView();
 
-        this.rb = rb;
+
     }
 
     @FXML
@@ -77,6 +77,7 @@ public class CamController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.rb = resources;
         // TODO Auto-generated method stub
 
     }
