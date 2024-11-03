@@ -86,7 +86,7 @@ public class BuzonController extends Controller implements Initializable {
     private TableView<MailsDto> tbvMails;
 
     @FXML
-    private TableColumn<MailsDto, Boolean> tbcAdjuntos;
+    private TableColumn<MailsDto, Integer> tbcAdjuntos;
 
 
     private CorreosService correosService;
@@ -152,9 +152,10 @@ public class BuzonController extends Controller implements Initializable {
         tbcFecha.setCellValueFactory(new PropertyValueFactory<>("date"));
         tbcId.setCellValueFactory(new PropertyValueFactory<>("id"));
 
-        tbcAdjuntos.setCellValueFactory(mail -> new SimpleObjectProperty<>(mail.getValue().hasAttachments()));
-
-
+        tbcAdjuntos.setCellValueFactory(mail -> {
+            int attachmentCount = mail.getValue().getAttachments() != null ? mail.getValue().getAttachments().size() : 0;
+            return new SimpleObjectProperty<>(attachmentCount);
+        });
 
         tbvMails.setItems(correosList);
 

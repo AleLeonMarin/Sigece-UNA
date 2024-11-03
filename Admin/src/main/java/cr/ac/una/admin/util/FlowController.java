@@ -192,4 +192,23 @@ public class FlowController {
     public void salir() {
         this.mainStage.close();
     }
+
+    public void reiniciarVistasConNuevoIdioma(ResourceBundle nuevoIdioma) {
+        this.idioma = nuevoIdioma;
+        HashMap<String, FXMLLoader> nuevosLoaders = new HashMap<>();
+
+        loaders.forEach((name, loader) -> {
+            try {
+                FXMLLoader nuevoLoader = new FXMLLoader(App.class.getResource("view/" + name + ".fxml"), nuevoIdioma);
+                nuevoLoader.load(); // Carga la vista con el nuevo idioma
+                nuevosLoaders.put(name, nuevoLoader); // Actualiza el loader en el mapa temporal
+            } catch (IOException e) {
+                java.util.logging.Logger.getLogger(FlowController.class.getName())
+                        .log(Level.SEVERE, "Error recargando la vista [" + name + "] con nuevo idioma.", e);
+            }
+        });
+
+        loaders.clear();
+        loaders.putAll(nuevosLoaders); // Sustituye los loaders antiguos con los nuevos
+    }
 }

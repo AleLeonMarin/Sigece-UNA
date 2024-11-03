@@ -41,6 +41,8 @@ public class CamController extends Controller implements Initializable {
         webCam.start();
 
         webCam.updateImageView();
+
+
     }
 
     @FXML
@@ -65,11 +67,13 @@ public class CamController extends Controller implements Initializable {
     @FXML
     void onActionBtnExit(ActionEvent event) {
 
+
         if (new Mensaje().showConfirmation(rb.getString("exitTitle"), getStage(), rb.getString("exitConfirmation"))) {
             webCam.stop();
             this.getStage().close();
         }
     }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

@@ -25,6 +25,7 @@
     import javafx.scene.control.Button;
 
     import cr.ac.una.chats.App;
+    import javafx.stage.Stage;
 
 
     /**
@@ -77,64 +78,64 @@
         void onActionBtnChangePass(ActionEvent event) {
 
             FlowController.getInstance().goViewInWindow("KeyAcceptView");
-            getStage().close();
+            ((Stage)btnChangePass.getScene().getWindow()).close();
 
         }
 
         @FXML
         void onActionBtnLogIn(ActionEvent event) {
-            try {
-                if (textMail.getText().isEmpty() || textPassword.getText().isBlank()) {
-                    new Mensaje().showModal(AlertType.ERROR, bundle.getString("userValidation.title"), getStage(),
-                            bundle.getString("userValidation.emptyUser"));
-                } else if (textPassword.getText().isEmpty() || textPassword.getText().isBlank()) {
-                    new Mensaje().showModal(AlertType.ERROR, bundle.getString("userValidation.title"), getStage(),
-                            bundle.getString("userValidation.emptyPassword"));
-                } else {
-                    UsersService service = new UsersService();
-                    Respuesta respuesta = service.logIn(textMail.getText(), textPassword.getText());
-                    if (respuesta.getEstado()) {
-                        UsersDto usuario = (UsersDto) respuesta.getResultado("Usuario");
+            if (textMail.getText().isEmpty() || textPassword.getText().isBlank()) {
+                new Mensaje().showModal(AlertType.ERROR, bundle.getString("userValidation.title"), getStage(),
+                        bundle.getString("userValidation.emptyUser"));
+            } else if (textPassword.getText().isEmpty() || textPassword.getText().isBlank()) {
+                new Mensaje().showModal(AlertType.ERROR, bundle.getString("userValidation.title"), getStage(),
+                        bundle.getString("userValidation.emptyPassword"));
+            } else {
+                UsersService service = new UsersService();
+                Respuesta respuesta = service.logIn(textMail.getText(), textPassword.getText());
+                if (respuesta.getEstado()) {
+                    UsersDto usuario = (UsersDto) respuesta.getResultado("Usuario");
 
-                        AppContext.getInstance().set("UsuarioActual", usuario);
+                    AppContext.getInstance().set("UsuarioActual", usuario);
 
-                        AppContext.getInstance().set("Token", usuario.getToken());
-                        System.out.println("token: " + usuario.getToken());
+                    AppContext.getInstance().set("Token", usuario.getToken());
+                    System.out.println("token: " + usuario.getToken());
 
-                        if (usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Admin"))
-                                && usuario.getState().equals("A")) {
-                            FlowController.getInstance().goMain("ChatsAppView");
-                            getStage().close();
-                        } else {
-                            new Mensaje().showModal(AlertType.ERROR, bundle.getString("userValidation.title"), getStage(),
-                                    bundle.getString("userValidation.noPermission"));
-                        }
+                    if (usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Normal"))
+                            && usuario.getState().equals("A")) {
+                        FlowController.getInstance().goMain("ChatsAppView");
+                        getStage().close();
                     } else {
                         new Mensaje().showModal(AlertType.ERROR, bundle.getString("userValidation.title"), getStage(),
-                                bundle.getString("userValidation.invalidCredentials"));
+                                bundle.getString("userValidation.noPermission"));
                     }
+                } else {
+                    new Mensaje().showModal(AlertType.ERROR, bundle.getString("userValidation.title"), getStage(),
+                            bundle.getString("userValidation.invalidCredentials"));
                 }
-            } catch (Exception e) {
-                Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, "Error al intentar ingresar al sistema", e);
-                new Mensaje().showModal(AlertType.ERROR, bundle.getString("loginError.title"), getStage(),
-                        bundle.getString("loginError.general"));
             }
         }
 
         @FXML
         void onActionBtnRegister(ActionEvent event) {
             FlowController.getInstance().goViewInWindow("RegisterView");
-            getStage().close();
+            ((Stage)btnRegister.getScene().getWindow()).close();
         }
 
         @FXML
         void onActionBtnCostaRica(ActionEvent event) {
+            ResourceBundle bundle = ResourceBundle.getBundle("cr.ac.una.chats.resources.MessagesBundle", new Locale("es"));
+            FlowController.getInstance().reiniciarVistasConNuevoIdioma(bundle);
             App.restart(new Locale("es"));
         }
 
         @FXML
         void onActionBtnUsa(ActionEvent event) {
+            ResourceBundle bundle = ResourceBundle.getBundle("cr.ac.una.chats.resources.MessagesBundle", new Locale("en"));
+            FlowController.getInstance().reiniciarVistasConNuevoIdioma(bundle);
             App.restart(new Locale("en"));
         }
+
+
 
     }

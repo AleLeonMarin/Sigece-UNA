@@ -84,7 +84,7 @@
 
         @FXML
         void onActionBtnLogIn(ActionEvent event) {
-            try {
+
                 if (textMail.getText().isEmpty() || textPassword.getText().isBlank()) {
                     new Mensaje().showModal(AlertType.ERROR, bundle.getString("userValidation.title"), getStage(),
                             bundle.getString("userValidation.emptyUser"));
@@ -105,7 +105,6 @@
                         if (usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Admin"))
                                 && usuario.getState().equals("A")) {
                             FlowController.getInstance().goMain("SecurityAppView");
-                            getStage().close();
                         } else {
                             new Mensaje().showModal(AlertType.ERROR, bundle.getString("userValidation.title"), getStage(),
                                     bundle.getString("userValidation.noPermission"));
@@ -115,11 +114,6 @@
                                 bundle.getString("userValidation.invalidCredentials"));
                     }
                 }
-            } catch (Exception e) {
-                Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, "Error al intentar ingresar al sistema", e);
-                new Mensaje().showModal(AlertType.ERROR, bundle.getString("loginError.title"), getStage(),
-                        bundle.getString("loginError.general"));
-            }
         }
 
         @FXML

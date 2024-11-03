@@ -60,7 +60,7 @@
                         <TableColumn fx:id="tbcEstado" prefWidth="109.0" text="%table.column.estado" />
                         <TableColumn fx:id="tbcFecha" prefWidth="178.0" text="%table.column.fecha" />
                         <TableColumn fx:id="tbcId" minWidth="0.0" prefWidth="0.0" text="%table.column.id" />
-                        <TableColumn fx:id="tbcAdjuntos" prefWidth="109.0" text="\%table.column.attachment" />
+                        <TableColumn fx:id="tbcAdjuntos" prefWidth="109.0" text="%table.column.attachment" />
                      </columns>
                   </TableView>
                   <HBox alignment="CENTER" prefHeight="60.0" prefWidth="563.0" spacing="20.0">
@@ -72,7 +72,7 @@
                         </MFXButton>
                         <MFXButton fx:id="btnShowContent" onAction="#onActionBtnShowContent" prefHeight="30.0" prefWidth="112.0" styleClass="button-blueStyle" text="%button.verContenido" />
                         <MFXButton fx:id="btnSendNow" onAction="#onActionBtnSendNow" prefHeight="30.0" prefWidth="162.0" styleClass="button-blueStyle" text="%button.actualizarCorreos" />
-                        <MFXButton fx:id="btnDownloadAttachment" onAction="#onActionBtnDownloadAttachment" prefHeight="31.0" prefWidth="122.0" styleClass="button-redStyle" text="\%btn.attachments" />
+                        <MFXButton fx:id="btnDownloadAttachment" onAction="#onActionBtnDownloadAttachment" prefHeight="31.0" prefWidth="171.0" styleClass="button-redStyle" text="%btn.attachments" />
                      </children>
                      <VBox.margin>
                         <Insets top="10.0" />
