@@ -459,6 +459,42 @@ public class GestionesController extends Controller implements Initializable {
         dpSolucionGestion.valueProperty().unbindBidirectional(gestion.solutionDate);
     }
 
+    private void clean() {
+        chkActividad.setSelected(false);
+        chkSubactividad.setSelected(false);
+        cmbActividades.setDisable(true);
+        cmbActividades.setVisible(false);
+        cmbActividades.getSelectionModel().clearSelection();
+        cmbSubactividades.setDisable(true);
+        cmbSubactividades.setVisible(false);
+        cmbSubactividades.getSelectionModel().clearSelection();
+        cmbAprobador1Gestion.getSelectionModel().clearSelection();
+        cmbAprobador1Gestion.setDisable(true);
+        cmbAprobador1Gestion.setVisible(false);
+        cmbAprobador2Gestion.getSelectionModel().clearSelection();
+        cmbAprobador2Gestion.setDisable(true);
+        cmbAprobador2Gestion.setVisible(false);
+        cmbAprobador3Gestion.getSelectionModel().clearSelection();
+        cmbAprobador3Gestion.setDisable(true);
+        cmbAprobador3Gestion.setVisible(false);
+        cmbAprobador4Gestion.getSelectionModel().clearSelection();
+        cmbAprobador4Gestion.setDisable(true);
+        cmbAprobador4Gestion.setVisible(false);
+        cmbAprobador5Gestion.getSelectionModel().clearSelection();
+        cmbAprobador5Gestion.setDisable(true);
+        cmbAprobador5Gestion.setVisible(false);
+        cmbAprobador6Gestion.getSelectionModel().clearSelection();
+        cmbAprobador6Gestion.setDisable(true);
+        cmbAprobador6Gestion.setVisible(false);
+        cmbAsiganadoGestion.getSelectionModel().clearSelection();
+        cmbAsiganadoGestion.setDisable(false);
+        cmbAsiganadoGestion.setVisible(true);
+        chkAprobador1.setSelected(false);
+        chkAprobador2.setSelected(false);
+        chkAprobador4.setSelected(false);
+        chkAprobador6.setSelected(false);
+    }
+
     // new entity
 
     private void newGestion() {
@@ -468,6 +504,8 @@ public class GestionesController extends Controller implements Initializable {
         txfIDGestion.clear();
         txfIDGestion.requestFocus();
         chkEsperaGestion.setSelected(true);
+        clean();
+
     }
 
     // selection checkBoxes methods
@@ -720,13 +758,81 @@ public class GestionesController extends Controller implements Initializable {
         try {
             GestionService service = new GestionService();
             Respuesta respuesta = service.getGestion(id);
+
             if (!respuesta.getEstado()) {
                 new Mensaje().showModal(AlertType.INFORMATION, "Gestiones", getStage(), respuesta.getMensaje());
-            } else {
-                unbindGestion();
-                gestion = (GestionsDto) respuesta.getResultado("Gestion");
-                bindGestion(false);
+                return;
             }
+
+            unbindGestion();
+            gestion = (GestionsDto) respuesta.getResultado("Gestion");
+
+            // Selección de actividad o subactividad
+            if (gestion.getActivity() != null) {
+                chkActividad.setSelected(true);
+                if (cmbActividades.getItems().contains(gestion.getActivity().getName())) {
+                    cmbActividades.getSelectionModel().selectItem(gestion.getActivity().getName());
+                } else {
+                    System.out.println(
+                            "La actividad " + gestion.getActivity().getName() + " no está en la lista de opciones.");
+                }
+            } else if (gestion.getSubactivities() != null) {
+                chkSubactividad.setSelected(true);
+                if (cmbSubactividades.getItems().contains(gestion.getSubactivities().getName())) {
+                    cmbSubactividades.getSelectionModel().selectItem(gestion.getSubactivities().getName());
+                } else {
+                    System.out.println("La subactividad " + gestion.getSubactivities().getName()
+                            + " no está en la lista de opciones.");
+                }
+            }
+
+            // Selección de asignado
+            if (gestion.getAssigned() != null) {
+                String assignedFullName = gestion.getAssigned().getName() + " " + gestion.getAssigned().getLastNames();
+                if (cmbAsiganadoGestion.getItems().contains(assignedFullName)) {
+                    cmbAsiganadoGestion.getSelectionModel().selectItem(assignedFullName);
+                } else {
+                    System.out.println("El asignado " + assignedFullName + " no está en la lista de opciones.");
+                }
+            }
+
+            // Selección de aprobadores
+            int approversCount = gestion.getApprovers().size();
+            for (int i = 0; i < approversCount; i++) {
+                String approverFullName = gestion.getApprovers().get(i).getName() + " "
+                        + gestion.getApprovers().get(i).getLastNames();
+                switch (i) {
+                    case 0:
+                        chkAprobador1.setSelected(true);
+                        if (cmbAprobador1Gestion.getItems().contains(approverFullName)) {
+                            cmbAprobador1Gestion.getSelectionModel().selectItem(approverFullName);
+                        }
+                        break;
+                    case 1:
+                        chkAprobador2.setSelected(true);
+                        if (cmbAprobador2Gestion.getItems().contains(approverFullName)) {
+                            cmbAprobador2Gestion.getSelectionModel().selectItem(approverFullName);
+                        }
+                        break;
+                    case 2:
+                        chkAprobador4.setSelected(true);
+                        if (cmbAprobador4Gestion.getItems().contains(approverFullName)) {
+                            cmbAprobador4Gestion.getSelectionModel().selectItem(approverFullName);
+                        }
+                        break;
+                    case 3:
+                        chkAprobador6.setSelected(true);
+                        if (cmbAprobador6Gestion.getItems().contains(approverFullName)) {
+                            cmbAprobador6Gestion.getSelectionModel().selectItem(approverFullName);
+                        }
+                        break;
+                    default:
+                        System.out.println("Número de aprobadores excede el límite soportado.");
+                }
+            }
+
+            bindGestion(false);
+
         } catch (Exception e) {
             Logger.getLogger(GestionesController.class.getName()).log(Level.SEVERE, "Error cargando la gestion", e);
             new Mensaje().showModal(AlertType.ERROR, "Cargar Gestion", getStage(), "Error cargando la gestion.");
