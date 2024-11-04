@@ -5,14 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
+import jakarta.json.bind.annotation.JsonbTransient;
 
-@JsonbPropertyOrder({
-        "id",
-        "name",
-        "area",
-        "version"
-})
-
+@JsonbPropertyOrder({"id", "name", "version"})
 @Schema(description = "Esta clase contiene la información de las actividades")
 public class ActivitiesDto implements Serializable {
 
@@ -22,7 +17,7 @@ public class ActivitiesDto implements Serializable {
     @Schema(description = "Nombre de la actividad", example = "Actividad de prueba")
     private String name;
 
-    @Schema(description = "Área de la actividad")
+    @JsonbTransient
     private AreasDto area;
 
     @Schema(description = "Versión de la actividad", example = "1")
@@ -30,18 +25,14 @@ public class ActivitiesDto implements Serializable {
 
     private List<SubactivitiesDto> subactivities;
 
-    private List<GestionsDto> gestions;
-
     public ActivitiesDto() {
         subactivities = new ArrayList<>();
-        gestions = new ArrayList<>();
     }
 
     public ActivitiesDto(Activities activities) {
         this();
         this.id = activities.getId();
         this.name = activities.getName();
-        this.area = new AreasDto(activities.getArea());
         this.version = activities.getVersion();
         // Convertir las subactividades de la entidad a DTO si es necesario
         if (activities.getSubactivities() != null) {
@@ -52,6 +43,7 @@ public class ActivitiesDto implements Serializable {
         }
     }
 
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -90,13 +82,5 @@ public class ActivitiesDto implements Serializable {
 
     public void setSubactivities(List<SubactivitiesDto> subactivities) {
         this.subactivities = subactivities;
-    }
-
-    public List<GestionsDto> getGestions() {
-        return gestions;
-    }
-
-    public void setGestions(List<GestionsDto> gestions) {
-        this.gestions = gestions;
     }
 }

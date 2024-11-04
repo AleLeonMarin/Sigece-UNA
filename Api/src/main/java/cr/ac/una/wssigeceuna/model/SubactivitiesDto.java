@@ -17,7 +17,7 @@ public class SubactivitiesDto {
     @Schema(description = "Nombre de la subactividad", example = "Subactividad 1")
     private String name;
 
-    @Schema(description = "ID de la actividad a la que pertenece", example = "1")
+    @JsonbTransient
     private ActivitiesDto activity;
 
     @Schema(description = "Versión de la subactividad", example = "1")

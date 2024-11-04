@@ -7,13 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
 import jakarta.json.bind.annotation.JsonbTransient;
 
-@JsonbPropertyOrder({
-        "id",
-        "name",
-        "state",
-        "version"
-})
-
+@JsonbPropertyOrder({"id", "name", "state", "version"})
 @Schema(description = "Esta clase contiene la información de las áreas")
 public class AreasDto implements Serializable {
 
@@ -47,6 +41,7 @@ public class AreasDto implements Serializable {
         this.version = areas.getVersion();
     }
 
+    // Getters and setters
     public Long getId() {
         return id;
     }

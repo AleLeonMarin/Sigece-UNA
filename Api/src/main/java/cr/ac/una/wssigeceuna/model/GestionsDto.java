@@ -71,18 +71,15 @@ public class GestionsDto implements Serializable {
 
     List<UsersDto> approvers;
 
+    @JsonbTransient
     List<UsersDto> deletedApprovers;
 
     public GestionsDto() {
 
-        follows = new ArrayList<>();
-        approvals = new ArrayList<>();
-        approvers = new ArrayList<>();
-        deletedApprovers = new ArrayList<>();
-        Activity = new ActivitiesDto();
-        Requester = new UsersDto();
-        Assigned = new UsersDto();
-        Subactivities = new SubactivitiesDto();
+        this.follows = new ArrayList<>();
+        this.approvals = new ArrayList<>();
+        this.approvers = new ArrayList<>();
+        this.deletedApprovers = new ArrayList<>();
 
     }
 
@@ -96,7 +93,16 @@ public class GestionsDto implements Serializable {
         this.state = gestions.getState();
         this.archive = gestions.getArchive();
         this.version = gestions.getVersion();
-        
+        if (gestions.getActivity() != null) {
+            this.Activity = new ActivitiesDto(gestions.getActivity());
+        }
+        if (gestions.getRequester() != null) {
+            this.Requester = new UsersDto(gestions.getRequester());
+        }
+        if (gestions.getAssigned() != null) {
+            this.Assigned = new UsersDto(gestions.getAssigned());
+        }
+
     }
 
     public Long getId() {

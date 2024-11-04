@@ -8,6 +8,7 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -122,21 +123,21 @@ public class Gestions implements Serializable {
     private List<Users> approvers;
 
     @JoinColumn(name = "GES_ACT_ID", referencedColumnName = "ACT_ID")
-    @ManyToOne
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Activities activity;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "gestion")
     private List<Follows> follows;
 
     @JoinColumn(name = "GES_SUB_ID", referencedColumnName = "SUB_ID")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Subactivities subactivities;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "GES_SOLICITANTE_ID", referencedColumnName = "USER_ID") // Cambiado de gestionRequester a USER_ID
     private Users requester;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "GES_ASIGNADO_ID", referencedColumnName = "USER_ID") // Cambiado de gestionAssigned a USER_ID
     private Users assigned;
 

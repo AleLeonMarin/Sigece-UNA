@@ -493,18 +493,24 @@ public class GestionesController extends Controller implements Initializable {
         chkAprobador2.setSelected(false);
         chkAprobador4.setSelected(false);
         chkAprobador6.setSelected(false);
+        chkCursoGestion.setSelected(false);
+        chkEsperaGestion.setSelected(false);
+        chkAprobacionGestion.setSelected(false);
+        chkAprobadaGestion.setSelected(false);
+        chkRechazadaGestion.setSelected(false);
+
     }
 
     // new entity
 
     private void newGestion() {
         unbindGestion();
+        clean();
         gestion = new GestionsDto();
         bindGestion(true);
         txfIDGestion.clear();
         txfIDGestion.requestFocus();
         chkEsperaGestion.setSelected(true);
-        clean();
 
     }
 
@@ -771,6 +777,8 @@ public class GestionesController extends Controller implements Initializable {
             if (gestion.getActivity() != null) {
                 chkActividad.setSelected(true);
                 if (cmbActividades.getItems().contains(gestion.getActivity().getName())) {
+                    cmbActividades.setVisible(true);
+                    cmbActividades.setDisable(false);
                     cmbActividades.getSelectionModel().selectItem(gestion.getActivity().getName());
                 } else {
                     System.out.println(
@@ -779,6 +787,8 @@ public class GestionesController extends Controller implements Initializable {
             } else if (gestion.getSubactivities() != null) {
                 chkSubactividad.setSelected(true);
                 if (cmbSubactividades.getItems().contains(gestion.getSubactivities().getName())) {
+                    cmbSubactividades.setVisible(true);
+                    cmbSubactividades.setDisable(false);
                     cmbSubactividades.getSelectionModel().selectItem(gestion.getSubactivities().getName());
                 } else {
                     System.out.println("La subactividad " + gestion.getSubactivities().getName()
@@ -805,24 +815,32 @@ public class GestionesController extends Controller implements Initializable {
                     case 0:
                         chkAprobador1.setSelected(true);
                         if (cmbAprobador1Gestion.getItems().contains(approverFullName)) {
+                            cmbAprobador1Gestion.setVisible(true);
+                            cmbAprobador1Gestion.setDisable(false);
                             cmbAprobador1Gestion.getSelectionModel().selectItem(approverFullName);
                         }
                         break;
                     case 1:
                         chkAprobador2.setSelected(true);
                         if (cmbAprobador2Gestion.getItems().contains(approverFullName)) {
+                            cmbAprobador2Gestion.setVisible(true);
+                            cmbAprobador2Gestion.setDisable(false);
                             cmbAprobador2Gestion.getSelectionModel().selectItem(approverFullName);
                         }
                         break;
                     case 2:
                         chkAprobador4.setSelected(true);
                         if (cmbAprobador4Gestion.getItems().contains(approverFullName)) {
+                            cmbAprobador4Gestion.setVisible(true);
+                            cmbAprobador4Gestion.setDisable(false);
                             cmbAprobador4Gestion.getSelectionModel().selectItem(approverFullName);
                         }
                         break;
                     case 3:
                         chkAprobador6.setSelected(true);
                         if (cmbAprobador6Gestion.getItems().contains(approverFullName)) {
+                            cmbAprobador6Gestion.setVisible(true);
+                            cmbAprobador6Gestion.setDisable(false);
                             cmbAprobador6Gestion.getSelectionModel().selectItem(approverFullName);
                         }
                         break;

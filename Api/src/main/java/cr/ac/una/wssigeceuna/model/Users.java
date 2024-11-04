@@ -35,43 +35,113 @@ import java.util.List;
 @Entity
 @Table(name = "SIS_USUARIOS", schema = "SigeceUNA")
 @NamedQueries({
-    @NamedQuery(name = "Users.findAll", query = "SELECT s FROM Users s", hints = @QueryHint(name = "eclipselink.refresh", value = "true")),
-    @NamedQuery(name = "Users.findByUserPass", query = "SELECT s FROM Users s LEFT JOIN FETCH s.roles WHERE s.user = :user AND s.password = :password", hints = @QueryHint(name = "eclipselink.refresh", value = "true")),
-    @NamedQuery(name = "Users.findById", query = "SELECT s FROM Users s WHERE s.id = :id"),
-    @NamedQuery(name = "Users.findByMail", query = "SELECT s FROM Users s WHERE s.email = :mail"),
-    @NamedQuery(name = "Users.findByPass", query = "SELECT s FROM Users s WHERE s.password = :password", hints = @QueryHint(name = "eclipselink.refresh", value = "true")), /*
- * @NamedQuery(name = "SisUsuarios.findByUserApellidos", query =
- * "SELECT s FROM SisUsuarios s WHERE s.userApellidos = :userApellidos"),
- * 
- * @NamedQuery(name = "SisUsuarios.findByUserCedula", query =
- * "SELECT s FROM SisUsuarios s WHERE s.userCedula = :userCedula"),
- * 
- * 
- * 
- * @NamedQuery(name = "SisUsuarios.findByUserTelefono", query =
- * "SELECT s FROM SisUsuarios s WHERE s.userTelefono = :userTelefono"),
- * 
- * @NamedQuery(name = "SisUsuarios.findByUserCelular", query =
- * "SELECT s FROM SisUsuarios s WHERE s.userCelular = :userCelular"),
- * 
- * @NamedQuery(name = "SisUsuarios.findByUserIdioma", query =
- * "SELECT s FROM SisUsuarios s WHERE s.userIdioma = :userIdioma"),
- * 
- * @NamedQuery(name = "SisUsuarios.findByUserUsuario", query =
- * "SELECT s FROM SisUsuarios s WHERE s.userUsuario = :userUsuario"),
- * 
- * @NamedQuery(name = "SisUsuarios.findByUserClave", query =
- * "SELECT s FROM SisUsuarios s WHERE s.userClave = :userClave"),
- * 
- * @NamedQuery(name = "SisUsuarios.findByUserEstado", query =
- * "SELECT s FROM SisUsuarios s WHERE s.userEstado = :userEstado"),
- * 
- * @NamedQuery(name = "SisUsuarios.findByUserStatus", query =
- * "SELECT s FROM SisUsuarios s WHERE s.userStatus = :userStatus"),
- * 
- * @NamedQuery(name = "SisUsuarios.findByUserVersion", query =
- * "SELECT s FROM SisUsuarios s WHERE s.userVersion = :userVersion")
- */})
+        @NamedQuery(name = "Users.findAll", query = "SELECT s FROM Users s", hints = @QueryHint(name = "eclipselink.refresh", value = "true")),
+        @NamedQuery(name = "Users.findByUserPass", query = "SELECT s FROM Users s LEFT JOIN FETCH s.roles WHERE s.user = :user AND s.password = :password", hints = @QueryHint(name = "eclipselink.refresh", value = "true")),
+        @NamedQuery(name = "Users.findById", query = "SELECT s FROM Users s WHERE s.id = :id"),
+        @NamedQuery(name = "Users.findByMail", query = "SELECT s FROM Users s WHERE s.email = :mail"),
+        @NamedQuery(name = "Users.findByPass", query = "SELECT s FROM Users s WHERE s.password = :password", hints = @QueryHint(name = "eclipselink.refresh", value = "true")), /*
+                                                                                                                                                                                 * @NamedQuery
+                                                                                                                                                                                 * (
+                                                                                                                                                                                 * name
+                                                                                                                                                                                 * =
+                                                                                                                                                                                 * "SisUsuarios.findByUserApellidos",
+                                                                                                                                                                                 * query
+                                                                                                                                                                                 * =
+                                                                                                                                                                                 * "SELECT s FROM SisUsuarios s WHERE s.userApellidos = :userApellidos"
+                                                                                                                                                                                 * ),
+                                                                                                                                                                                 * 
+                                                                                                                                                                                 * @NamedQuery
+                                                                                                                                                                                 * (
+                                                                                                                                                                                 * name
+                                                                                                                                                                                 * =
+                                                                                                                                                                                 * "SisUsuarios.findByUserCedula",
+                                                                                                                                                                                 * query
+                                                                                                                                                                                 * =
+                                                                                                                                                                                 * "SELECT s FROM SisUsuarios s WHERE s.userCedula = :userCedula"
+                                                                                                                                                                                 * ),
+                                                                                                                                                                                 * 
+                                                                                                                                                                                 * 
+                                                                                                                                                                                 * 
+                                                                                                                                                                                 * @NamedQuery
+                                                                                                                                                                                 * (
+                                                                                                                                                                                 * name
+                                                                                                                                                                                 * =
+                                                                                                                                                                                 * "SisUsuarios.findByUserTelefono",
+                                                                                                                                                                                 * query
+                                                                                                                                                                                 * =
+                                                                                                                                                                                 * "SELECT s FROM SisUsuarios s WHERE s.userTelefono = :userTelefono"
+                                                                                                                                                                                 * ),
+                                                                                                                                                                                 * 
+                                                                                                                                                                                 * @NamedQuery
+                                                                                                                                                                                 * (
+                                                                                                                                                                                 * name
+                                                                                                                                                                                 * =
+                                                                                                                                                                                 * "SisUsuarios.findByUserCelular",
+                                                                                                                                                                                 * query
+                                                                                                                                                                                 * =
+                                                                                                                                                                                 * "SELECT s FROM SisUsuarios s WHERE s.userCelular = :userCelular"
+                                                                                                                                                                                 * ),
+                                                                                                                                                                                 * 
+                                                                                                                                                                                 * @NamedQuery
+                                                                                                                                                                                 * (
+                                                                                                                                                                                 * name
+                                                                                                                                                                                 * =
+                                                                                                                                                                                 * "SisUsuarios.findByUserIdioma",
+                                                                                                                                                                                 * query
+                                                                                                                                                                                 * =
+                                                                                                                                                                                 * "SELECT s FROM SisUsuarios s WHERE s.userIdioma = :userIdioma"
+                                                                                                                                                                                 * ),
+                                                                                                                                                                                 * 
+                                                                                                                                                                                 * @NamedQuery
+                                                                                                                                                                                 * (
+                                                                                                                                                                                 * name
+                                                                                                                                                                                 * =
+                                                                                                                                                                                 * "SisUsuarios.findByUserUsuario",
+                                                                                                                                                                                 * query
+                                                                                                                                                                                 * =
+                                                                                                                                                                                 * "SELECT s FROM SisUsuarios s WHERE s.userUsuario = :userUsuario"
+                                                                                                                                                                                 * ),
+                                                                                                                                                                                 * 
+                                                                                                                                                                                 * @NamedQuery
+                                                                                                                                                                                 * (
+                                                                                                                                                                                 * name
+                                                                                                                                                                                 * =
+                                                                                                                                                                                 * "SisUsuarios.findByUserClave",
+                                                                                                                                                                                 * query
+                                                                                                                                                                                 * =
+                                                                                                                                                                                 * "SELECT s FROM SisUsuarios s WHERE s.userClave = :userClave"
+                                                                                                                                                                                 * ),
+                                                                                                                                                                                 * 
+                                                                                                                                                                                 * @NamedQuery
+                                                                                                                                                                                 * (
+                                                                                                                                                                                 * name
+                                                                                                                                                                                 * =
+                                                                                                                                                                                 * "SisUsuarios.findByUserEstado",
+                                                                                                                                                                                 * query
+                                                                                                                                                                                 * =
+                                                                                                                                                                                 * "SELECT s FROM SisUsuarios s WHERE s.userEstado = :userEstado"
+                                                                                                                                                                                 * ),
+                                                                                                                                                                                 * 
+                                                                                                                                                                                 * @NamedQuery
+                                                                                                                                                                                 * (
+                                                                                                                                                                                 * name
+                                                                                                                                                                                 * =
+                                                                                                                                                                                 * "SisUsuarios.findByUserStatus",
+                                                                                                                                                                                 * query
+                                                                                                                                                                                 * =
+                                                                                                                                                                                 * "SELECT s FROM SisUsuarios s WHERE s.userStatus = :userStatus"
+                                                                                                                                                                                 * ),
+                                                                                                                                                                                 * 
+                                                                                                                                                                                 * @NamedQuery
+                                                                                                                                                                                 * (
+                                                                                                                                                                                 * name
+                                                                                                                                                                                 * =
+                                                                                                                                                                                 * "SisUsuarios.findByUserVersion",
+                                                                                                                                                                                 * query
+                                                                                                                                                                                 * =
+                                                                                                                                                                                 * "SELECT s FROM SisUsuarios s WHERE s.userVersion = :userVersion"
+                                                                                                                                                                                 * )
+                                                                                                                                                                                 */ })
 public class Users implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -138,8 +208,8 @@ public class Users implements Serializable {
     private Long version;
 
     @JoinTable(name = "SIS_APROBADORES", joinColumns = {
-        @JoinColumn(name = "SGU_USER_ID", referencedColumnName = "USER_ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "SGU_GES_ID", referencedColumnName = "GES_ID")})
+            @JoinColumn(name = "SGU_USER_ID", referencedColumnName = "USER_ID") }, inverseJoinColumns = {
+                    @JoinColumn(name = "SGU_GES_ID", referencedColumnName = "GES_ID") })
     @ManyToMany
     private List<Gestions> approvers;
 
@@ -158,10 +228,10 @@ public class Users implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "users")
     private List<Follows> follows;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "requester")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "requester")
     private List<Gestions> gestionRequester;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "assigned")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "assigned")
     private List<Gestions> gestionAssigned;
 
     @JoinColumn(name = "USER_AR_ID", referencedColumnName = "AR_ID")

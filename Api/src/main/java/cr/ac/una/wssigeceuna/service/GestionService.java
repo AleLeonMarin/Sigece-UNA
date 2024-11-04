@@ -116,7 +116,7 @@ public class GestionService {
                 gestionsDto.add(dto);
             }
 
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Gestiones", query.getResultList());
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Gestiones", gestionsDto);
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrió un error al consultar las gestiones.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
@@ -132,14 +132,15 @@ public class GestionService {
             Gestions gestions = (Gestions) query.getSingleResult();
             GestionsDto dto = new GestionsDto(gestions);
 
+            for (Users u : gestions.getApprovers()) {
+                dto.getApprovers().add(new UsersDto(u));
+            }
+
             for (Follows f : gestions.getFollows()) {
                 dto.getFollows().add(new FollowsDto(f));
             }
 
-            for (Users u : gestions.getApprovers()) {
-                dto.getApprovers().add(new UsersDto(u));
-            }
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Gestion", new GestionsDto(gestions));
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Gestion", dto);
         } catch (NoResultException ex) {
             LOG.log(Level.SEVERE, "Gestion no encontrada.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
