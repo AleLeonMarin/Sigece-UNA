@@ -249,6 +249,14 @@ public class ChatsAppController extends Controller implements Initializable {
                         btnEliminar.setStyle("-fx-background-color: red; -fx-text-fill: white;");
                         btnEliminar.setOnAction(event -> onActionEliminarMensaje(mensaje));
 
+                        // Verificar si el mensaje tiene un archivo adjunto
+                        if (mensaje.getArchive() != null && mensaje.getArchive().length > 0) {
+                            Button btnDescargar = new Button("Descargar");
+                            btnDescargar.setStyle("-fx-background-color: green; -fx-text-fill: white;");
+                            btnDescargar.setOnAction(event -> descargarArchivoAdjunto(mensaje.getId()));
+                            hbox.getChildren().add(btnDescargar); // Agregar el botón de descarga al mensaje
+                        }
+
                         Long emisorIdMensaje = mensaje.getUser().getId();
                         if (emisorIdMensaje != null && emisorIdMensaje.equals(idEmisor)) {
                             hbox.setAlignment(Pos.CENTER_RIGHT);
@@ -330,6 +338,12 @@ public class ChatsAppController extends Controller implements Initializable {
         MessagesDto mensajeDto = new MessagesDto();
         mensajeDto.setText(textoMensaje);
 
+
+        if (archivoAdjunto != null) {
+            mensajeDto.setArchive(archivoAdjunto);
+
+        }
+
         UsersDto emisor = new UsersDto();
         UsersDto receptor = new UsersDto();
         receptor.setId(idReceptor);
@@ -342,6 +356,10 @@ public class ChatsAppController extends Controller implements Initializable {
 
         if (respuesta.getEstado()) {
             System.out.println("Mensaje enviado correctamente.");
+
+            archivoAdjunto = null; // Limpiar el archivo adjunto después de enviar
+            nombreArchivoAdjunto = null;
+            txtMensaje.clear();
 
             HBox hbox = new HBox();
             hbox.setPrefWidth(vboxChats.getPrefWidth() - 20);
@@ -491,7 +509,7 @@ public class ChatsAppController extends Controller implements Initializable {
         }
         timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
             actualizarMensajes();
-            actualizarListaDeContactosConChats();
+            //actualizarListaDeContactosConChats();
         }));
         timeline.setCycleCount(Timeline.INDEFINITE); // Ejecutar indefinidamente
         timeline.play();
@@ -568,6 +586,41 @@ public class ChatsAppController extends Controller implements Initializable {
             }
         }
     }
+
+    private void descargarArchivoAdjunto(Long mensajeId) {
+        MensajesService mensajesService = new MensajesService();
+        Respuesta respuesta = mensajesService.descargarArchivo(mensajeId);
+
+        if (!respuesta.getEstado() || respuesta.getResultado("ArchivoAdjunto") == null) {
+            new Mensaje().show(Alert.AlertType.ERROR, bundle.getString("errorDownloadAttachment"), respuesta.getMensaje());
+            return;
+        }
+
+        MessagesDto mensajeDto = (MessagesDto) respuesta.getResultado("ArchivoAdjunto");
+
+        if (mensajeDto == null || mensajeDto.getArchive() == null || mensajeDto.getExtension() == null) {
+            new Mensaje().show(Alert.AlertType.ERROR, bundle.getString("errorDownloadAttachment"), "Archivo no encontrado o datos incompletos.");
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Guardar archivo adjunto");
+        fileChooser.setInitialFileName("adjunto_" + mensajeId + mensajeDto.getExtension());
+        File archivoGuardar = fileChooser.showSaveDialog(this.getStage());
+
+        if (archivoGuardar != null) {
+            try {
+                Files.write(archivoGuardar.toPath(), mensajeDto.getArchive());
+                new Mensaje().show(Alert.AlertType.INFORMATION, bundle.getString("successDownloadAttachment"),
+                        "Archivo descargado: " + archivoGuardar.getAbsolutePath());
+            } catch (IOException e) {
+                new Mensaje().show(Alert.AlertType.ERROR, bundle.getString("errorDownloadAttachment"),
+                        "Error al guardar el archivo: " + e.getMessage());
+            }
+        }
+    }
+
+
 
 }
 

@@ -10,16 +10,18 @@ public class MessagesDto {
 
     public SimpleStringProperty id;
     public SimpleStringProperty text;
-    public SimpleObjectProperty<Serializable> archive;
+    public byte[] archive;
     public SimpleObjectProperty<Date> date;
     public ChatsDto chat;
     public UsersDto user;
     public SimpleLongProperty version;
+    private String extension;
+    private String mimeType;
 
     public MessagesDto() {
         this.id = new SimpleStringProperty("");
         this.text = new SimpleStringProperty("");
-        this.archive = new SimpleObjectProperty<>(null);
+        this.archive = null;
         this.date = new SimpleObjectProperty<>(new Date());
         this.chat = new ChatsDto();
         this.user = new UsersDto();
@@ -46,12 +48,12 @@ public class MessagesDto {
         this.text.set(text);
     }
 
-    public Serializable getArchive() {
-        return archive.get();
+    public byte[] getArchive() {
+        return archive;
     }
 
-    public void setArchive(Serializable archive) {
-        this.archive.set(archive);
+    public void setArchive(byte[] archive) {
+        this.archive = archive;
     }
 
     public Date getDate() {
@@ -91,11 +93,27 @@ public class MessagesDto {
         return "MessagesDto{" +
                 "id=" + id.get() +
                 ", text='" + text.get() + '\'' +
-                ", archive=" + archive.get() +
+                ", archive=" + archive +
                 ", date=" + date.get() +
                 ", chat=" + chat +
                 ", user=" + user +
                 ", version=" + version.get() +
                 '}';
+    }
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public void setExtension(String extension) {
+        this.extension = extension;
+    }
+
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
     }
 }

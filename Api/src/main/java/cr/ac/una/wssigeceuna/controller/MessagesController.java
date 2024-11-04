@@ -85,8 +85,8 @@ public class MessagesController {
                     .build();
         }
     }
-    
-     @GET
+
+    @GET
     @Path("/getByChat/{chatId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Get messages by chat", description = "Get all messages associated with a specific chat")
@@ -110,7 +110,27 @@ public class MessagesController {
                     .build();
         }
     }
-    
-    
+
+    @GET
+    @Path("/download/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Download attachment", description = "Download attachment for the given message ID")
+    public Response descargarArchivoAdjunto(@PathParam("id") Long id) {
+        try {
+            Respuesta res = messagesService.getArchivoAdjunto(id);
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+
+            MessagesDto mensajeDto = (MessagesDto) res.getResultado("ArchivoAdjunto");
+            return Response.ok(mensajeDto).build(); // Devolvemos el MessagesDto completo como JSON
+        } catch (Exception ex) {
+            Logger.getLogger(MessagesController.class.getName()).log(Level.SEVERE,
+                    "Error al descargar el archivo adjunto.", ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue())
+                    .entity("Ocurrió un error al descargar el archivo adjunto.")
+                    .build();
+        }
+    }
 
 }
