@@ -13,6 +13,7 @@ import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.List;
 
 @Path("/messages")
 @Tag(name = "Messages", description = "API to manage messages")
@@ -84,5 +85,32 @@ public class MessagesController {
                     .build();
         }
     }
+    
+     @GET
+    @Path("/getByChat/{chatId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Get messages by chat", description = "Get all messages associated with a specific chat")
+    public Response getMensajesByChat(@PathParam("chatId") Long chatId) {
+        try {
+            Respuesta res = messagesService.getMensajesByChat(chatId);
+
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue())
+                        .entity(res.getMensaje())
+                        .build();
+            }
+
+            List<MessagesDto> mensajes = (List<MessagesDto>) res.getResultado("Mensajes");
+            return Response.ok(mensajes).build();
+        } catch (Exception ex) {
+            Logger.getLogger(MessagesController.class.getName()).log(Level.SEVERE,
+                    "Error al obtener mensajes del chat.", ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue())
+                    .entity("An error occurred while retrieving messages for the chat.")
+                    .build();
+        }
+    }
+    
+    
 
 }

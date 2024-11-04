@@ -1,5 +1,6 @@
 package cr.ac.una.wssigeceuna.model;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,6 +34,8 @@ public class Roles implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     private Systems system;
     
+    
+    @JsonbTransient
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "SIS_ROLES_USUARIOS", joinColumns = @JoinColumn(name = "SRU_ROL_ID", referencedColumnName = "ROL_ID"), inverseJoinColumns = @JoinColumn(name = "SRU_USER_ID", referencedColumnName = "USER_ID"))
     private List<Users> users = new ArrayList<>();

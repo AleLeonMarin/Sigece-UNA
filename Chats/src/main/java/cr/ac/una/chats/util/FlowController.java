@@ -186,7 +186,7 @@ public class FlowController {
         Controller controller = loader.getController();
         controller.initialize();
         Stage stage = new Stage();
-        stage.getIcons().add(new Image("cr/ac/una/chats/resources/chats.jpg"));
+       // stage.getIcons().add(new Image("cr/ac/una/chats/resources/chats.jpg"));
         stage.setResizable(resizable);
         stage.setOnHidden((WindowEvent event) -> {
             controller.getStage().getScene().setRoot(new Pane());

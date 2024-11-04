@@ -98,6 +98,8 @@ public class Messages implements Serializable {
         this.text = sms.getText();
         this.archive = sms.getArchive();
         this.date = sms.getDate();
+        this.user = new Users(sms.getUser());
+        this.chat = new Chats(sms.getChat());
         this.version = sms.getVersion();
     }
 

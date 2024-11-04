@@ -29,8 +29,8 @@ public class ChatsService {
 
     public Respuesta getChat(Long id) {
         try {
-            Query qryChat = em.createNamedQuery("Chats.findById", Chats.class);
-            qryChat.setParameter("chtId", id);
+            Query qryChat = em.createNamedQuery("Chats.findByChtId", Chats.class);
+            qryChat.setParameter("id", id);
 
             Chats chat = (Chats) qryChat.getSingleResult();
             em.refresh(chat);
