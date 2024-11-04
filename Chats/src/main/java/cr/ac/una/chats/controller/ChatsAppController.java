@@ -238,37 +238,95 @@ public class ChatsAppController extends Controller implements Initializable {
             mensajes.stream()
                     .sorted(Comparator.comparing(MessagesDto::getDate))
                     .forEach(mensaje -> {
-                        HBox hbox = new HBox();
-                        Label mensajeLabel = new Label(mensaje.getText());
+                        HBox hbox = new HBox(10); // Contenedor principal para cada mensaje
                         hbox.setPrefWidth(vboxChats.getPrefWidth() - 20);
                         hbox.setMaxWidth(vboxChats.getPrefWidth() - 20);
+
+                        Button btnEliminar = new Button("");
+                        btnEliminar.getStyleClass().add("deletechat-button");
+                        btnEliminar.setOnAction(event -> onActionEliminarMensaje(mensaje));
+
+                        VBox vboxMessageContent = new VBox(5); // Contenedor para la imagen y el texto del mensaje
+                        Label mensajeLabel = new Label(mensaje.getText());
                         mensajeLabel.setWrapText(true);
                         mensajeLabel.setMaxWidth(hbox.getPrefWidth() * 0.75);
 
-                        Button btnEliminar = new Button("Eliminar");
-                        btnEliminar.setStyle("-fx-background-color: red; -fx-text-fill: white;");
-                        btnEliminar.setOnAction(event -> onActionEliminarMensaje(mensaje));
-
-                        // Verificar si el mensaje tiene un archivo adjunto
+                        // Verificar si el mensaje tiene un archivo adjunto y si es una imagen
                         if (mensaje.getArchive() != null && mensaje.getArchive().length > 0) {
-                            Button btnDescargar = new Button("Descargar");
-                            btnDescargar.setStyle("-fx-background-color: green; -fx-text-fill: white;");
+                            MensajesService mensajesService = new MensajesService();
+                            Respuesta respuesta = mensajesService.descargarArchivo(mensaje.getId());
+
+                            if (!respuesta.getEstado() || respuesta.getResultado("ArchivoAdjunto") == null) {
+                                new Mensaje().show(Alert.AlertType.ERROR, bundle.getString("errorDownloadAttachment"), respuesta.getMensaje());
+                                return;
+                            }
+
+                            MessagesDto mensajeDto = (MessagesDto) respuesta.getResultado("ArchivoAdjunto");
+
+                            //comprobaciones para el tipo de archivo
+                            if (Objects.equals(mensajeDto.getExtension(), ".png")) {
+                                ImageView imageView = new ImageView(new Image(new ByteArrayInputStream(mensajeDto.getArchive())));
+                                imageView.setFitWidth(100);
+                                imageView.setPreserveRatio(true);
+
+                                vboxMessageContent.getChildren().add(imageView); // Agrega la imagen en la parte superior del VBox
+                            }
+
+                            if (Objects.equals(mensajeDto.getExtension(), ".pdf")) {
+                                ImageView imageView = new ImageView(new Image("/cr/ac/una/chats/resources/pdf.png"));
+                                imageView.setFitWidth(100);
+                                imageView.setPreserveRatio(true);
+
+                                vboxMessageContent.getChildren().add(imageView); // Agrega la imagen en la parte superior del VBox
+                            }
+
+                            if (Objects.equals(mensajeDto.getExtension(), ".docx")) {
+                                ImageView imageView = new ImageView(new Image("/cr/ac/una/chats/resources/word.png"));
+                                imageView.setFitWidth(100);
+                                imageView.setPreserveRatio(true);
+
+                                vboxMessageContent.getChildren().add(imageView); // Agrega la imagen en la parte superior del VBox
+                            }
+
+                            if (Objects.equals(mensajeDto.getExtension(), ".xlsx")) {
+                                ImageView imageView = new ImageView(new Image("/cr/ac/una/chats/resources/sheets.png"));
+                                imageView.setFitWidth(100);
+                                imageView.setPreserveRatio(true);
+
+                                vboxMessageContent.getChildren().add(imageView); // Agrega la imagen en la parte superior del VBox
+                            }
+
+                            if (Objects.equals(mensajeDto.getExtension(), ".pptx")) {
+                                ImageView imageView = new ImageView(new Image("/cr/ac/una/chats/resources/ppt.png"));
+                                imageView.setFitWidth(100);
+                                imageView.setPreserveRatio(true);
+
+                                vboxMessageContent.getChildren().add(imageView); // Agrega la imagen en la parte superior del VBox
+                            }
+
+
+
+                            // Añadir botón de descarga si hay archivo adjunto
+                            Button btnDescargar = new Button("");
+                            btnDescargar.getStyleClass().add("download-button");
                             btnDescargar.setOnAction(event -> descargarArchivoAdjunto(mensaje.getId()));
-                            hbox.getChildren().add(btnDescargar); // Agregar el botón de descarga al mensaje
+                            hbox.getChildren().add(btnDescargar);
                         }
+
+                        vboxMessageContent.getChildren().add(mensajeLabel); // Agrega el mensaje debajo de la imagen si existe
 
                         Long emisorIdMensaje = mensaje.getUser().getId();
                         if (emisorIdMensaje != null && emisorIdMensaje.equals(idEmisor)) {
                             hbox.setAlignment(Pos.CENTER_RIGHT);
                             mensajeLabel.setStyle("-fx-background-color: #2390b8; -fx-padding: 10px; -fx-background-radius: 10px;");
-                            hbox.getChildren().addAll(mensajeLabel, btnEliminar);
                         } else {
                             hbox.setAlignment(Pos.CENTER_LEFT);
                             mensajeLabel.setStyle("-fx-background-color: lightgray; -fx-padding: 10px; -fx-background-radius: 10px;");
-                            hbox.getChildren().addAll(mensajeLabel, btnEliminar);
                         }
 
-                        vboxChats.getChildren().add(hbox);
+                        hbox.getChildren().addAll(btnEliminar, vboxMessageContent); // Agregar botón de eliminar y contenido del mensaje al HBox
+
+                        vboxChats.getChildren().add(hbox); // Agregar el HBox al VBox principal
                     });
         } else {
             Label noMessagesLabel = new Label("No hay mensajes en este chat.");
@@ -276,6 +334,7 @@ public class ChatsAppController extends Controller implements Initializable {
             vboxChats.getChildren().add(noMessagesLabel);
         }
     }
+
 
 
 
@@ -305,7 +364,6 @@ public class ChatsAppController extends Controller implements Initializable {
             List<ChatsDto> chatsExistentes = (List<ChatsDto>) respuestaChatExistente.getResultado("Chats");
 
             if (chatsExistentes != null && !chatsExistentes.isEmpty()) {
-                // Si existe un chat, utilizar el primero de la lista
                 currentChat = chatsExistentes.get(0);
                 System.out.println("Chat existente encontrado. Usando el chat con ID: " + currentChat.getId());
             } else {
@@ -507,7 +565,7 @@ public class ChatsAppController extends Controller implements Initializable {
         if (timeline != null) {
             timeline.stop(); // Detener cualquier actualización previa antes de iniciar una nueva
         }
-        timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
+        timeline = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
             actualizarMensajes();
             //actualizarListaDeContactosConChats();
         }));

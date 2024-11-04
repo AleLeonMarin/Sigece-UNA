@@ -1103,4 +1103,59 @@
     -fx-background-image: url("../resources/costa-rica.png");
 }
 
+.download-button {
+    -fx-background-image: url("../resources/descargar.png"); /* Cambia el nombre de la imagen si es necesario */
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 30px 30px; /* Ajusta el tamaño de la imagen dentro del botón */
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 10, 0, 0, 2);
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-min-width: 50px; /* Ancho mínimo del botón */
+    -fx-min-height: 50px; /* Alto mínimo del botón */
+    -fx-max-width: 50px; /* Ancho máximo del botón */
+    -fx-max-height: 50px; /* Alto máximo del botón */
+}
+
+.download-button:hover,
+.download-button:pressed,
+.download-button:armed,
+.download-button:focused {
+    -fx-background-image: url("../resources/descargar.png"); /* Cambia la imagen para hover si tienes otra */
+    -fx-background-color: #f0f0f0; /* Color de fondo al interactuar */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.9), 10, 0, 0, 2);
+}
+
+
+.deletechat-button {
+    -fx-background-image: url("../resources/borrar.png"); /* Cambia el nombre de la imagen si es necesario */
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 30px 30px; /* Ajusta el tamaño de la imagen dentro del botón */
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 10, 0, 0, 2);
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-min-width: 50px; /* Ancho mínimo del botón */
+    -fx-min-height: 50px; /* Alto mínimo del botón */
+    -fx-max-width: 50px; /* Ancho máximo del botón */
+    -fx-max-height: 50px; /* Alto máximo del botón */
+}
+
+.deletechat-button:hover,
+.deletechat-button:pressed,
+.deletechat-button:armed,
+.deletechat-button:focused {
+    -fx-background-image: url("../resources/borrar.png"); /* Cambia la imagen para hover si tienes otra */
+    -fx-background-color: #f0f0f0; /* Color de fondo al interactuar */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.9), 10, 0, 0, 2);
+}
+
 
