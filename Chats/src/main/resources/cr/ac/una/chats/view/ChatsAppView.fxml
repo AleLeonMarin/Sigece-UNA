@@ -97,7 +97,7 @@
                                     </ImageView>
                                  </graphic>
                               </MFXButton>
-                              <MFXButton fx:id="btnVoiceRecorder" onAction="#onActionBtnVoiceRecorder" prefHeight="40.0" prefWidth="33.0" styleClass="button-redStyle" text=" ">
+                              <MFXButton fx:id="btnVoiceRecorder" onAction="#onActionBtnVoiceRecorder" prefHeight="40.0" prefWidth="33.0" styleClass="button-redStyle" text="Iniciar Grabación">
                                  <graphic>
                                     <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                        <image>

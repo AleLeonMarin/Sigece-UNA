@@ -1,6 +1,7 @@
 package cr.ac.una.chats.controller;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -666,56 +667,114 @@ public class ChatsAppController extends Controller implements Initializable {
         }
     }
 
+    private volatile boolean grabando = false;
+    private TargetDataLine line;
+    private File audioFile;
+    private byte[] audioAdjunto;
+
     @FXML
     void onActionBtnVoiceRecorder(ActionEvent event) {
-        if (btnVoiceRecorder.getText().equals("Iniciar Grabación")) {
-            iniciarGrabacion();
-            btnVoiceRecorder.setText("Detener Grabación");
+        if (!grabando) {
+            grabando = true;
+            btnVoiceRecorder.setText("Detener");
+            new Thread(this::iniciarGrabacion).start();
         } else {
             detenerGrabacion();
-            btnVoiceRecorder.setText("Iniciar Grabación");
+            grabando = false;
+            btnVoiceRecorder.setText("Grabar");
         }
     }
 
-    private TargetDataLine line;
-    private File audioFile;
-
     private void iniciarGrabacion() {
+        AudioFormat format = new AudioFormat(8000, 8, 1, true, true); // 8000 Hz, 8 bits, 1 canal (mono)
+        DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+
+        if (!AudioSystem.isLineSupported(info)) {
+            System.out.println("Línea no soportada");
+            return;
+        }
+
         try {
-            AudioFormat format = new AudioFormat(16000, 8, 2, true, true);
-            DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
-            if (!AudioSystem.isLineSupported(info)) {
-                System.out.println("Formato no soportado");
-                return;
-            }
             line = (TargetDataLine) AudioSystem.getLine(info);
             line.open(format);
             line.start();
 
-            audioFile = new File("audioMensaje.wav"); // Guardar como WAV temporalmente
-
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
             AudioInputStream ais = new AudioInputStream(line);
-            AudioSystem.write(ais, AudioFileFormat.Type.WAVE, audioFile);
 
-            System.out.println("Grabación iniciada...");
+            // Escribir datos de audio en un hilo separado
+            new Thread(() -> {
+                try {
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while (grabando && (bytesRead = ais.read(buffer)) != -1) {
+                        out.write(buffer, 0, bytesRead);
+                    }
+                    out.flush();
+                    audioAdjunto = out.toByteArray(); // Guardar el audio en un byte array
+                    System.out.println("Grabación completada.");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void detenerGrabacion() {
-        line.stop();
-        line.close();
-        System.out.println("Grabación detenida. Archivo guardado en: " + audioFile.getAbsolutePath());
-
-        try {
-            archivoAdjunto = Files.readAllBytes(audioFile.toPath());
-            nombreArchivoAdjunto = audioFile.getName();
-            new Mensaje().show(Alert.AlertType.INFORMATION, bundle.getString("infoTitle"), "Audio grabado y adjuntado: " + nombreArchivoAdjunto);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (line != null && grabando) {
+            grabando = false;
+            line.stop();
+            line.close();
+            System.out.println("Grabación detenida.");
         }
     }
+
+    // Enviar el audio como adjunto en el mensaje
+    private void enviarAudio() {
+        if (audioAdjunto != null) {
+            MessagesDto mensajeDto = new MessagesDto();
+            mensajeDto.setArchive(audioAdjunto); // Adjuntar el audio grabado
+            mensajeDto.setExtension(".wav"); // Especificar la extensión
+
+            // Enviar el mensaje como cualquier otro mensaje
+            MensajesService mensajesService = new MensajesService();
+            Respuesta respuesta = mensajesService.guardarMensaje(mensajeDto);
+
+            if (respuesta.getEstado()) {
+                System.out.println("Audio enviado correctamente.");
+            } else {
+                System.out.println("Error enviando el audio: " + respuesta.getMensaje());
+            }
+        } else {
+            System.out.println("No hay audio para enviar.");
+        }
+    }
+
+    // Reproducir el audio grabado en la aplicación
+    private void reproducirAudio() {
+        if (audioAdjunto != null) {
+            try {
+                // Convertir el byte[] de audio a un AudioInputStream
+                ByteArrayInputStream bais = new ByteArrayInputStream(audioAdjunto);
+                AudioInputStream ais = new AudioInputStream(bais, new AudioFormat(8000, 8, 1, true, true), audioAdjunto.length);
+
+                // Crear un clip de audio y reproducirlo
+                Clip clip = AudioSystem.getClip();
+                clip.open(ais);
+                clip.start();
+                System.out.println("Reproduciendo audio...");
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Error al reproducir el audio.");
+            }
+        } else {
+            System.out.println("No hay audio para reproducir.");
+        }
+    }
+
 }
 
 
