@@ -39,6 +39,8 @@ import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import javafx.util.Duration;
 
+import javax.sound.sampled.*;
+
 public class ChatsAppController extends Controller implements Initializable {
 
     @FXML
@@ -75,6 +77,9 @@ public class ChatsAppController extends Controller implements Initializable {
 
     @FXML
     private MFXTextField txtEstado;
+
+    @FXML
+    private MFXButton btnVoiceRecorder;
 
     ResourceBundle bundle;
 
@@ -242,89 +247,70 @@ public class ChatsAppController extends Controller implements Initializable {
                         hbox.setPrefWidth(vboxChats.getPrefWidth() - 20);
                         hbox.setMaxWidth(vboxChats.getPrefWidth() - 20);
 
-                        Button btnEliminar = new Button("");
-                        btnEliminar.getStyleClass().add("deletechat-button");
-                        btnEliminar.setOnAction(event -> onActionEliminarMensaje(mensaje));
-
-                        VBox vboxMessageContent = new VBox(5); // Contenedor para la imagen y el texto del mensaje
                         Label mensajeLabel = new Label(mensaje.getText());
                         mensajeLabel.setWrapText(true);
                         mensajeLabel.setMaxWidth(hbox.getPrefWidth() * 0.75);
 
-                        // Verificar si el mensaje tiene un archivo adjunto y si es una imagen
+                        VBox vboxMessageContent = new VBox(5); // Contenedor para imagen y texto del mensaje
+                        vboxMessageContent.getChildren().add(mensajeLabel);
+
+                        // Si el mensaje tiene archivo adjunto, agregamos una imagen según el tipo
+                        Button btnDescargar = null;
                         if (mensaje.getArchive() != null && mensaje.getArchive().length > 0) {
+                            ImageView imageView = new ImageView();
                             MensajesService mensajesService = new MensajesService();
                             Respuesta respuesta = mensajesService.descargarArchivo(mensaje.getId());
 
-                            if (!respuesta.getEstado() || respuesta.getResultado("ArchivoAdjunto") == null) {
-                                new Mensaje().show(Alert.AlertType.ERROR, bundle.getString("errorDownloadAttachment"), respuesta.getMensaje());
-                                return;
-                            }
-
-                            MessagesDto mensajeDto = (MessagesDto) respuesta.getResultado("ArchivoAdjunto");
-
-                            //comprobaciones para el tipo de archivo
-                            if (Objects.equals(mensajeDto.getExtension(), ".png")) {
-                                ImageView imageView = new ImageView(new Image(new ByteArrayInputStream(mensajeDto.getArchive())));
+                            if (respuesta.getEstado() && respuesta.getResultado("ArchivoAdjunto") != null) {
+                                MessagesDto mensajeDto = (MessagesDto) respuesta.getResultado("ArchivoAdjunto");
+                                String extension = mensajeDto.getExtension();
+                                if (extension.equals(".png")) {
+                                    imageView.setImage(new Image(new ByteArrayInputStream(mensajeDto.getArchive())));
+                                } else if (extension.equals(".pdf")) {
+                                    imageView.setImage(new Image("/cr/ac/una/chats/resources/pdf.png"));
+                                } else if (extension.equals(".docx")) {
+                                    imageView.setImage(new Image("/cr/ac/una/chats/resources/word.png"));
+                                } else if (extension.equals(".xlsx")) {
+                                    imageView.setImage(new Image("/cr/ac/una/chats/resources/sheets.png"));
+                                } else if (extension.equals(".pptx")) {
+                                    imageView.setImage(new Image("/cr/ac/una/chats/resources/ppt.png"));
+                                }
                                 imageView.setFitWidth(100);
                                 imageView.setPreserveRatio(true);
-
-                                vboxMessageContent.getChildren().add(imageView); // Agrega la imagen en la parte superior del VBox
+                                vboxMessageContent.getChildren().add(0, imageView); // Imagen encima del texto
                             }
 
-                            if (Objects.equals(mensajeDto.getExtension(), ".pdf")) {
-                                ImageView imageView = new ImageView(new Image("/cr/ac/una/chats/resources/pdf.png"));
-                                imageView.setFitWidth(100);
-                                imageView.setPreserveRatio(true);
-
-                                vboxMessageContent.getChildren().add(imageView); // Agrega la imagen en la parte superior del VBox
-                            }
-
-                            if (Objects.equals(mensajeDto.getExtension(), ".docx")) {
-                                ImageView imageView = new ImageView(new Image("/cr/ac/una/chats/resources/word.png"));
-                                imageView.setFitWidth(100);
-                                imageView.setPreserveRatio(true);
-
-                                vboxMessageContent.getChildren().add(imageView); // Agrega la imagen en la parte superior del VBox
-                            }
-
-                            if (Objects.equals(mensajeDto.getExtension(), ".xlsx")) {
-                                ImageView imageView = new ImageView(new Image("/cr/ac/una/chats/resources/sheets.png"));
-                                imageView.setFitWidth(100);
-                                imageView.setPreserveRatio(true);
-
-                                vboxMessageContent.getChildren().add(imageView); // Agrega la imagen en la parte superior del VBox
-                            }
-
-                            if (Objects.equals(mensajeDto.getExtension(), ".pptx")) {
-                                ImageView imageView = new ImageView(new Image("/cr/ac/una/chats/resources/ppt.png"));
-                                imageView.setFitWidth(100);
-                                imageView.setPreserveRatio(true);
-
-                                vboxMessageContent.getChildren().add(imageView); // Agrega la imagen en la parte superior del VBox
-                            }
-
-
-
-                            // Añadir botón de descarga si hay archivo adjunto
-                            Button btnDescargar = new Button("");
+                            // Crear botón de descarga
+                            btnDescargar = new Button("");
                             btnDescargar.getStyleClass().add("download-button");
                             btnDescargar.setOnAction(event -> descargarArchivoAdjunto(mensaje.getId()));
-                            hbox.getChildren().add(btnDescargar);
                         }
 
-                        vboxMessageContent.getChildren().add(mensajeLabel); // Agrega el mensaje debajo de la imagen si existe
+                        // Crear botón de eliminar
+                        Button btnEliminar = new Button("");
+                        btnEliminar.getStyleClass().add("deletechat-button");
+                        btnEliminar.setOnAction(event -> onActionEliminarMensaje(mensaje));
 
                         Long emisorIdMensaje = mensaje.getUser().getId();
+
+                        // Configurar orden y alineación según emisor o receptor
                         if (emisorIdMensaje != null && emisorIdMensaje.equals(idEmisor)) {
                             hbox.setAlignment(Pos.CENTER_RIGHT);
-                            mensajeLabel.setStyle("-fx-background-color: #2390b8; -fx-padding: 10px; -fx-background-radius: 10px;");
+                            mensajeLabel.getStyleClass().add("chat-bubble-emisor");
+                            if (btnDescargar != null) {
+                                hbox.getChildren().addAll(btnDescargar, btnEliminar, vboxMessageContent); // Emisor: descargar - eliminar - mensaje
+                            } else {
+                                hbox.getChildren().addAll(btnEliminar, vboxMessageContent); // Si no hay descarga, solo eliminar - mensaje
+                            }
                         } else {
                             hbox.setAlignment(Pos.CENTER_LEFT);
-                            mensajeLabel.setStyle("-fx-background-color: lightgray; -fx-padding: 10px; -fx-background-radius: 10px;");
+                            mensajeLabel.getStyleClass().add("chat-bubble-receptor");
+                            if (btnDescargar != null) {
+                                hbox.getChildren().addAll(vboxMessageContent, btnEliminar, btnDescargar); // Receptor: mensaje - eliminar - descargar
+                            } else {
+                                hbox.getChildren().addAll(vboxMessageContent, btnEliminar); // Si no hay descarga, solo mensaje - eliminar
+                            }
                         }
-
-                        hbox.getChildren().addAll(btnEliminar, vboxMessageContent); // Agregar botón de eliminar y contenido del mensaje al HBox
 
                         vboxChats.getChildren().add(hbox); // Agregar el HBox al VBox principal
                     });
@@ -334,6 +320,9 @@ public class ChatsAppController extends Controller implements Initializable {
             vboxChats.getChildren().add(noMessagesLabel);
         }
     }
+
+
+
 
 
 
@@ -396,10 +385,8 @@ public class ChatsAppController extends Controller implements Initializable {
         MessagesDto mensajeDto = new MessagesDto();
         mensajeDto.setText(textoMensaje);
 
-
         if (archivoAdjunto != null) {
             mensajeDto.setArchive(archivoAdjunto);
-
         }
 
         UsersDto emisor = new UsersDto();
@@ -419,7 +406,7 @@ public class ChatsAppController extends Controller implements Initializable {
             nombreArchivoAdjunto = null;
             txtMensaje.clear();
 
-            HBox hbox = new HBox();
+            HBox hbox = new HBox(10); // Espaciado entre elementos
             hbox.setPrefWidth(vboxChats.getPrefWidth() - 20);
             hbox.setMaxWidth(vboxChats.getPrefWidth() - 20);
             hbox.setAlignment(Pos.CENTER_RIGHT);
@@ -427,13 +414,13 @@ public class ChatsAppController extends Controller implements Initializable {
             Label mensajeLabel = new Label(textoMensaje);
             mensajeLabel.setWrapText(true);
             mensajeLabel.setMaxWidth(hbox.getPrefWidth() * 0.75);
-            mensajeLabel.setStyle("-fx-background-color: #2390b8; -fx-padding: 10px; -fx-background-radius: 10px;");
+            mensajeLabel.getStyleClass().add("chat-bubble-emisor"); // Aplicar estilo de burbuja del emisor
 
-            Button btnEliminar = new Button("Eliminar");
-            btnEliminar.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+            Button btnEliminar = new Button("");
+            btnEliminar.getStyleClass().add("deletechat-button");
             btnEliminar.setOnAction(e -> onActionEliminarMensaje(mensajeDto));
 
-            hbox.getChildren().addAll(mensajeLabel, btnEliminar);
+            hbox.getChildren().addAll(btnEliminar,mensajeLabel );
 
             vboxChats.getChildren().add(hbox);
 
@@ -442,6 +429,7 @@ public class ChatsAppController extends Controller implements Initializable {
             System.out.println("Error enviando el mensaje: " + respuesta.getMensaje());
         }
     }
+
 
 
 
@@ -678,7 +666,60 @@ public class ChatsAppController extends Controller implements Initializable {
         }
     }
 
+    @FXML
+    void onActionBtnVoiceRecorder(ActionEvent event) {
+        if (btnVoiceRecorder.getText().equals("Iniciar Grabación")) {
+            iniciarGrabacion();
+            btnVoiceRecorder.setText("Detener Grabación");
+        } else {
+            detenerGrabacion();
+            btnVoiceRecorder.setText("Iniciar Grabación");
+        }
+    }
 
+    private TargetDataLine line;
+    private File audioFile;
 
+    private void iniciarGrabacion() {
+        try {
+            AudioFormat format = new AudioFormat(16000, 8, 2, true, true);
+            DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+            if (!AudioSystem.isLineSupported(info)) {
+                System.out.println("Formato no soportado");
+                return;
+            }
+            line = (TargetDataLine) AudioSystem.getLine(info);
+            line.open(format);
+            line.start();
+
+            audioFile = new File("audioMensaje.wav"); // Guardar como WAV temporalmente
+
+            AudioInputStream ais = new AudioInputStream(line);
+            AudioSystem.write(ais, AudioFileFormat.Type.WAVE, audioFile);
+
+            System.out.println("Grabación iniciada...");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void detenerGrabacion() {
+        line.stop();
+        line.close();
+        System.out.println("Grabación detenida. Archivo guardado en: " + audioFile.getAbsolutePath());
+
+        try {
+            archivoAdjunto = Files.readAllBytes(audioFile.toPath());
+            nombreArchivoAdjunto = audioFile.getName();
+            new Mensaje().show(Alert.AlertType.INFORMATION, bundle.getString("infoTitle"), "Audio grabado y adjuntado: " + nombreArchivoAdjunto);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
+
+
+
+
 
