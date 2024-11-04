@@ -9,11 +9,11 @@ import java.util.Date;
 import java.util.List;
 
 @JsonbPropertyOrder({
-        "id",
-        "date",
-        "receptor",
-        "emisor",
-        "version"
+    "id",
+    "date",
+    "receptor",
+    "emisor",
+    "version"
 })
 
 @Schema(description = "Esta clase contiene la informacion de los chats")
@@ -25,17 +25,18 @@ public class ChatsDto implements Serializable {
     @Schema(description = "Fecha del chat", example = "2021-09-01")
     private Date date;
 
+    @JsonbTransient
     @Schema(description = "Receptor del chat")
     private Users receptor;
 
+    @JsonbTransient
     @Schema(description = "Emisor del chat")
     private Users emisor;
 
     @Schema(description = "Version del chat", example = "1")
     private Long version;
 
-    @JsonbTransient
-    List<MessagesDto> messages;
+    private List<MessagesDto> messages;
 
     public ChatsDto() {
         messages = new ArrayList<>();
@@ -49,12 +50,16 @@ public class ChatsDto implements Serializable {
         this.emisor = chats.getEmisor();
         this.version = chats.getVersion();
         
-         if (chats.getMessages() != null) {
-            this.messages= new ArrayList<>();
-            for (Messages mensaje : chats.getMessages()) {
-                this.messages.add(new MessagesDto(mensaje)); 
-            }
+           if (chats.getMessages() != null) {
+        this.messages = new ArrayList<>();
+        for (Messages message : chats.getMessages()) {
+            MessagesDto messageDto = new MessagesDto();
+            messageDto.setId(message.getId());
+            messageDto.setText(message.getText());
+            this.messages.add(messageDto);
         }
+    }
+           
     }
 
     public Long getId() {

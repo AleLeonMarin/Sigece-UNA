@@ -24,9 +24,9 @@
                <children>
                   <VBox alignment="CENTER" prefHeight="649.0" prefWidth="255.0">
                      <children>
-                        <ImageView fitHeight="48.0" fitWidth="218.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="100.0" fitWidth="243.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../resources/img.png" />
+                              <Image url="@../resources/Captura%20de%20pantalla%202024-11-03%20130735.png" />
                            </image>
                         </ImageView>
                         <TableView fx:id="tbvContactos" prefHeight="386.0" prefWidth="255.0">

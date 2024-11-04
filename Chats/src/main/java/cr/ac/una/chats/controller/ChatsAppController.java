@@ -75,6 +75,8 @@ public class ChatsAppController extends Controller implements Initializable {
         idEmisor = obtenerIdEmisorActual();
         cargarUsuarios();
 
+        txtEstado.setText(((UsersDto) AppContext.getInstance().get("UsuarioActual")).getStatus());
+
         tbvContactos.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 cargarChatConUsuario(newValue.getId());
@@ -196,7 +198,18 @@ public class ChatsAppController extends Controller implements Initializable {
             List<ChatsDto> chats = (List<ChatsDto>) respuesta.getResultado("Chats");
             if (chats != null && !chats.isEmpty()) {
                 currentChat = chats.get(0);
-                mostrarMensajesDelChat(currentChat.getMessages());
+
+                // Realizar una consulta específica para obtener los mensajes del chat
+                MensajesService mensajesService = new MensajesService();
+                Respuesta respuestaMensajes = mensajesService.getMensajesByChat(currentChat.getId());
+
+                if (respuestaMensajes.getEstado()) {
+                    List<MessagesDto> mensajes = (List<MessagesDto>) respuestaMensajes.getResultado("Mensajes");
+                    currentChat.setMessages(mensajes);
+                    mostrarMensajesDelChat(mensajes);
+                } else {
+                    System.out.println("Error obteniendo los mensajes: " + respuestaMensajes.getMensaje());
+                }
             } else {
                 Label noChatLabel = new Label("No hay un chat con este usuario, se creará cuando envíes un mensaje.");
                 noChatLabel.setStyle("-fx-text-fill: gray; -fx-font-size: 14px;");
@@ -206,6 +219,7 @@ public class ChatsAppController extends Controller implements Initializable {
             System.out.println("Error obteniendo los chats: " + respuesta.getMensaje());
         }
     }
+
 
     private void mostrarMensajesDelChat(List<MessagesDto> mensajes) {
         vboxChats.getChildren().clear();
@@ -294,8 +308,8 @@ public class ChatsAppController extends Controller implements Initializable {
             UsersDto emisor = new UsersDto();
             UsersDto receptor = new UsersDto();
 
-            emisor.setUser(obtenerIdEmisorActual().toString());
-            receptor.setUser(idReceptor.toString());
+            emisor.setId(obtenerIdEmisorActual());
+            receptor.setId(idReceptor);
 
             nuevoChat.setEmisor(emisor);
             nuevoChat.setReceptor(receptor);
@@ -315,8 +329,8 @@ public class ChatsAppController extends Controller implements Initializable {
 
         UsersDto emisor = new UsersDto();
         UsersDto receptor = new UsersDto();
-        receptor.setUser(idReceptor.toString());
-        emisor.setUser(obtenerIdEmisorActual().toString());
+        receptor.setId(idReceptor);
+        emisor.setId(obtenerIdEmisorActual());
         mensajeDto.setUser(emisor);
         mensajeDto.setChat(currentChat);
 

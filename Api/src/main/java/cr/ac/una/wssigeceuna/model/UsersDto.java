@@ -87,8 +87,6 @@ public class UsersDto implements Serializable {
 
     public AreasDto areas;
 
-    @JsonbTransient
-    public List<ChatsDto> chats;
 
     @JsonbTransient
     public List<MessagesDto> messages;
@@ -107,7 +105,6 @@ public class UsersDto implements Serializable {
         this.modified = false;
         this.roles = new ArrayList<>();
         this.eliminatedRoles = new ArrayList<>();
-        this.chats = new ArrayList<>();
         this.messages = new ArrayList<>();
         this.follows = new ArrayList<>();
         this.gestions = new ArrayList<>();
@@ -275,14 +272,6 @@ public class UsersDto implements Serializable {
 
     public void setAreas(AreasDto areas) {
         this.areas = areas;
-    }
-
-    public List<ChatsDto> getChats() {
-        return chats;
-    }
-
-    public void setChats(List<ChatsDto> chats) {
-        this.chats = chats;
     }
 
     public List<MessagesDto> getMessages() {

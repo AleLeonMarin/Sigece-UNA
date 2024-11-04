@@ -16,6 +16,8 @@ import cr.ac.una.wssigeceuna.model.MessagesDto;
 import cr.ac.una.wssigeceuna.util.CodigoRespuesta;
 import cr.ac.una.wssigeceuna.util.Respuesta;
 
+import cr.ac.una.wssigeceuna.model.Chats;
+
 @Stateless
 @LocalBean
 public class MessagesService {
@@ -40,11 +42,11 @@ public class MessagesService {
         }
     }
 
-    public Respuesta getMensajesByChat(Long chat) {
+    public Respuesta getMensajesByChat(Long chatId) {
         try {
-            Query qryMensajes = em.createNamedQuery("Mensajes.findByChat", Messages.class);
-            qryMensajes.setParameter("chat", chat);
-            em.refresh(chat);
+            Query qryMensajes = em.createNamedQuery("Messages.findByChat", Messages.class);
+            qryMensajes.setParameter("chat", chatId);
+
             List<Messages> sms = qryMensajes.getResultList();
             List<MessagesDto> smsDto = new ArrayList<>();
             for (Messages message : sms) {
@@ -64,32 +66,49 @@ public class MessagesService {
 
     public Respuesta saveMessage(MessagesDto sms) {
         try {
+
+            if (sms.getChat() == null || sms.getChat().getId() == null) {
+                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
+                        "El mensaje debe pertenecer a un chat existente con un ID válido.", "saveMessage ChatIDNullException");
+            }
+
+            Chats chat = em.find(Chats.class, sms.getChat().getId());
+            if (chat == null) {
+                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
+                        "No se encontró el chat asociado al mensaje.", "saveMessage ChatNotFoundException");
+            }
+
             Messages mensaje;
             if (sms.getId() != null && sms.getId() > 0) {
+
                 mensaje = em.find(Messages.class, sms.getId());
                 if (mensaje == null) {
                     return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
-                            "No se encontró el mensaje a modificar.", "guardarMensaje NoResultException");
+                            "No se encontró el mensaje a modificar.", "saveMessage MessageNotFoundException");
                 }
                 mensaje.update(sms);
+                mensaje.setChat(chat);
                 mensaje = em.merge(mensaje);
             } else {
+
                 mensaje = new Messages(sms);
+                mensaje.setChat(chat);
                 em.persist(mensaje);
             }
+
             em.flush();
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Mensaje", new MessagesDto(mensaje));
         } catch (jakarta.validation.ConstraintViolationException ex) {
             ex.getConstraintViolations().forEach(violation -> {
                 LOG.log(Level.SEVERE, "Validation error in field {0}: {1}",
-                        new Object[] { violation.getPropertyPath(), violation.getMessage() });
+                        new Object[]{violation.getPropertyPath(), violation.getMessage()});
             });
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error de validación al guardar el mensaje.",
-                    "guardarMensaje " + ex.getMessage());
+                    "saveMessage " + ex.getMessage());
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrió un error al guardar el mensaje.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al guardar el mensaje.",
-                    "guardarMensaje " + ex.getMessage());
+                    "saveMessage " + ex.getMessage());
         }
     }
 

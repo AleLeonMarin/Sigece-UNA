@@ -1,5 +1,6 @@
 package cr.ac.una.wssigeceuna.model;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class Systems implements Serializable {
     @Column(name = "SIS_VERSION")
     private Long version;
 
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "system", fetch = FetchType.LAZY)
     private List<Roles> roles = new ArrayList<>();
 

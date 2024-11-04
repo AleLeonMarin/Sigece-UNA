@@ -216,12 +216,6 @@ public class Users implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users")
     private List<Roles> roles;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "receptor")
-    private List<Chats> chatsReceptor;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "emisor")
-    private List<Chats> chatsEmisor;
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Messages> messagesEmisor;
 
@@ -244,8 +238,6 @@ public class Users implements Serializable {
     public Users() {
 
         roles = new ArrayList<>();
-        chatsReceptor = new ArrayList<>();
-        chatsEmisor = new ArrayList<>();
         messagesEmisor = new ArrayList<>();
         follows = new ArrayList<>();
         gestionRequester = new ArrayList<>();
@@ -402,21 +394,7 @@ public class Users implements Serializable {
         this.roles = roles;
     }
 
-    public List<Chats> getChatsReceptor() {
-        return chatsReceptor;
-    }
 
-    public void setChatsReceptor(List<Chats> chatsReceptor) {
-        this.chatsReceptor = chatsReceptor;
-    }
-
-    public List<Chats> getChatsEmisor() {
-        return chatsEmisor;
-    }
-
-    public void setChatsEmisor(List<Chats> chatsEmisor) {
-        this.chatsEmisor = chatsEmisor;
-    }
 
     public List<Messages> getMessagesEmisor() {
         return messagesEmisor;

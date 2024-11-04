@@ -34,10 +34,10 @@ import java.util.List;
 @Table(name = "SIS_CHATS")
 @NamedQueries({
         @NamedQuery(name = "Chats.findAll", query = "SELECT s FROM Chats s"),
-/*
- * @NamedQuery(name = "SisChats.findByChtId", query =
- * "SELECT s FROM SisChats s WHERE s.chtId = :chtId"),
- * 
+
+        @NamedQuery(name = "Chats.findByChtId", query =
+        "SELECT s FROM Chats s WHERE s.id = :id"),
+ /* 
  * @NamedQuery(name = "SisChats.findByChtFecha", query =
  * "SELECT s FROM SisChats s WHERE s.chtFecha = :chtFecha"),
  * 
@@ -66,11 +66,11 @@ public class Chats implements Serializable {
     private Long version;
 
     @JoinColumn(name = "CHT_RECEPTOR_ID", referencedColumnName = "USER_ID")
-    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+    @ManyToOne(optional = false, cascade = CascadeType.MERGE)
     private Users receptor;
 
     @JoinColumn(name = "CHT_EMISOR_ID", referencedColumnName = "USER_ID")
-    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+    @ManyToOne(optional = false, cascade = CascadeType.MERGE)
     private Users emisor;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "chat")

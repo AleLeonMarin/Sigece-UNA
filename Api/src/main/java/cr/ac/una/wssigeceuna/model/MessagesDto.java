@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
 import java.io.Serializable;
 import java.util.Date;
+import jakarta.json.bind.annotation.JsonbTransient;
 
 @JsonbPropertyOrder({ "id", "text", "archive", "date", "chat", "user", "version" })
 @Schema(description = "Esta clase contiene la informacion de los mensajes")
@@ -32,7 +33,6 @@ public class MessagesDto implements Serializable {
         this.text = messages.getText();
         this.archive = messages.getArchive();
         this.date = messages.getDate();
-        this.chat = new ChatsDto(messages.getChat());
         this.user = new UsersDto(messages.getUser());
         this.version = messages.getVersion();
     }
