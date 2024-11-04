@@ -80,6 +80,7 @@ public class ChatsAppController extends Controller implements Initializable {
         tbvContactos.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 cargarChatConUsuario(newValue.getId());
+                iniciarActualizacionPeriodica();
             }
         });
 
@@ -260,29 +261,6 @@ public class ChatsAppController extends Controller implements Initializable {
 
 
 
-    private void iniciarActualizacionPeriodica() {
-        timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> actualizarMensajes()));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
-    }
-
-    private void actualizarMensajes() {
-        Optional.ofNullable(currentChat)
-                .map(chat -> chatsService.getChatsEntreUsuarios(idEmisor, chat.getReceptor().getId()))
-                .filter(Respuesta::getEstado)
-                .map(respuesta -> (List<ChatsDto>) respuesta.getResultado("Chats"))
-                .filter(chats -> !chats.isEmpty())
-                .map(chats -> chats.get(0))
-                .ifPresent(nuevoChat -> {
-                    List<MessagesDto> nuevosMensajes = nuevoChat.getMessages();
-                    if (!nuevosMensajes.equals(currentChat.getMessages())) {
-                        currentChat = nuevoChat;
-                        mostrarMensajesDelChat(nuevosMensajes);
-                    }
-                });
-    }
-
-
     @FXML
     void onActonBtnSend(ActionEvent event) {
         String textoMensaje = txtMensaje.getText();
@@ -303,27 +281,42 @@ public class ChatsAppController extends Controller implements Initializable {
             return;
         }
 
-        if (currentChat == null) {
-            ChatsDto nuevoChat = new ChatsDto();
-            UsersDto emisor = new UsersDto();
-            UsersDto receptor = new UsersDto();
+        // Verificar si ya existe un chat entre el emisor y el receptor
+        Respuesta respuestaChatExistente = chatsService.getChatsEntreUsuarios(idEmisor, idReceptor);
+        if (respuestaChatExistente.getEstado()) {
+            List<ChatsDto> chatsExistentes = (List<ChatsDto>) respuestaChatExistente.getResultado("Chats");
 
-            emisor.setId(obtenerIdEmisorActual());
-            receptor.setId(idReceptor);
-
-            nuevoChat.setEmisor(emisor);
-            nuevoChat.setReceptor(receptor);
-
-            Respuesta respuestaChat = chatsService.guardarChat(nuevoChat);
-            if (respuestaChat.getEstado()) {
-                currentChat = (ChatsDto) respuestaChat.getResultado("Chat");
-                System.out.println("Nuevo chat creado con éxito.");
+            if (chatsExistentes != null && !chatsExistentes.isEmpty()) {
+                // Si existe un chat, utilizar el primero de la lista
+                currentChat = chatsExistentes.get(0);
+                System.out.println("Chat existente encontrado. Usando el chat con ID: " + currentChat.getId());
             } else {
-                System.out.println("Error creando el chat: " + respuestaChat.getMensaje());
-                return;
+                // Si no existe un chat, crear uno nuevo
+                ChatsDto nuevoChat = new ChatsDto();
+                UsersDto emisor = new UsersDto();
+                UsersDto receptor = new UsersDto();
+
+                emisor.setId(obtenerIdEmisorActual());
+                receptor.setId(idReceptor);
+
+                nuevoChat.setEmisor(emisor);
+                nuevoChat.setReceptor(receptor);
+
+                Respuesta respuestaNuevoChat = chatsService.guardarChat(nuevoChat);
+                if (respuestaNuevoChat.getEstado()) {
+                    currentChat = (ChatsDto) respuestaNuevoChat.getResultado("Chat");
+                    System.out.println("Nuevo chat creado con éxito con ID: " + currentChat.getId());
+                } else {
+                    System.out.println("Error creando el chat: " + respuestaNuevoChat.getMensaje());
+                    return;
+                }
             }
+        } else {
+            System.out.println("Error verificando existencia del chat: " + respuestaChatExistente.getMensaje());
+            return;
         }
 
+        // Crear y enviar el mensaje
         MessagesDto mensajeDto = new MessagesDto();
         mensajeDto.setText(textoMensaje);
 
@@ -363,6 +356,7 @@ public class ChatsAppController extends Controller implements Initializable {
             System.out.println("Error enviando el mensaje: " + respuesta.getMensaje());
         }
     }
+
 
 
 
@@ -479,5 +473,67 @@ public class ChatsAppController extends Controller implements Initializable {
             new Mensaje().show(Alert.AlertType.ERROR, bundle.getString("errorTitle"), bundle.getString("errorUpdatingStatus") + respuesta.getMensaje());
         }
     }
+
+
+    private void iniciarActualizacionPeriodica() {
+        if (timeline != null) {
+            timeline.stop(); // Detener cualquier actualización previa antes de iniciar una nueva
+        }
+        timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
+            actualizarMensajes();
+            actualizarListaDeContactosConChats();
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE); // Ejecutar indefinidamente
+        timeline.play();
+    }
+
+    private void actualizarMensajes() {
+        if (currentChat != null) {
+            MensajesService mensajesService = new MensajesService();
+            Respuesta respuestaMensajes = mensajesService.getMensajesByChat(currentChat.getId());
+
+            if (respuestaMensajes.getEstado()) {
+                List<MessagesDto> nuevosMensajes = (List<MessagesDto>) respuestaMensajes.getResultado("Mensajes");
+
+                // Solo actualizar la vista si hay mensajes nuevos
+                if (!nuevosMensajes.equals(currentChat.getMessages())) {
+                    currentChat.setMessages(nuevosMensajes);
+                    mostrarMensajesDelChat(nuevosMensajes);
+                }
+            } else {
+                System.out.println("Error obteniendo mensajes actualizados: " + respuestaMensajes.getMensaje());
+            }
+        }
+    }
+
+    private void actualizarListaDeContactosConChats() {
+        Respuesta respuesta = chatsService.getUsuarios();
+        if (respuesta.getEstado()) {
+            List<UsersDto> usuarios = (List<UsersDto>) respuesta.getResultado("Usuarios");
+            List<UsersDto> usuariosConChats = new ArrayList<>();
+
+            for (UsersDto usuario : usuarios) {
+                if ("A".equals(usuario.getState()) && !idEmisor.equals(usuario.getId())) {
+                    Respuesta respuestaChat = chatsService.getChatsEntreUsuarios(idEmisor, usuario.getId());
+                    if (respuestaChat.getEstado()) {
+                        List<ChatsDto> chats = (List<ChatsDto>) respuestaChat.getResultado("Chats");
+                        if (chats != null && !chats.isEmpty()) {
+                            usuariosConChats.add(usuario);
+                        }
+                    }
+                }
+            }
+
+            ObservableList<UsersDto> usuariosList = FXCollections.observableArrayList(usuariosConChats);
+
+            if (!usuariosList.equals(tbvContactos.getItems())) {
+                tbvContactos.setItems(usuariosList);
+                tbvContactos.refresh();
+            }
+        } else {
+            System.out.println("Error obteniendo usuarios: " + respuesta.getMensaje());
+        }
+    }
+
 }
 

@@ -4,6 +4,7 @@
  */
 package cr.ac.una.wssigeceuna.model;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -216,6 +217,7 @@ public class Users implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users")
     private List<Roles> roles;
 
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Messages> messagesEmisor;
 

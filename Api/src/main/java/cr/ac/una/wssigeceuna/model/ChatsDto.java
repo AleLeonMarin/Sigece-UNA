@@ -1,5 +1,7 @@
 package cr.ac.una.wssigeceuna.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
 import jakarta.json.bind.annotation.JsonbTransient;
@@ -16,6 +18,11 @@ import java.util.List;
     "version"
 })
 
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id"
+)
+
 @Schema(description = "Esta clase contiene la informacion de los chats")
 public class ChatsDto implements Serializable {
 
@@ -25,11 +32,11 @@ public class ChatsDto implements Serializable {
     @Schema(description = "Fecha del chat", example = "2021-09-01")
     private Date date;
 
-    @JsonbTransient
+    
     @Schema(description = "Receptor del chat")
     private Users receptor;
 
-    @JsonbTransient
+
     @Schema(description = "Emisor del chat")
     private Users emisor;
 
