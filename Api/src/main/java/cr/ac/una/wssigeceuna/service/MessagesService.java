@@ -66,7 +66,6 @@ public class MessagesService {
 
     public Respuesta saveMessage(MessagesDto sms) {
         try {
-
             if (sms.getChat() == null || sms.getChat().getId() == null) {
                 return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
                         "El mensaje debe pertenecer a un chat existente con un ID válido.", "saveMessage ChatIDNullException");
@@ -80,7 +79,6 @@ public class MessagesService {
 
             Messages mensaje;
             if (sms.getId() != null && sms.getId() > 0) {
-
                 mensaje = em.find(Messages.class, sms.getId());
                 if (mensaje == null) {
                     return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
@@ -90,21 +88,18 @@ public class MessagesService {
                 mensaje.setChat(chat);
                 mensaje = em.merge(mensaje);
             } else {
-
                 mensaje = new Messages(sms);
                 mensaje.setChat(chat);
                 em.persist(mensaje);
             }
 
+            // Procesar y guardar archivo adjunto, si existe
+            if (sms.getArchive() != null) {
+                mensaje.setArchive(sms.getArchive());
+            }
+
             em.flush();
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Mensaje", new MessagesDto(mensaje));
-        } catch (jakarta.validation.ConstraintViolationException ex) {
-            ex.getConstraintViolations().forEach(violation -> {
-                LOG.log(Level.SEVERE, "Validation error in field {0}: {1}",
-                        new Object[]{violation.getPropertyPath(), violation.getMessage()});
-            });
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error de validación al guardar el mensaje.",
-                    "saveMessage " + ex.getMessage());
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrió un error al guardar el mensaje.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al guardar el mensaje.",

@@ -88,6 +88,15 @@
                            <children>
                               <MFXTextField fx:id="txtMensaje" floatMode="DISABLED" prefHeight="31.0" prefWidth="552.0" />
                               <MFXButton fx:id="btnSend" onAction="#onActonBtnSend" prefHeight="29.0" prefWidth="58.0" styleClass="button-blueStyle" text="%button.send" />
+                              <MFXButton fx:id="btnAttach" onAction="#onActionBtnAttach" prefHeight="37.0" prefWidth="21.0" styleClass="button-blueStyle" text=" ">
+                                 <graphic>
+                                    <ImageView fitHeight="32.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../resources/clip-de-papel.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </MFXButton>
                            </children>
                            <VBox.margin>
                               <Insets left="20.0" />

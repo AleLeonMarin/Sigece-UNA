@@ -1,7 +1,10 @@
 package cr.ac.una.chats.controller;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,6 +35,7 @@ import javafx.scene.layout.VBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
+import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import javafx.util.Duration;
 
@@ -43,6 +47,12 @@ public class ChatsAppController extends Controller implements Initializable {
     private TableColumn<UsersDto, String> tbcContactos;
     @FXML
     private VBox vboxChats;
+
+    private byte[] archivoAdjunto;
+    private String nombreArchivoAdjunto;
+
+    @FXML
+    private MFXButton btnAttach;
 
     private ChatsService chatsService = new ChatsService();
 
@@ -532,6 +542,30 @@ public class ChatsAppController extends Controller implements Initializable {
             }
         } else {
             System.out.println("Error obteniendo usuarios: " + respuesta.getMensaje());
+        }
+    }
+
+    @FXML
+    void onActionBtnAttach(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Seleccionar archivo para adjuntar");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Todos los archivos", "*.*"),
+                new FileChooser.ExtensionFilter("Imágenes", "*.jpg", "*.png", "*.gif"),
+                new FileChooser.ExtensionFilter("Documentos", "*.pdf", "*.docx", "*.xlsx")
+        );
+
+        File file = fileChooser.showOpenDialog(this.getStage());
+        if (file != null) {
+            try {
+                archivoAdjunto = Files.readAllBytes(file.toPath());
+                nombreArchivoAdjunto = file.getName();
+                new Mensaje().show(Alert.AlertType.INFORMATION, bundle.getString("infoTitle"), "Archivo adjuntado: " + nombreArchivoAdjunto);
+            } catch (IOException e) {
+                new Mensaje().show(Alert.AlertType.ERROR, bundle.getString("errorTitle"), "Error al adjuntar archivo: " + e.getMessage());
+                archivoAdjunto = null;
+                nombreArchivoAdjunto = null;
+            }
         }
     }
 
