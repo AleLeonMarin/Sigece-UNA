@@ -16,10 +16,7 @@ import cr.ac.una.chats.model.UsersDto;
 import cr.ac.una.chats.service.ChatsService;
 import cr.ac.una.chats.service.MensajesService;
 import cr.ac.una.chats.service.UsuariosServiceRest;
-import cr.ac.una.chats.util.AppContext;
-import cr.ac.una.chats.util.FlowController;
-import cr.ac.una.chats.util.Mensaje;
-import cr.ac.una.chats.util.Respuesta;
+import cr.ac.una.chats.util.*;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.animation.KeyFrame;
@@ -36,6 +33,8 @@ import javafx.scene.layout.VBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import javafx.util.Duration;
@@ -83,6 +82,10 @@ public class ChatsAppController extends Controller implements Initializable {
     private MFXButton btnVoiceRecorder;
 
     ResourceBundle bundle;
+
+    private AudioRecorder recorder = new AudioRecorder();
+    private AudioPlayer player = new AudioPlayer();
+    private byte[] recordedAudio;
 
 
     @Override
@@ -181,7 +184,7 @@ public class ChatsAppController extends Controller implements Initializable {
                         System.out.println("Cargando usuario en celda: " + usuario.getName());
 
                         // Aquí continúa la lógica de configuración de la celda
-                HBox hbox = new HBox(10);
+                        HBox hbox = new HBox(10);
                         ImageView imageView = new ImageView();
                         if (usuario.getUsuFotoBase64() != null && !usuario.getUsuFotoBase64().isEmpty()) {
                             byte[] imageBytes = usuario.getPhoto();
@@ -255,6 +258,7 @@ public class ChatsAppController extends Controller implements Initializable {
                         VBox vboxMessageContent = new VBox(5); // Contenedor para imagen y texto del mensaje
                         vboxMessageContent.getChildren().add(mensajeLabel);
 
+
                         // Si el mensaje tiene archivo adjunto, agregamos una imagen según el tipo
                         Button btnDescargar = null;
                         if (mensaje.getArchive() != null && mensaje.getArchive().length > 0) {
@@ -275,7 +279,16 @@ public class ChatsAppController extends Controller implements Initializable {
                                     imageView.setImage(new Image("/cr/ac/una/chats/resources/sheets.png"));
                                 } else if (extension.equals(".pptx")) {
                                     imageView.setImage(new Image("/cr/ac/una/chats/resources/ppt.png"));
+                                } else if (extension.equals(".mp3")) {
+                                    Button btnReproducir = new Button("Reproducir");
+                                    btnReproducir.setOnAction(event -> reproducirAudio(mensajeDto.getArchive()));
+                                    vboxMessageContent.getChildren().add(btnReproducir);
+                                } else {
+                                    Button btnReproducir = new Button("Reproducir");
+                                    btnReproducir.setOnAction(event -> reproducirAudio(mensajeDto.getArchive()));
+                                    vboxMessageContent.getChildren().add(btnReproducir);
                                 }
+
                                 imageView.setFitWidth(100);
                                 imageView.setPreserveRatio(true);
                                 vboxMessageContent.getChildren().add(0, imageView); // Imagen encima del texto
@@ -321,11 +334,6 @@ public class ChatsAppController extends Controller implements Initializable {
             vboxChats.getChildren().add(noMessagesLabel);
         }
     }
-
-
-
-
-
 
 
     @FXML
@@ -421,7 +429,7 @@ public class ChatsAppController extends Controller implements Initializable {
             btnEliminar.getStyleClass().add("deletechat-button");
             btnEliminar.setOnAction(e -> onActionEliminarMensaje(mensajeDto));
 
-            hbox.getChildren().addAll(btnEliminar,mensajeLabel );
+            hbox.getChildren().addAll(btnEliminar, mensajeLabel);
 
             vboxChats.getChildren().add(hbox);
 
@@ -430,9 +438,6 @@ public class ChatsAppController extends Controller implements Initializable {
             System.out.println("Error enviando el mensaje: " + respuesta.getMensaje());
         }
     }
-
-
-
 
 
     @FXML
@@ -471,7 +476,6 @@ public class ChatsAppController extends Controller implements Initializable {
             System.out.println(bundle.getString("chatDeletionCancelled"));
         }
     }
-
 
 
     private void onActionEliminarMensaje(MessagesDto mensaje) {
@@ -524,7 +528,6 @@ public class ChatsAppController extends Controller implements Initializable {
             }
         }
     }
-
 
 
     @FXML
@@ -668,83 +671,67 @@ public class ChatsAppController extends Controller implements Initializable {
     }
 
     private volatile boolean grabando = false;
-    private TargetDataLine line;
-    private File audioFile;
-    private byte[] audioAdjunto;
+
 
     @FXML
     void onActionBtnVoiceRecorder(ActionEvent event) {
         if (!grabando) {
             grabando = true;
             btnVoiceRecorder.setText("Detener");
-            new Thread(this::iniciarGrabacion).start();
+            recorder.startRecording(); // Starts recording but does not return data immediately
         } else {
-            detenerGrabacion();
             grabando = false;
+            recordedAudio = recorder.stopRecording(); // Stops recording and retrieves byte array
             btnVoiceRecorder.setText("Grabar");
-        }
-    }
 
-    private void iniciarGrabacion() {
-        AudioFormat format = new AudioFormat(8000, 8, 1, true, true); // 8000 Hz, 8 bits, 1 canal (mono)
-        DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
-
-        if (!AudioSystem.isLineSupported(info)) {
-            System.out.println("Línea no soportada");
-            return;
-        }
-
-        try {
-            line = (TargetDataLine) AudioSystem.getLine(info);
-            line.open(format);
-            line.start();
-
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            AudioInputStream ais = new AudioInputStream(line);
-
-            // Escribir datos de audio en un hilo separado
-            new Thread(() -> {
-                try {
-                    byte[] buffer = new byte[1024];
-                    int bytesRead;
-                    while (grabando && (bytesRead = ais.read(buffer)) != -1) {
-                        out.write(buffer, 0, bytesRead);
-                    }
-                    out.flush();
-                    audioAdjunto = out.toByteArray(); // Guardar el audio en un byte array
-                    System.out.println("Grabación completada.");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }).start();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            if (recordedAudio != null) {
+                enviarAudio(); // Send the recorded audio
+            } else {
+                System.out.println("No audio data recorded.");
+            }
         }
     }
 
     private void detenerGrabacion() {
-        if (line != null && grabando) {
+        if (grabando) {
+            recorder.stopRecording();
             grabando = false;
-            line.stop();
-            line.close();
             System.out.println("Grabación detenida.");
+            enviarAudio();
         }
     }
 
-    // Enviar el audio como adjunto en el mensaje
     private void enviarAudio() {
-        if (audioAdjunto != null) {
-            MessagesDto mensajeDto = new MessagesDto();
-            mensajeDto.setArchive(audioAdjunto); // Adjuntar el audio grabado
-            mensajeDto.setExtension(".wav"); // Especificar la extensión
+        if (currentChat == null) {
+            System.out.println("Error: No hay un chat seleccionado.");
+            new Mensaje().show(Alert.AlertType.WARNING, "Error", "Debe seleccionar un chat antes de enviar un audio.");
+            return;
+        }
 
-            // Enviar el mensaje como cualquier otro mensaje
+        if (recordedAudio != null) {
+            Long idReceptor = tbvContactos.getSelectionModel().getSelectedItem().getId();
+
+            MessagesDto mensajeDto = new MessagesDto();
+
+            UsersDto emisor = new UsersDto();
+            UsersDto receptor = new UsersDto();
+
+            receptor.setId(idReceptor);
+            emisor.setId(obtenerIdEmisorActual());
+
+            mensajeDto.setUser(emisor);
+            mensajeDto.setChat(currentChat);
+
+            mensajeDto.setText("Audio adjunto");
+            mensajeDto.setArchive(recordedAudio); // Set the recorded MP3 data
+            mensajeDto.setExtension(".mp3"); // Indicate MP3 format
+
             MensajesService mensajesService = new MensajesService();
             Respuesta respuesta = mensajesService.guardarMensaje(mensajeDto);
 
             if (respuesta.getEstado()) {
                 System.out.println("Audio enviado correctamente.");
+                recordedAudio = null; // Clear audio after sending
             } else {
                 System.out.println("Error enviando el audio: " + respuesta.getMensaje());
             }
@@ -753,27 +740,16 @@ public class ChatsAppController extends Controller implements Initializable {
         }
     }
 
-    // Reproducir el audio grabado en la aplicación
-    private void reproducirAudio() {
-        if (audioAdjunto != null) {
-            try {
-                // Convertir el byte[] de audio a un AudioInputStream
-                ByteArrayInputStream bais = new ByteArrayInputStream(audioAdjunto);
-                AudioInputStream ais = new AudioInputStream(bais, new AudioFormat(8000, 8, 1, true, true), audioAdjunto.length);
-
-                // Crear un clip de audio y reproducirlo
-                Clip clip = AudioSystem.getClip();
-                clip.open(ais);
-                clip.start();
-                System.out.println("Reproduciendo audio...");
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Error al reproducir el audio.");
-            }
-        } else {
-            System.out.println("No hay audio para reproducir.");
+    private void reproducirAudio(byte[] audioBytes) {
+        try {
+            // Reproducir el audio en formato MP3
+            player.playMp3(audioBytes);
+            System.out.println("Reproduciendo audio...");
+        } catch (Exception e) {
+            System.out.println("Error al reproducir el audio: " + e.getMessage());
         }
     }
+
 
 }
 

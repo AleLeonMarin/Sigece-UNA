@@ -17,6 +17,8 @@ module cr.ac.una.chats {
     requires org.apache.poi.ooxml;
     requires javafx.swing;
     requires webcam.capture;
+    requires javafx.media;
+    requires jlayer;
 
     opens cr.ac.una.chats.model;
 

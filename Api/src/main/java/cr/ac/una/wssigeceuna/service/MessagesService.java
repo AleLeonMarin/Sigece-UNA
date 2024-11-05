@@ -143,7 +143,6 @@ public class MessagesService {
         }
     }
 
-   
     public Respuesta getArchivoAdjunto(Long mensajeId) {
         try {
             Messages mensaje = em.find(Messages.class, mensajeId);
@@ -157,6 +156,11 @@ public class MessagesService {
             String extension = "";
             try {
                 extension = MimeTypes.getDefaultMimeTypes().forName(tipoMime).getExtension();
+
+                if (tipoMime.equals("application/octet-stream")) {
+                    tipoMime = "audio/wav";
+                    extension = ".wav";
+                }
             } catch (Exception e) {
                 extension = ".bin"; // Asignar una extensión predeterminada si no se puede detectar
             }
