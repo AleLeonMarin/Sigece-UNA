@@ -226,6 +226,8 @@ public class GestionesController extends Controller implements Initializable {
 
     ApprovalsDto approval;
 
+    GestionsDto calendarGestion;
+
     private Map<String, UsersDto> usersMap = new HashMap<>();
 
     private Map<String, ActivitiesDto> activityMap = new HashMap<>();
@@ -236,8 +238,16 @@ public class GestionesController extends Controller implements Initializable {
 
     @Override
     public void initialize() {
-
         initValuesOfGestion();
+
+        calendarGestion = (GestionsDto) AppContext.getInstance().get("Gestion");
+        if (calendarGestion != null) {
+            chargeGestion(calendarGestion.getId());
+        } else {
+            AppContext.getInstance().set("Gestion", new GestionsDto());
+            calendarGestion = (GestionsDto) AppContext.getInstance().get("Gestion");
+        }
+
     }
 
     // unique chkBox Selections
@@ -411,6 +421,8 @@ public class GestionesController extends Controller implements Initializable {
         chargeUsers();
         chargeActivity();
         chargeSubactivity();
+
+        newGestion();
 
     }
 
@@ -627,8 +639,10 @@ public class GestionesController extends Controller implements Initializable {
             }
         } else if (chkSubactividad.isSelected()) {
             String selectedSubactivity = cmbSubactividades.getSelectionModel().getSelectedItem();
-            if (selectedSubactivity != null && activityMap.containsKey(selectedSubactivity)) {
-                gestion.setActivity(activityMap.get(selectedSubactivity));
+            System.out.println(selectedSubactivity);
+            if (selectedSubactivity != null && subactivityMap.containsKey(selectedSubactivity)) {
+                gestion.setSubactivities(subactivityMap.get(selectedSubactivity));
+                System.out.println("Subactividad: " + gestion.getSubactivities().getId());
             }
         }
     }
@@ -638,6 +652,22 @@ public class GestionesController extends Controller implements Initializable {
     private void setAssigned() {
         String selectedAssigned = cmbAsiganadoGestion.getSelectionModel().getSelectedItem();
         if (selectedAssigned != null && assigned.containsKey(selectedAssigned)) {
+            // Obtener la lista de aprobadores de la gestión
+            List<UsersDto> aprobadores = gestion.getApprovers();
+
+            // Si la lista es nula, inicializarla y agregar todos los asignados
+            if (aprobadores == null) {
+                aprobadores = new ArrayList<>(assigned.values());
+                gestion.setApprovers(aprobadores);
+            } else {
+                // Si la lista no es nula, agregar solo los usuarios que no estén ya en la lista
+                UsersDto usuarioAsignado = assigned.get(selectedAssigned);
+                if (!aprobadores.contains(usuarioAsignado)) {
+                    aprobadores.add(usuarioAsignado);
+                }
+            }
+
+            // Establecer el usuario asignado en la gestión (si aplica)
             gestion.setAssigned(assigned.get(selectedAssigned));
         }
     }
@@ -867,8 +897,12 @@ public class GestionesController extends Controller implements Initializable {
             setApproversGestion();
             UsersDto user = (UsersDto) AppContext.getInstance().get("User");
             this.gestion.setRequester(user);
-            System.out.println(gestion.getRequester().getId());
-            System.out.println(gestion.getActivity().getId());
+            System.out.println("Solicitante: " + gestion.getRequester().getId());
+            if (gestion.getActivity() != null) {
+                System.out.println("Actividad: " + gestion.getActivity().getId());
+            } else if (gestion.getSubactivities() != null) {
+                System.out.println("Subactividad: " + gestion.getSubactivities().getId());
+            }
             System.out.println(gestion.getState());
             GestionService service = new GestionService();
             Respuesta respuesta = service.createGestion(gestion);
@@ -886,6 +920,25 @@ public class GestionesController extends Controller implements Initializable {
             new Mensaje().showModal(AlertType.ERROR, "Guardar Gestion", getStage(), "Error guardando la gestion.");
         }
 
+    }
+
+    // delete methods
+
+    private void deleteGestion(Long id) {
+        try {
+            GestionService service = new GestionService();
+            Respuesta respuesta = service.deleteGestion(id);
+            if (!respuesta.getEstado()) {
+                new Mensaje().showModal(AlertType.INFORMATION, "Gestiones", getStage(), respuesta.getMensaje());
+            } else {
+                new Mensaje().showModal(AlertType.CONFIRMATION, "Gestiones", getStage(),
+                        "La gestion ha sido correctamente eliminada");
+                newGestion();
+            }
+        } catch (Exception e) {
+            Logger.getLogger(GestionesController.class.getName()).log(Level.SEVERE, "Error eliminando la gestión", e);
+            new Mensaje().showModal(AlertType.ERROR, "Eliminar Gestion", getStage(), "Error eliminando la gestión.");
+        }
     }
 
     @FXML
@@ -915,11 +968,15 @@ public class GestionesController extends Controller implements Initializable {
 
     @FXML
     void onActionBtnDelete(ActionEvent event) {
+        if (tptGestiones.isSelected()) {
+            deleteGestion(Long.valueOf(txfIDGestion.getText()));
+        }
 
     }
 
     @FXML
     void onActionBtnExit(ActionEvent event) {
+        AppContext.getInstance().set("Gestion", null);
         FlowController.getInstance().goViewInWindow("PrincipalView");
         this.getStage().close();
     }
@@ -945,7 +1002,18 @@ public class GestionesController extends Controller implements Initializable {
     @FXML
     void onActionBtnSearch(ActionEvent event) {
 
-        new Mensaje().showModal(AlertType.INFORMATION, "Sin implementacion", getStage(), "Sin implementacion");
+        SpecificSearchViewController controller = (SpecificSearchViewController) FlowController.getInstance()
+                .getController("SpecificSearch");
+
+        FlowController.getInstance().goViewInWindowModal("SpecificSearch", getStage(), false);
+
+        Object result = controller.getResult();
+
+        GestionsDto gestion = (GestionsDto) result;
+        if (gestion != null) {
+            txfIDGestion.setText(gestion.getId().toString());
+            chargeGestion(Long.valueOf(txfIDGestion.getText()));
+        }
 
     }
 

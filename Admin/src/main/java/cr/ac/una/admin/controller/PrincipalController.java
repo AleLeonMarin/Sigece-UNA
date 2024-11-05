@@ -173,6 +173,7 @@ public class PrincipalController extends Controller implements Initializable {
     void onActionBtnCalendar(ActionEvent event) {
 
         FlowController.getInstance().goViewInWindow("CalendarView");
+        this.getStage().close();
 
     }
 

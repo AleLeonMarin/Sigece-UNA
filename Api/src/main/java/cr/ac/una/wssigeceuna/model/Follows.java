@@ -17,11 +17,9 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.persistence.Version;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  *
@@ -58,8 +56,7 @@ public class Follows implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "SEG_FECHA")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    private LocalDate date;
 
     @Basic(optional = false)
     @Column(name = "SEG_DESCRIPCION")
@@ -116,11 +113,11 @@ public class Follows implements Serializable {
         this.id = id;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

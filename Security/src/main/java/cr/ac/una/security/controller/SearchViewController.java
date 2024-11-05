@@ -1,18 +1,14 @@
 package cr.ac.una.security.controller;
 
 import java.net.URL;
-import java.security.PublicKey;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.Flow;
 import java.util.stream.Collectors;
 
 import cr.ac.una.security.model.SystemsDto;
 import cr.ac.una.security.model.UsersDto;
 import cr.ac.una.security.service.SystemsService;
 import cr.ac.una.security.service.UsersService;
-import cr.ac.una.security.util.FlowController;
 import cr.ac.una.security.util.Mensaje;
 import cr.ac.una.security.util.Respuesta;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -136,7 +132,8 @@ public class SearchViewController extends Controller implements Initializable {
     public void loadUsers(String name, String lastNames, String idCard) {
         Respuesta res = userService.getUsers();
         if (res.getEstado()) {
-            ObservableList<UsersDto> usersDto = FXCollections.observableArrayList((List<UsersDto>) res.getResultado("Usuarios"));
+            ObservableList<UsersDto> usersDto = FXCollections
+                    .observableArrayList((List<UsersDto>) res.getResultado("Usuarios"));
             users.clear();
 
             if (idCard != null && !idCard.isBlank()) {

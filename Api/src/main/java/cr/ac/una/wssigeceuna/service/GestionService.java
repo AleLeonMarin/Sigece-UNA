@@ -1,5 +1,6 @@
 package cr.ac.una.wssigeceuna.service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -15,6 +16,7 @@ import cr.ac.una.wssigeceuna.model.Users;
 import cr.ac.una.wssigeceuna.model.UsersDto;
 import cr.ac.una.wssigeceuna.util.CodigoRespuesta;
 import cr.ac.una.wssigeceuna.util.Respuesta;
+import jakarta.ejb.EJB;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -30,18 +32,65 @@ public class GestionService {
     @PersistenceContext(unitName = "SigeceUnaWsPU")
     private EntityManager em;
 
+    @EJB
+    FollowsService followService;
+
     public Respuesta createGestion(GestionsDto gestion) {
         try {
             Gestions gestions;
+
+            List<String> changes = new ArrayList<>();
+
             if (gestion.getId() != null && gestion.getId() > 0) {
+                // Si la gestión ya existe, la buscamos y actualizamos
                 gestions = em.find(Gestions.class, gestion.getId());
                 if (gestions == null) {
                     return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
                             "No se encontró la gestión a modificar",
                             "createGestion No se encontró la gestión a modificar");
                 }
+                if (gestion.getActivity() != null) {
+                    gestions.setActivity(em.find(Activities.class, gestion.getActivity().getId()));
+                } else if (gestion.getSubactivities() != null) {
+                    gestions.setSubactivities(em.find(Subactivities.class, gestion.getSubactivities().getId()));
+                }
+                boolean modificated = gestion.getId() != null && gestion.getId() > 0;
+                gestions.setSolutionDate(gestion.getSolutionDate());
+                if (modificated) {
+                    if (!gestion.getDescription().equals(gestions.getDescription())) {
+                        changes.add("Se realizó un cambio en la descripción de la gestión");
+                    }
+                    if (!gestion.getCreationDate().equals(gestions.getCreationDate())) {
+                        changes.add("Se realizó un cambio en la fecha de inicio de la gestión");
+                    }
+                    if (!gestion.getSolutionDate().equals(gestions.getSolutionDate())) {
+                        changes.add("Se realizó un cambio en la fecha de fin de la gestión");
+                    }
+                    if (!gestion.getState().equals(gestions.getState())) {
+                        changes.add("Se realizó un cambio en el estado de la gestión");
+                    }
+                    if (gestion.getAssigned().getId() != gestions.getAssigned().getId()) {
+                        changes.add("Se realizó un cambio en el usuario asignado a la gestión");
+                    }
+                    if (gestion.getApprovers().size() != gestions.getApprovers().size()) {
+                        changes.add("Se realizó un cambio en los aprobadores de la gestión");
+                    }
+                    if (!gestion.getSubject().equals(gestions.getSubject())) {
+                        changes.add("Se realizó un cambio en el asunto de la gestión");
+                    }
+                    if (gestion.getActivity() != null && gestions.getActivity() != null
+                            && !gestion.getActivity().getId().equals(gestions.getActivity().getId())) {
+                        changes.add("Se realizó un cambio en la actividad de la gestión");
+                    }
+                    if (gestion.getSubactivities() != null && gestions.getSubactivities() != null
+                            && !gestion.getSubactivities().getId().equals(gestions.getSubactivities().getId())) {
+                        changes.add("Se realizó un cambio en la subactividad de la gestión");
+                    }
+
+                }
                 gestions.update(gestion);
 
+                // Remover los aprobadores eliminados
                 for (UsersDto users : gestion.getDeletedApprovers()) {
                     Users userDeleted = em.find(Users.class, users.getId());
                     if (userDeleted != null) {
@@ -51,10 +100,12 @@ public class GestionService {
                         em.merge(gestions);
                     }
                 }
+
+                // Agregar aprobadores nuevos evitando duplicados
                 if (!gestions.getApprovers().isEmpty()) {
                     for (UsersDto u : gestion.getApprovers()) {
                         Users user = em.find(Users.class, u.getId());
-                        if (user != null) {
+                        if (user != null && !gestions.getApprovers().contains(user)) {
                             user.getApprovers().add(gestions);
                             gestions.getApprovers().add(user);
                             em.merge(user);
@@ -64,7 +115,19 @@ public class GestionService {
                 }
 
                 gestions = em.merge(gestions);
+
+                if (!changes.isEmpty()) {
+                    FollowsDto follow = new FollowsDto();
+                    follow.setDescription("Modificación de la gestión");
+                    follow.setGestions(new GestionsDto(gestions));
+                    follow.setUsers(new UsersDto(gestions.getRequester()));
+                    follow.setState("S");
+                    follow.setArchive(
+                            ("Cambios realizados: " + String.join(", ", changes)).getBytes(StandardCharsets.UTF_8));
+                    followService.createFollow(follow);
+                }
             } else {
+                // Si es una nueva gestión, la creamos
                 gestions = new Gestions(gestion);
                 gestions.setRequester(em.find(Users.class, gestion.getRequester().getId()));
                 gestions.setAssigned(em.find(Users.class, gestion.getAssigned().getId()));
@@ -73,22 +136,35 @@ public class GestionService {
                 } else if (gestion.getSubactivities() != null) {
                     gestions.setSubactivities(em.find(Subactivities.class, gestion.getSubactivities().getId()));
                 }
+                gestions.setSolutionDate(gestion.getSolutionDate());
+
+                changes.add("Creación de la gestión");
+
                 em.persist(gestions);
 
+                // Agregar aprobadores evitando duplicados
                 for (UsersDto u : gestion.getApprovers()) {
-
                     Users user = em.find(Users.class, u.getId());
-
-                    if (user != null) {
+                    if (user != null && !gestions.getApprovers().contains(user)) {
                         user.getApprovers().add(gestions);
                         gestions.getApprovers().add(user);
                         em.merge(user);
                         em.merge(gestions);
                     }
-
                 }
-            }
 
+                if (!changes.isEmpty()) {
+                    FollowsDto follow = new FollowsDto();
+                    follow.setDescription("Creación de la gestión");
+                    follow.setGestions(new GestionsDto(gestions));
+                    follow.setUsers(new UsersDto(gestions.getRequester()));
+                    follow.setState("S");
+                    follow.setArchive(
+                            ("Cambios realizados: " + String.join(", ", changes)).getBytes(StandardCharsets.UTF_8));
+                    followService.createFollow(follow);
+                }
+
+            }
             em.flush();
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Gestion", new GestionsDto(gestions));
         } catch (NoResultException ex) {
@@ -102,7 +178,6 @@ public class GestionService {
                     "Ocurrió un error al guardar la gestion.",
                     "createGestion " + ex.getMessage());
         }
-
     }
 
     public Respuesta getGestiones() {

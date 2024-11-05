@@ -2,10 +2,10 @@ package cr.ac.una.admin.controller;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import com.calendarfx.model.Calendar;
@@ -36,9 +36,11 @@ public class CalendarController extends Controller implements Initializable {
     UsersDto user;
     GestionsDto gestion;
     Calendar gestionCalendar;
+    private final Map<Entry<String>, GestionsDto> gestionMap = new HashMap<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        stackPane.setPrefSize(800, 600);
         user = (UsersDto) AppContext.getInstance().get("User");
         gestion = new GestionsDto();
         calendarView = new CalendarView();
@@ -60,8 +62,29 @@ public class CalendarController extends Controller implements Initializable {
                         Entry<String> gestionEntry = new Entry<>(g.getSubject());
                         gestionEntry.setInterval(g.getCreationDate().atStartOfDay(),
                                 g.getSolutionDate().atStartOfDay());
+
+                        // Store the entry in the map for access
+                        gestionMap.put(gestionEntry, g);
+
+                        // Add the entry to the calendar
                         gestionCalendar.addEntry(gestionEntry);
                     });
+                });
+
+                // Add a selection listener to handle double-clicks
+                calendarView.setEntryDetailsPopOverContentCallback(param -> {
+                    Entry<?> entry = param.getEntry();
+                    if (entry != null && gestionMap.containsKey(entry)) {
+                        param.getNode().setOnMouseClicked(event -> {
+                            if (event.getClickCount() == 2) { // Detect double-click
+                                GestionsDto gestion = gestionMap.get(entry);
+                                AppContext.getInstance().set("Gestion", gestion);
+                                FlowController.getInstance().goViewInWindow("GestionView");
+                                this.getStage().close();
+                            }
+                        });
+                    }
+                    return null; // Avoid showing the default popover
                 });
             }
         } catch (Exception ex) {

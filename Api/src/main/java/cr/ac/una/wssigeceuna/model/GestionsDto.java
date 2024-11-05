@@ -9,20 +9,18 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 @JsonbPropertyOrder({
-        "id",
-        "creationDate",
-        "solutionDate",
-        "subject",
-        "description",
-        "state",
-        "archive",
-        "version",
-        "version",
-        "Subactuvities",
-        "Requester",
-        "Assigned",
-
-})
+    "id",
+    "creationDate",
+    "solutionDate",
+    "subject",
+    "description",
+    "state",
+    "archive",
+    "version",
+    "version",
+    "Subactuvities",
+    "Requester",
+    "Assigned",})
 
 @Schema(description = "Esta clase contiene la informacion de las gestiones")
 public class GestionsDto implements Serializable {
@@ -101,6 +99,9 @@ public class GestionsDto implements Serializable {
         }
         if (gestions.getAssigned() != null) {
             this.Assigned = new UsersDto(gestions.getAssigned());
+        }
+        if (gestions.getSubactivities() != null) {
+            this.Subactivities = new SubactivitiesDto(gestions.getSubactivities());
         }
 
     }

@@ -2,9 +2,8 @@ package cr.ac.una.wssigeceuna.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
-
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 @JsonbPropertyOrder({
         "id",
@@ -23,13 +22,16 @@ public class FollowsDto implements Serializable {
     private Long id;
 
     @Schema(description = "Fecha del seguimiento", example = "2021-09-01")
-    private Date date;
+    private LocalDate date;
 
     @Schema(description = "Descripcion del seguimiento", example = "Descripcion de prueba")
     private String description;
 
     @Schema(description = "Archivo del seguimiento")
     private byte[] archive;
+
+    @Schema(description = "Estado del seguimiento", example = "Activo")
+    private String state;
 
     @Schema(description = "Version del seguimiento", example = "1")
     private Long version;
@@ -49,6 +51,7 @@ public class FollowsDto implements Serializable {
         this.description = follows.getDescription();
         this.archive = follows.getArchive();
         this.version = follows.getVersion();
+        this.state = follows.getState();
         this.Gestions = new GestionsDto(follows.getGestion());
         this.Users = new UsersDto(follows.getUsers());
     }
@@ -61,11 +64,11 @@ public class FollowsDto implements Serializable {
         this.id = id;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -107,6 +110,14 @@ public class FollowsDto implements Serializable {
 
     public void setUsers(UsersDto Users) {
         this.Users = Users;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
 }

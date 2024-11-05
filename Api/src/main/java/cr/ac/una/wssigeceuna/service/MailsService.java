@@ -24,8 +24,6 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.validation.ConstraintViolationException;
-import java.util.stream.Collectors;
-import org.apache.commons.lang3.tuple.Pair;
 
 @LocalBean
 @Stateless
@@ -169,7 +167,8 @@ public class MailsService {
                 String destinatary = mailNotSend.getDestinatary();
                 String subject = mailNotSend.getSubject();
 
-                String resultMail = emailsService.sendMail(destinatary, subject, html, mailNotSend.getAttachments(), mailNotSend.getContentIds());
+                String resultMail = emailsService.sendMail(destinatary, subject, html, mailNotSend.getAttachments(),
+                        mailNotSend.getContentIds());
 
                 if (resultMail.contains("exitosamente")) {
                     mailNotSend.setState("E");
@@ -207,8 +206,8 @@ public class MailsService {
                 em.flush();
             }
 
-          
-            String result = emailsService.sendMail(mail.getDestinatary(), mail.getSubject(), mail.getResult(), mailsDto.getAttachments(),null);
+            String result = emailsService.sendMail(mail.getDestinatary(), mail.getSubject(), mail.getResult(),
+                    mailsDto.getAttachments(), null);
 
             if (result.contains("exitosamente")) {
                 mail.setState("E"); // Cambiar el estado a 'Enviado'

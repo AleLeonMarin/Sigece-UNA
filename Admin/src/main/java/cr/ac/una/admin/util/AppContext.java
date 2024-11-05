@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Properties;
 
+import cr.ac.una.admin.model.GestionsDto;
+
 public class AppContext {
 
     private static AppContext INSTANCE = null;
