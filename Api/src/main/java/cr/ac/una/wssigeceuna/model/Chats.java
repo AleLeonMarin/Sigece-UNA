@@ -73,7 +73,7 @@ public class Chats implements Serializable {
     @ManyToOne(optional = false, cascade = CascadeType.MERGE)
     private Users emisor;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "chat")
+   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "chat")
     private List<Messages> messages;
 
     public Chats() {

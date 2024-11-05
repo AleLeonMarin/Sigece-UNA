@@ -61,7 +61,7 @@ public class Messages implements Serializable {
 
     @Lob
     @Column(name = "SMS_ARCHIVO")
-    private Serializable archive;
+    private byte[] archive;
 
     @Basic(optional = false)
     @Column(name = "SMS_TIEMPO")
@@ -119,11 +119,11 @@ public class Messages implements Serializable {
         this.text = text;
     }
 
-    public Serializable getArchive() {
+    public byte[] getArchive() {
         return archive;
     }
 
-    public void setArchive(Serializable archive) {
+    public void setArchive(byte[] archive) {
         this.archive = archive;
     }
 

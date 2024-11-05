@@ -17,6 +17,8 @@ import cr.ac.una.wssigeceuna.util.CodigoRespuesta;
 import cr.ac.una.wssigeceuna.util.Respuesta;
 
 import cr.ac.una.wssigeceuna.model.Chats;
+import org.apache.tika.Tika;
+import org.apache.tika.mime.MimeTypes;
 
 @Stateless
 @LocalBean
@@ -66,7 +68,6 @@ public class MessagesService {
 
     public Respuesta saveMessage(MessagesDto sms) {
         try {
-
             if (sms.getChat() == null || sms.getChat().getId() == null) {
                 return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
                         "El mensaje debe pertenecer a un chat existente con un ID válido.", "saveMessage ChatIDNullException");
@@ -80,7 +81,6 @@ public class MessagesService {
 
             Messages mensaje;
             if (sms.getId() != null && sms.getId() > 0) {
-
                 mensaje = em.find(Messages.class, sms.getId());
                 if (mensaje == null) {
                     return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
@@ -90,21 +90,18 @@ public class MessagesService {
                 mensaje.setChat(chat);
                 mensaje = em.merge(mensaje);
             } else {
-
                 mensaje = new Messages(sms);
                 mensaje.setChat(chat);
                 em.persist(mensaje);
             }
 
+            // Procesar y guardar archivo adjunto, si existe
+            if (sms.getArchive() != null) {
+                mensaje.setArchive(sms.getArchive());
+            }
+
             em.flush();
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Mensaje", new MessagesDto(mensaje));
-        } catch (jakarta.validation.ConstraintViolationException ex) {
-            ex.getConstraintViolations().forEach(violation -> {
-                LOG.log(Level.SEVERE, "Validation error in field {0}: {1}",
-                        new Object[]{violation.getPropertyPath(), violation.getMessage()});
-            });
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error de validación al guardar el mensaje.",
-                    "saveMessage " + ex.getMessage());
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrió un error al guardar el mensaje.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al guardar el mensaje.",
@@ -143,6 +140,36 @@ public class MessagesService {
             LOG.log(Level.SEVERE, "Ocurrió un error al eliminar el mensaje.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al eliminar el mensaje.",
                     "eliminarMensaje " + ex.getMessage());
+        }
+    }
+
+   
+    public Respuesta getArchivoAdjunto(Long mensajeId) {
+        try {
+            Messages mensaje = em.find(Messages.class, mensajeId);
+            if (mensaje == null || mensaje.getArchive() == null) {
+                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
+                        "El mensaje o archivo adjunto no fue encontrado.", "getArchivoAdjunto NoResultException");
+            }
+
+            Tika tika = new Tika();
+            String tipoMime = tika.detect(mensaje.getArchive());
+            String extension = "";
+            try {
+                extension = MimeTypes.getDefaultMimeTypes().forName(tipoMime).getExtension();
+            } catch (Exception e) {
+                extension = ".bin"; // Asignar una extensión predeterminada si no se puede detectar
+            }
+
+            MessagesDto mensajeDto = new MessagesDto(mensaje);
+            mensajeDto.setMimeType(tipoMime);
+            mensajeDto.setExtension(extension);
+
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "ArchivoAdjunto", mensajeDto);
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrió un error al obtener el archivo adjunto.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
+                    "Ocurrió un error al obtener el archivo adjunto.", "getArchivoAdjunto " + ex.getMessage());
         }
     }
 

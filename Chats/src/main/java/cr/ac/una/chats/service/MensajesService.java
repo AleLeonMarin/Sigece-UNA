@@ -63,4 +63,26 @@ public class MensajesService {
         }
     }
 
+    public Respuesta descargarArchivo(Long mensajeId) {
+        try {
+            Request request = new Request("messages/download/" + mensajeId);
+            request.get();  // Realizamos la solicitud GET para descargar el archivo
+
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+
+            MessagesDto mensajeDto = (MessagesDto) request.readEntity(MessagesDto.class); // Lee directamente como MessagesDto
+
+            return new Respuesta(true, "", "", "ArchivoAdjunto", mensajeDto);
+        } catch (Exception ex) {
+            Logger.getLogger(MensajesService.class.getName()).log(Level.SEVERE, "Ocurrió un error al descargar el archivo adjunto.", ex);
+            return new Respuesta(false, "Ocurrió un error al descargar el archivo adjunto.", "descargarArchivo " + ex.getMessage());
+        }
+    }
+
+
+
 }
+
+

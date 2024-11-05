@@ -15,7 +15,7 @@ public class MessagesDto implements Serializable {
     @Schema(description = "Texto del mensaje", example = "Hola")
     private String text;
     @Schema(description = "Archivo del mensaje")
-    private Serializable archive;
+    private byte[] archive;
     @Schema(description = "Fecha del mensaje", example = "2021-09-01")
     private Date date;
     @Schema(description = "Chat al que pertenece el mensaje")
@@ -24,6 +24,10 @@ public class MessagesDto implements Serializable {
     private UsersDto user;
     @Schema(description = "Version del mensaje", example = "1")
     private Long version;
+    
+    
+    private String extension;
+    private String mimeType;
 
     public MessagesDto() {
     }
@@ -53,11 +57,11 @@ public class MessagesDto implements Serializable {
         this.text = text;
     }
 
-    public Serializable getArchive() {
+    public byte[] getArchive() {
         return archive;
     }
 
-    public void setArchive(Serializable archive) {
+    public void setArchive(byte[] archive) {
         this.archive = archive;
     }
 
@@ -91,6 +95,22 @@ public class MessagesDto implements Serializable {
 
     public void setVersion(Long version) {
         this.version = version;
+    }
+    
+      public void setExtension(String extension) {
+        this.extension = extension;
+    }
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+
+    public String getMimeType() {
+        return mimeType;
     }
 
 }
