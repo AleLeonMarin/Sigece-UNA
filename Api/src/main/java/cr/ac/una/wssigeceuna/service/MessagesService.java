@@ -157,10 +157,14 @@ public class MessagesService {
             try {
                 extension = MimeTypes.getDefaultMimeTypes().forName(tipoMime).getExtension();
 
-                if (tipoMime.equals("application/octet-stream")) {
-                    tipoMime = "audio/wav";
-                    extension = ".wav";
-                }
+              if ("audio/wav".equals(tipoMime)) {
+                extension = ".wav";
+            }
+              
+               if ("audio/x-wav".equals(tipoMime)) {  // Forzar la extensión a WAV si no es detectado correctamente
+                extension = ".wav";
+            }
+               
             } catch (Exception e) {
                 extension = ".bin"; // Asignar una extensión predeterminada si no se puede detectar
             }

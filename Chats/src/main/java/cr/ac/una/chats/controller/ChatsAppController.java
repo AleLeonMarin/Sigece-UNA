@@ -1,7 +1,6 @@
 package cr.ac.una.chats.controller;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -33,13 +32,18 @@ import javafx.scene.layout.VBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import javafx.util.Duration;
 
+
 import javax.sound.sampled.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+
+
+
 
 public class ChatsAppController extends Controller implements Initializable {
 
@@ -52,6 +56,14 @@ public class ChatsAppController extends Controller implements Initializable {
 
     private byte[] archivoAdjunto;
     private String nombreArchivoAdjunto;
+
+
+    private ByteArrayOutputStream out;
+    private AudioFormat format;
+    private TargetDataLine line;
+    private Thread recordingThread;
+    private volatile boolean grabando = false;
+
 
     @FXML
     private MFXButton btnAttach;
@@ -82,9 +94,6 @@ public class ChatsAppController extends Controller implements Initializable {
     private MFXButton btnVoiceRecorder;
 
     ResourceBundle bundle;
-
-    private AudioRecorder recorder = new AudioRecorder();
-    private AudioPlayer player = new AudioPlayer();
     private byte[] recordedAudio;
 
 
@@ -670,83 +679,163 @@ public class ChatsAppController extends Controller implements Initializable {
         }
     }
 
-    private volatile boolean grabando = false;
 
 
     @FXML
     void onActionBtnVoiceRecorder(ActionEvent event) {
         if (!grabando) {
+            // Iniciar grabación
             grabando = true;
             btnVoiceRecorder.setText("Detener");
-            recorder.startRecording(); // Starts recording but does not return data immediately
+            startRecording();
         } else {
+            // Detener grabación
             grabando = false;
-            recordedAudio = recorder.stopRecording(); // Stops recording and retrieves byte array
             btnVoiceRecorder.setText("Grabar");
-
-            if (recordedAudio != null) {
-                enviarAudio(); // Send the recorded audio
-            } else {
-                System.out.println("No audio data recorded.");
-            }
+            stopRecording();
+            enviarAudio(recordedAudio);
         }
     }
 
-    private void detenerGrabacion() {
-        if (grabando) {
-            recorder.stopRecording();
-            grabando = false;
-            System.out.println("Grabación detenida.");
-            enviarAudio();
+
+    private void startRecording() {
+        format = getAudioFormat();
+        DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+        try {
+            line = (TargetDataLine) AudioSystem.getLine(info);
+            line.open(format);
+            line.start();
+            out = new ByteArrayOutputStream();
+            recordingThread = new Thread(() -> {
+                byte[] buffer = new byte[1024];
+                while (grabando) {
+                    int bytesRead = line.read(buffer, 0, buffer.length);
+                    out.write(buffer, 0, bytesRead);
+                }
+            });
+            recordingThread.start();
+        } catch (LineUnavailableException ex) {
+            ex.printStackTrace();
         }
     }
 
-    private void enviarAudio() {
-        if (currentChat == null) {
-            System.out.println("Error: No hay un chat seleccionado.");
-            new Mensaje().show(Alert.AlertType.WARNING, "Error", "Debe seleccionar un chat antes de enviar un audio.");
+    private void stopRecording() {
+        grabando = false;
+        line.stop();
+        line.close();
+        try {
+            recordingThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        // Convertir los datos grabados a formato WAV
+        try {
+            byte[] audioData = out.toByteArray();
+            InputStream byteInputStream = new ByteArrayInputStream(audioData);
+            AudioInputStream audioInputStream = new AudioInputStream(byteInputStream, format, audioData.length / format.getFrameSize());
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, baos);
+            recordedAudio = baos.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private AudioFormat getAudioFormat() {
+        float sampleRate = 16000;
+        int sampleSizeInBits = 16;
+        int channels = 1;
+        boolean signed = true;
+        boolean bigEndian = false;
+        return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed, bigEndian);
+    }
+
+
+
+
+    private void enviarAudio(byte[] audioData) {
+        if (tbvContactos.getSelectionModel().getSelectedItem() == null) {
+            new Mensaje().show(Alert.AlertType.WARNING, bundle.getString("warningTitle"), bundle.getString("warningNoChatSelected"));
             return;
         }
 
-        if (recordedAudio != null) {
-            Long idReceptor = tbvContactos.getSelectionModel().getSelectedItem().getId();
+        Long idReceptor = tbvContactos.getSelectionModel().getSelectedItem().getId();
+        if (idReceptor == null) {
+            System.out.println("Error: No se ha seleccionado ningún contacto.");
+            return;
+        }
 
-            MessagesDto mensajeDto = new MessagesDto();
 
-            UsersDto emisor = new UsersDto();
-            UsersDto receptor = new UsersDto();
+        Respuesta respuestaChatExistente = chatsService.getChatsEntreUsuarios(idEmisor, idReceptor);
+        if (respuestaChatExistente.getEstado()) {
+            List<ChatsDto> chatsExistentes = (List<ChatsDto>) respuestaChatExistente.getResultado("Chats");
 
-            receptor.setId(idReceptor);
-            emisor.setId(obtenerIdEmisorActual());
-
-            mensajeDto.setUser(emisor);
-            mensajeDto.setChat(currentChat);
-
-            mensajeDto.setText("Audio adjunto");
-            mensajeDto.setArchive(recordedAudio); // Set the recorded MP3 data
-            mensajeDto.setExtension(".mp3"); // Indicate MP3 format
-
-            MensajesService mensajesService = new MensajesService();
-            Respuesta respuesta = mensajesService.guardarMensaje(mensajeDto);
-
-            if (respuesta.getEstado()) {
-                System.out.println("Audio enviado correctamente.");
-                recordedAudio = null; // Clear audio after sending
+            if (chatsExistentes != null && !chatsExistentes.isEmpty()) {
+                currentChat = chatsExistentes.get(0);
+                System.out.println("Chat existente encontrado. Usando el chat con ID: " + currentChat.getId());
             } else {
-                System.out.println("Error enviando el audio: " + respuesta.getMensaje());
+                // Si no existe un chat, crear uno nuevo
+                ChatsDto nuevoChat = new ChatsDto();
+                UsersDto emisor = new UsersDto();
+                UsersDto receptor = new UsersDto();
+
+                emisor.setId(obtenerIdEmisorActual());
+                receptor.setId(idReceptor);
+
+                nuevoChat.setEmisor(emisor);
+                nuevoChat.setReceptor(receptor);
+
+                Respuesta respuestaNuevoChat = chatsService.guardarChat(nuevoChat);
+                if (respuestaNuevoChat.getEstado()) {
+                    currentChat = (ChatsDto) respuestaNuevoChat.getResultado("Chat");
+                    System.out.println("Nuevo chat creado con éxito con ID: " + currentChat.getId());
+                } else {
+                    System.out.println("Error creando el chat: " + respuestaNuevoChat.getMensaje());
+                    return;
+                }
             }
         } else {
-            System.out.println("No hay audio para enviar.");
+            System.out.println("Error verificando existencia del chat: " + respuestaChatExistente.getMensaje());
+            return;
+        }
+
+        MessagesDto mensajeDto = new MessagesDto();
+        mensajeDto.setText("▶ Audio ");
+
+        mensajeDto.setArchive(audioData);
+        mensajeDto.setExtension(".wav");
+        mensajeDto.setMimeType("audio/wav");
+
+        // Configurar emisor y receptor
+        UsersDto emisor = new UsersDto();
+        UsersDto receptor = new UsersDto();
+        receptor.setId(idReceptor);
+        emisor.setId(obtenerIdEmisorActual());
+        mensajeDto.setUser(emisor);
+        mensajeDto.setChat(currentChat);
+
+        MensajesService mensajesService = new MensajesService();
+        Respuesta respuesta = mensajesService.guardarMensaje(mensajeDto);
+
+        if (respuesta.getEstado()) {
+            System.out.println("Audio enviado correctamente.");
+            // Opcionalmente, puedes actualizar la interfaz aquí
+        } else {
+            System.out.println("Error enviando el audio: " + respuesta.getMensaje());
         }
     }
 
+
+
     private void reproducirAudio(byte[] audioBytes) {
         try {
-            // Reproducir el audio en formato MP3
-            player.playMp3(audioBytes);
-            System.out.println("Reproduciendo audio...");
+            InputStream byteInputStream = new ByteArrayInputStream(audioBytes);
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(byteInputStream);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
         } catch (Exception e) {
-            System.out.println("Error al reproducir el audio: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
