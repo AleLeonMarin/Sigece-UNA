@@ -7,6 +7,7 @@ import cr.ac.una.wssigeceuna.model.UsersDto;
 import cr.ac.una.wssigeceuna.service.MailsService;
 import cr.ac.una.wssigeceuna.util.CodigoRespuesta;
 import cr.ac.una.wssigeceuna.util.Respuesta;
+import cr.ac.una.wssigeceuna.util.Secure;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,6 +20,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.logging.Level;
 
+@Secure
 @Path("/mails")
 @Tag(name = "Mails", description = "API para los correos del sistema")
 public class MailsController {

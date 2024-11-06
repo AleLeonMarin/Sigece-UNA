@@ -7,6 +7,7 @@ import cr.ac.una.wssigeceuna.model.MessagesDto;
 import cr.ac.una.wssigeceuna.service.MessagesService;
 import cr.ac.una.wssigeceuna.util.CodigoRespuesta;
 import cr.ac.una.wssigeceuna.util.Respuesta;
+import cr.ac.una.wssigeceuna.util.Secure;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ejb.EJB;
@@ -15,6 +16,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 
+@Secure
 @Path("/messages")
 @Tag(name = "Messages", description = "API to manage messages")
 public class MessagesController {

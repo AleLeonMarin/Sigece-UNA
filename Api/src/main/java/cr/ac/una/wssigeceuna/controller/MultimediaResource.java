@@ -4,6 +4,7 @@ import cr.ac.una.wssigeceuna.model.VariablesDto;
 import cr.ac.una.wssigeceuna.service.MultimediaService;
 import cr.ac.una.wssigeceuna.service.VariablesService;
 import cr.ac.una.wssigeceuna.util.Respuesta;
+import cr.ac.una.wssigeceuna.util.Secure;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -14,9 +15,10 @@ import jakarta.ws.rs.core.Response;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-
+@Secure
 @Path("/multimedia")
 @Tag(name = "Multimedia", description = "API para gestionar recursos multimedia")
+
 public class MultimediaResource {
 
     @EJB

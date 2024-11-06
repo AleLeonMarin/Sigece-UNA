@@ -21,7 +21,10 @@ import cr.ac.una.wssigeceuna.model.ChatsDto;
 import cr.ac.una.wssigeceuna.service.ChatsService;
 import cr.ac.una.wssigeceuna.util.CodigoRespuesta;
 import cr.ac.una.wssigeceuna.util.Respuesta;
+import cr.ac.una.wssigeceuna.util.Secure;
 
+
+@Secure
 @Path("/ChatsController")
 @Tag(name = "Chats", description = "Operaciones sobre Chats")
 public class ChatsController {

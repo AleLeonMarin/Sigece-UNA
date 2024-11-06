@@ -6,6 +6,7 @@ import cr.ac.una.wssigeceuna.model.VariablesDto;
 import cr.ac.una.wssigeceuna.service.VariablesService;
 import cr.ac.una.wssigeceuna.util.CodigoRespuesta;
 import cr.ac.una.wssigeceuna.util.Respuesta;
+import cr.ac.una.wssigeceuna.util.Secure;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,6 +18,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
+
 
 @Path("/variables")
 @Tag(name = "Variables", description = "API para las variables del sistema")

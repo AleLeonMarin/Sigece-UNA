@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 
 import cr.ac.una.wssigeceuna.service.EmailsService;
 import cr.ac.una.wssigeceuna.util.CodigoRespuesta;
+import cr.ac.una.wssigeceuna.util.Secure;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -18,6 +19,8 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.Pair;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 
+
+@Secure
 @Path("/emails")
 @Tag(name = "Emails", description = "API para los correos del sistema")
 public class EmailsController {
