@@ -349,7 +349,7 @@ public class ChatsAppController extends Controller implements Initializable {
     void onActonBtnSend(ActionEvent event) {
         String textoMensaje = txtMensaje.getText();
 
-        if (textoMensaje.isEmpty()) {
+        if (textoMensaje.isEmpty() && archivoAdjunto == null) {
             new Mensaje().show(Alert.AlertType.WARNING, bundle.getString("warningTitle"), bundle.getString("warningEmptyMessageField"));
             return;
         }
@@ -405,6 +405,9 @@ public class ChatsAppController extends Controller implements Initializable {
 
         if (archivoAdjunto != null) {
             mensajeDto.setArchive(archivoAdjunto);
+
+            mensajeDto.setText(nombreArchivoAdjunto);
+
         }
 
         UsersDto emisor = new UsersDto();
@@ -679,6 +682,8 @@ public class ChatsAppController extends Controller implements Initializable {
         }
     }
 
+    @FXML
+    private ImageView imgaeMic;
 
 
     @FXML
@@ -686,12 +691,13 @@ public class ChatsAppController extends Controller implements Initializable {
         if (!grabando) {
             // Iniciar grabación
             grabando = true;
-            btnVoiceRecorder.setText("Detener");
+            imgaeMic.setImage(new Image("/cr/ac/una/chats/resources/senal-de-stop.png"));
             startRecording();
         } else {
             // Detener grabación
             grabando = false;
-            btnVoiceRecorder.setText("Grabar");
+            imgaeMic.setImage(new Image("/cr/ac/una/chats/resources/forma-de-microfono-negro.png"));
+
             stopRecording();
             enviarAudio(recordedAudio);
         }

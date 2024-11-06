@@ -97,9 +97,9 @@
                                     </ImageView>
                                  </graphic>
                               </MFXButton>
-                              <MFXButton fx:id="btnVoiceRecorder" onAction="#onActionBtnVoiceRecorder" prefHeight="40.0" prefWidth="33.0" styleClass="button-redStyle" text=" ">
+                              <MFXButton fx:id="btnVoiceRecorder" alignment="CENTER" onAction="#onActionBtnVoiceRecorder" prefHeight="40.0" prefWidth="33.0" styleClass="button-redStyle" text=" " textAlignment="CENTER">
                                  <graphic>
-                                    <ImageView fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fx:id="imgaeMic" fitHeight="27.0" fitWidth="28.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@../resources/forma-de-microfono-negro.png" />
                                        </image>
