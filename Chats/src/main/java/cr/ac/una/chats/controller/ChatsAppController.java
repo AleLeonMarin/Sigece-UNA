@@ -32,6 +32,8 @@ import javafx.scene.layout.VBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import javafx.util.Duration;
@@ -260,8 +262,9 @@ public class ChatsAppController extends Controller implements Initializable {
                         hbox.setPrefWidth(vboxChats.getPrefWidth() - 20);
                         hbox.setMaxWidth(vboxChats.getPrefWidth() - 20);
 
-                        Label mensajeLabel = new Label(mensaje.getText());
-                        mensajeLabel.setWrapText(true);
+                        TextFlow mensajeLabel = new TextFlow();
+                        mensajeLabel.getChildren().add(new Text(mensaje.getText()));
+
                         mensajeLabel.setMaxWidth(hbox.getPrefWidth() * 2);
 
                         VBox vboxMessageContent = new VBox(5); // Contenedor para imagen y texto del mensaje
