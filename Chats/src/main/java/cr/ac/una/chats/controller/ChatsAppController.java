@@ -262,7 +262,7 @@ public class ChatsAppController extends Controller implements Initializable {
 
                         Label mensajeLabel = new Label(mensaje.getText());
                         mensajeLabel.setWrapText(true);
-                        mensajeLabel.setMaxWidth(hbox.getPrefWidth() * 0.75);
+                        mensajeLabel.setMaxWidth(hbox.getPrefWidth() * 2);
 
                         VBox vboxMessageContent = new VBox(5); // Contenedor para imagen y texto del mensaje
                         vboxMessageContent.getChildren().add(mensajeLabel);
@@ -401,13 +401,13 @@ public class ChatsAppController extends Controller implements Initializable {
 
         // Crear y enviar el mensaje
         MessagesDto mensajeDto = new MessagesDto();
-        mensajeDto.setText(textoMensaje);
+
 
         if (archivoAdjunto != null) {
             mensajeDto.setArchive(archivoAdjunto);
-
             mensajeDto.setText(nombreArchivoAdjunto);
-
+        }else{
+            mensajeDto.setText(textoMensaje);
         }
 
         UsersDto emisor = new UsersDto();
@@ -416,6 +416,7 @@ public class ChatsAppController extends Controller implements Initializable {
         emisor.setId(obtenerIdEmisorActual());
         mensajeDto.setUser(emisor);
         mensajeDto.setChat(currentChat);
+
 
         MensajesService mensajesService = new MensajesService();
         Respuesta respuesta = mensajesService.guardarMensaje(mensajeDto);

@@ -1,6 +1,5 @@
 package cr.ac.una.wssigeceuna.service;
 
-
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -101,27 +100,39 @@ public class ChatsService {
         }
     }
 
-    public Respuesta deleteChat(Long id) {
-        try {
-            Chats chat = em.find(Chats.class, id);
-            if (chat == null) {
-                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el chat a eliminar.",
-                        "deleteChat NoResultException");
-            }
-            em.remove(chat);
-            em.flush();
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "Chat eliminado correctamente.", "");
-        } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Ocurrió un error al eliminar el chat.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al eliminar el chat.",
-                    "deleteChat " + ex.getMessage());
+   public Respuesta deleteChat(Long id) {
+    try {
+        Chats chat = em.find(Chats.class, id);
+        
+        if (chat == null) {
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el chat a eliminar.",
+                    "deleteChat NoResultException");
         }
+
+        // Actualizar la lista de mensajes
+        chat = em.merge(chat);
+        chat.getMessages().size(); // Cargar los mensajes y asegurarse de que están sincronizados
+
+        // Eliminar manualmente los mensajes asociados al chat para evitar conflictos de integridad
+        Query deleteMessagesQuery = em.createQuery("DELETE FROM Messages m WHERE m.chat.id = :chatId");
+        deleteMessagesQuery.setParameter("chatId", id);
+        deleteMessagesQuery.executeUpdate();
+
+        // Eliminar el chat
+        em.remove(chat);
+        em.flush();
+
+        return new Respuesta(true, CodigoRespuesta.CORRECTO, "Chat eliminado correctamente.", "");
+    } catch (Exception ex) {
+        LOG.log(Level.SEVERE, "Ocurrió un error al eliminar el chat.", ex);
+        return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al eliminar el chat.",
+                "deleteChat " + ex.getMessage());
     }
+}
+
 
     public Respuesta getChatsByUsuario(Long id) {
         try {
-            
-            
 
             Query qryChat = em.createQuery(
                     "SELECT c FROM Chats c WHERE c.emisor.id = :id OR c.receptor.id = :id",
@@ -149,28 +160,25 @@ public class ChatsService {
 
             Query qryChats = em.createQuery(
                     "SELECT c FROM Chats c WHERE (c.emisor.id = :emisor AND c.receptor.id = :receptor) "
-                            + "OR (c.emisor.id = :receptor AND c.receptor.id = :emisor)",
+                    + "OR (c.emisor.id = :receptor AND c.receptor.id = :emisor)",
                     Chats.class);
             qryChats.setParameter("emisor", emisor);
             qryChats.setParameter("receptor", receptor);
 
-        List<Chats> chats = qryChats.getResultList();
+            List<Chats> chats = qryChats.getResultList();
 
-        List<ChatsDto> chatsDto = new ArrayList<>();
-        for (Chats chat : chats) {
-            chatsDto.add(new ChatsDto(chat));
+            List<ChatsDto> chatsDto = new ArrayList<>();
+            for (Chats chat : chats) {
+                chatsDto.add(new ChatsDto(chat));
+            }
+
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Chats", chatsDto);
+
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar los chats entre usuarios.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
+                    "Ocurrio un error al consultar los chats entre usuarios.", "getChatsEntreUsuarios " + ex.getMessage());
         }
-
-        return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Chats", chatsDto);
-
-    } catch (Exception ex) {
-        LOG.log(Level.SEVERE, "Ocurrio un error al consultar los chats entre usuarios.", ex);
-        return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
-                "Ocurrio un error al consultar los chats entre usuarios.", "getChatsEntreUsuarios " + ex.getMessage());
     }
-}
-
-
-
 
 }

@@ -104,7 +104,6 @@
                     if (usuario.getRoles().stream().anyMatch(r -> r.getName().equals("Normal"))
                             && usuario.getState().equals("A")) {
                         FlowController.getInstance().goMain("ChatsAppView");
-                        getStage().close();
                     } else {
                         new Mensaje().showModal(AlertType.ERROR, bundle.getString("userValidation.title"), getStage(),
                                 bundle.getString("userValidation.noPermission"));
