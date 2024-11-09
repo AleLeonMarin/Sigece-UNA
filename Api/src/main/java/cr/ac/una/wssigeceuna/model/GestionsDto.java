@@ -19,8 +19,8 @@ import java.time.LocalDate;
     "version",
     "version",
     "Subactuvities",
-    "Requester",
-    "Assigned",})
+    "requester",
+    "assigned",})
 
 @Schema(description = "Esta clase contiene la informacion de las gestiones")
 public class GestionsDto implements Serializable {
@@ -56,10 +56,10 @@ public class GestionsDto implements Serializable {
     private ActivitiesDto Activity;
 
     @Schema(description = "Solicitante de la gestion")
-    private UsersDto Requester;
+    private UsersDto requester;
 
     @Schema(description = "Asignado de la gestion")
-    private UsersDto Assigned;
+    private UsersDto assigned;
 
     @JsonbTransient
     List<FollowsDto> follows;
@@ -95,10 +95,10 @@ public class GestionsDto implements Serializable {
             this.Activity = new ActivitiesDto(gestions.getActivity());
         }
         if (gestions.getRequester() != null) {
-            this.Requester = new UsersDto(gestions.getRequester());
+            this.requester = new UsersDto(gestions.getRequester());
         }
         if (gestions.getAssigned() != null) {
-            this.Assigned = new UsersDto(gestions.getAssigned());
+            this.assigned = new UsersDto(gestions.getAssigned());
         }
         if (gestions.getSubactivities() != null) {
             this.Subactivities = new SubactivitiesDto(gestions.getSubactivities());
@@ -187,19 +187,19 @@ public class GestionsDto implements Serializable {
     }
 
     public UsersDto getRequester() {
-        return Requester;
+        return requester;
     }
 
     public void setRequester(UsersDto Requester) {
-        this.Requester = Requester;
+        this.requester = Requester;
     }
 
     public UsersDto getAssigned() {
-        return Assigned;
+        return assigned;
     }
 
     public void setAssigned(UsersDto Assigned) {
-        this.Assigned = Assigned;
+        this.assigned = Assigned;
     }
 
     public List<FollowsDto> getFollows() {

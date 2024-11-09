@@ -10,6 +10,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,10 +27,17 @@ public class ReportsService {
     @PersistenceContext(unitName = "SigeceUnaWsPU")
     private EntityManager em;
 
-    public Respuesta generateGestionesReport() {
+    public Respuesta generateGestionesReport(Long employeeId, LocalDate creationStartDate, LocalDate creationEndDate) {
         try {
-            // Consultar las gestiones desde la base de datos
-            TypedQuery<Gestions> query = em.createNamedQuery("Gestions.findAll", Gestions.class);
+            // Consulta modificada para incluir el rango de fechas de creación
+            TypedQuery<Gestions> query = em.createQuery(
+                    "SELECT g FROM Gestions g WHERE "
+                    + "((g.requester.id = :employeeId) OR (g.assigned.id = :employeeId)) AND "
+                    + "(g.creationDate BETWEEN :creationStartDate AND :creationEndDate)", Gestions.class);
+            query.setParameter("employeeId", employeeId);
+            query.setParameter("creationStartDate", creationStartDate);
+            query.setParameter("creationEndDate", creationEndDate);
+
             List<Gestions> gestiones = query.getResultList();
 
             // Convertir las entidades a DTOs
@@ -40,6 +48,8 @@ public class ReportsService {
             // Parámetros adicionales para el reporte
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("gestionesData", new JRBeanCollectionDataSource(gestionesDto));
+            parameters.put("creationStartDate", creationStartDate); 
+            parameters.put("creationEndDate",creationEndDate);
 
             // Generar el reporte utilizando ReportsUtil
             byte[] reportPdf = ReportsUtil.generatePdfReport("reportGestiones.jrxml", gestionesDto, parameters);
