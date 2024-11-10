@@ -90,7 +90,7 @@ public class ReportsService {
             // Calcular los conteos para los gráficos
             long enTiempoCount = gestionesDto.stream().filter(dto -> dto.getOnTime()).count();
             long fueraDeTiempoCount = gestionesDto.stream().filter(dto -> !dto.getOnTime()).count();
-            long pendientesCount = gestionesDto.stream().filter(g -> g.getState().equals("P")).count();
+            long pendientesCount = gestionesDto.stream().filter(g -> g.getState().equals("S")).count();
             long atendidasCount = gestionesDto.stream().filter(g -> g.getState().equals("A")).count();
 
             // Parámetros para el reporte
