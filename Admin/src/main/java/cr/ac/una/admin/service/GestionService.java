@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cr.ac.una.admin.model.ApprovalsDto;
+import cr.ac.una.admin.model.FollowsDto;
 import cr.ac.una.admin.model.GestionsDto;
 import cr.ac.una.admin.util.Request;
 import cr.ac.una.admin.util.Respuesta;
@@ -74,6 +76,38 @@ public class GestionService {
             return new Respuesta(true, "", "Gestion eliminada correctamente", "Gestion", null);
         } catch (Exception ex) {
             return new Respuesta(false, "Error eliminando la gestion.", "deleteGestion " + ex.getMessage());
+        }
+    }
+
+    public Respuesta createFollow(FollowsDto follow) {
+        try {
+            Request request = new Request("follow/createFollow");
+            request.post(follow);
+
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+
+            FollowsDto followGuardado = (FollowsDto) request.readEntity(FollowsDto.class);
+            return new Respuesta(true, "", "", "Follow", followGuardado);
+        } catch (Exception e) {
+            return new Respuesta(false, e.getMessage(), "");
+        }
+    }
+
+    public Respuesta createApproval(ApprovalsDto approval) {
+        try {
+            Request request = new Request("approvals/createApprovals");
+            request.post(approval);
+
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+
+            ApprovalsDto approvalGuardado = (ApprovalsDto) request.readEntity(ApprovalsDto.class);
+            return new Respuesta(true, "", "", "Approval", approvalGuardado);
+        } catch (Exception e) {
+            return new Respuesta(false, e.getMessage(), "");
         }
     }
 

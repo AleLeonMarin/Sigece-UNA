@@ -621,6 +621,16 @@
   -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 5);
 }
 
+.stack-historial-pane {
+  -fx-background-color: #FFFACD; /* Color amarillo pastel */
+  -fx-background-radius: 15;
+  -fx-padding: 0;
+  -fx-border-radius: 15;
+  -fx-border-color: #FFD700; /* Borde de un tono dorado suave */
+  -fx-border-width: 2;
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 5);
+}
+
 .image-profile {
   -fx-background-repeat: no-repeat;
   -fx-background-size: contain;
@@ -1140,3 +1150,6 @@
   -fx-background-image: url("../resources/costa-rica.png");
 }
 
+.jfx-pane-historial{
+  -fx-background-color: #FFFACD;
+}

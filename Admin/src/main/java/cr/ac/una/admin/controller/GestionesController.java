@@ -9,17 +9,24 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +51,8 @@ import cr.ac.una.admin.util.Formato;
 import cr.ac.una.admin.util.Mensaje;
 import cr.ac.una.admin.util.Respuesta;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 
 public class GestionesController extends Controller implements Initializable {
 
@@ -236,6 +245,10 @@ public class GestionesController extends Controller implements Initializable {
 
     private Map<String, UsersDto> assigned = new HashMap<>();
 
+    List<UsersDto> currentUsers;
+
+    List<UsersDto> deletedUsers;
+
     @Override
     public void initialize() {
         initValuesOfGestion();
@@ -260,6 +273,57 @@ public class GestionesController extends Controller implements Initializable {
             }
         }
 
+    }
+
+    private void selectionStateFollows(CheckBox chkBox) {
+        CheckBox[] checkBoxs = { chkCursoSeguimiento, chkAprobadaSeguimiento, chkRechazadaSeguimiento };
+        for (CheckBox checkBox : checkBoxs) {
+            if (checkBox != chkBox) {
+                checkBox.setSelected(false);
+            }
+        }
+    }
+
+    private void selectStateFollows() {
+        chkCursoSeguimiento.setOnAction(e -> selectionStateFollows(chkCursoSeguimiento));
+        chkAprobadaSeguimiento.setOnAction(e -> selectionStateFollows(chkAprobadaSeguimiento));
+        chkRechazadaSeguimiento.setOnAction(e -> selectionStateFollows(chkRechazadaSeguimiento));
+    }
+
+    private void selectTypeOfFollows(CheckBox chkBox) {
+        CheckBox[] checkBoxs = { chkTextoSeguimiento, chkArchivoSeguimiento };
+        for (CheckBox checkBox : checkBoxs) {
+            if (checkBox != chkBox) {
+                checkBox.setSelected(false);
+            }
+        }
+    }
+
+    private void selectTypeOfFollows() {
+        chkTextoSeguimiento.setOnAction(e -> {
+            selectTypeOfFollows(chkTextoSeguimiento);
+            if (chkTextoSeguimiento.isSelected()) {
+                txaTextoSeguimiento.setDisable(false);
+                txaTextoSeguimiento.setVisible(true);
+                btnAdjuntarSeguimiento.setDisable(true);
+                btnAdjuntarSeguimiento.setVisible(false);
+            } else {
+                txaTextoSeguimiento.setDisable(true);
+                txaTextoSeguimiento.setVisible(false);
+            }
+        });
+        chkArchivoSeguimiento.setOnAction(e -> {
+            selectTypeOfFollows(chkArchivoSeguimiento);
+            if (chkArchivoSeguimiento.isSelected()) {
+                txaTextoSeguimiento.setDisable(true);
+                txaTextoSeguimiento.setVisible(false);
+                btnAdjuntarSeguimiento.setDisable(false);
+                btnAdjuntarSeguimiento.setVisible(true);
+            } else {
+                btnAdjuntarSeguimiento.setDisable(true);
+                btnAdjuntarSeguimiento.setVisible(false);
+            }
+        });
     }
 
     private void selectType() {
@@ -394,6 +458,8 @@ public class GestionesController extends Controller implements Initializable {
         selectType();
         selectTypeOfAprobacion();
         selectQuantityOfApprovers();
+        selectStateFollows();
+        selectTypeOfFollows();
 
         // Configuración de los comboboxes
         cmbActividades.setVisible(false);
@@ -412,12 +478,6 @@ public class GestionesController extends Controller implements Initializable {
         txfSolicitanteGestion.setText(user.getName() + " " + user.getLastNames());
         txfSolicitanteGestion.setEditable(false);
 
-        txfAprobadorAprobacion.setText(user.getName() + " " + user.getLastNames());
-        txfAprobadorAprobacion.setEditable(false);
-
-        txfUsuarioSeguimiento.setText(user.getName() + " " + user.getLastNames());
-        txfUsuarioSeguimiento.setEditable(false);
-
         chargeUsers();
         chargeActivity();
         chargeSubactivity();
@@ -435,7 +495,7 @@ public class GestionesController extends Controller implements Initializable {
 
         // Descriptions
         txfDescripcionAprobacion.setTextFormatter(Formato.getInstance().letrasFormat(200));
-        txfDescripcionSeguimiento.setTextFormatter(Formato.getInstance().letrasFormat(200));
+        txfDescripcionSeguimiento.setTextFormatter(Formato.getInstance().anyCharacterFormatWithMaxLength(200));
         txaGestion.setTextFormatter(Formato.getInstance().letrasFormat(1000));
 
         // Comments
@@ -461,6 +521,24 @@ public class GestionesController extends Controller implements Initializable {
         dpSolucionGestion.valueProperty().bindBidirectional(gestion.solutionDate);
     }
 
+    private void bindFollow(Boolean isNew) {
+        if (!isNew) {
+            txfIDSeguimiento.textProperty().bind(follow.id);
+        }
+        txfDescripcionSeguimiento.textProperty().bindBidirectional(follow.description);
+        dpFechaSeguimeinto.valueProperty().bindBidirectional(follow.date);
+    }
+
+    private void bindApproval(Boolean isNew) {
+        if (!isNew) {
+            txfIDAprobacion.textProperty().bind(approval.id);
+        }
+        txfDescripcionAprobacion.textProperty().bindBidirectional(approval.description);
+        txfComentarioAprobacion.textProperty().bindBidirectional(approval.comment);
+        txaSolucionAprobacion.textProperty().bindBidirectional(approval.solution);
+        dpFechaAprobacion.valueProperty().bindBidirectional(approval.date);
+    }
+
     // unbinds
 
     private void unbindGestion() {
@@ -471,7 +549,21 @@ public class GestionesController extends Controller implements Initializable {
         dpSolucionGestion.valueProperty().unbindBidirectional(gestion.solutionDate);
     }
 
-    private void clean() {
+    private void unbindFollow() {
+        txfIDSeguimiento.textProperty().unbind();
+        txfDescripcionSeguimiento.textProperty().unbindBidirectional(follow.description);
+        dpFechaSeguimeinto.valueProperty().unbindBidirectional(follow.date);
+    }
+
+    private void unbindApproval() {
+        txfIDAprobacion.textProperty().unbind();
+        txfDescripcionAprobacion.textProperty().unbindBidirectional(approval.description);
+        txfComentarioAprobacion.textProperty().unbindBidirectional(approval.comment);
+        txaSolucionAprobacion.textProperty().unbindBidirectional(approval.solution);
+        dpFechaAprobacion.valueProperty().unbindBidirectional(approval.date);
+    }
+
+    private void cleanGestion() {
         chkActividad.setSelected(false);
         chkSubactividad.setSelected(false);
         cmbActividades.setDisable(true);
@@ -517,13 +609,29 @@ public class GestionesController extends Controller implements Initializable {
 
     private void newGestion() {
         unbindGestion();
-        clean();
+        cleanGestion();
         gestion = new GestionsDto();
         bindGestion(true);
         txfIDGestion.clear();
         txfIDGestion.requestFocus();
         chkEsperaGestion.setSelected(true);
+        vboxHistorial.getChildren().clear();
 
+    }
+
+    private void newFollow() {
+        unbindFollow();
+        follow = new FollowsDto();
+        bindFollow(true);
+        txfIDSeguimiento.clear();
+        txfIDSeguimiento.requestFocus();
+        chkCursoSeguimiento.setSelected(true);
+        chkTextoSeguimiento.setSelected(true);
+        txaTextoSeguimiento.clear();
+        txaTextoSeguimiento.setDisable(false);
+        txaTextoSeguimiento.setVisible(true);
+        btnAdjuntarSeguimiento.setDisable(true);
+        btnAdjuntarSeguimiento.setVisible(false);
     }
 
     // selection checkBoxes methods
@@ -624,7 +732,18 @@ public class GestionesController extends Controller implements Initializable {
 
     private void setApproversGestion() {
         List<UsersDto> selectedApprovers = setApprovers();
+
+        deletedUsers = new ArrayList<>();
+        deletedUsers.clear();
+
+        for (UsersDto initial : currentUsers) {
+            if (!selectedApprovers.contains(initial)) {
+                deletedUsers.add(initial);
+            }
+        }
+
         gestion.setApprovers(selectedApprovers);
+        gestion.setDeletedApprovers(deletedUsers);
     }
 
     // selection Activity or subactivity
@@ -792,6 +911,7 @@ public class GestionesController extends Controller implements Initializable {
 
     private void chargeGestion(Long id) {
         try {
+            vboxHistorial.getChildren().clear();
             GestionService service = new GestionService();
             Respuesta respuesta = service.getGestion(id);
 
@@ -802,6 +922,18 @@ public class GestionesController extends Controller implements Initializable {
 
             unbindGestion();
             gestion = (GestionsDto) respuesta.getResultado("Gestion");
+
+            if(gestion.getState().equals("C")) {
+                chkCursoGestion.setSelected(true);
+            } else if(gestion.getState().equals("E")) {
+                chkEsperaGestion.setSelected(true);
+            } else if(gestion.getState().equals("A")) {
+                chkAprobacionGestion.setSelected(true);
+            } else if(gestion.getState().equals("P")) {
+                chkAprobadaGestion.setSelected(true);
+            } else if(gestion.getState().equals("R")) {
+                chkRechazadaGestion.setSelected(true);
+            }
 
             // Selección de actividad o subactividad
             if (gestion.getActivity() != null) {
@@ -836,6 +968,8 @@ public class GestionesController extends Controller implements Initializable {
                 }
             }
 
+            currentUsers = new ArrayList<>(gestion.getApprovers());
+            System.out.println("Cantidad de aprobadores: " + currentUsers.size());
             // Selección de aprobadores
             int approversCount = gestion.getApprovers().size();
             for (int i = 0; i < approversCount; i++) {
@@ -879,12 +1013,99 @@ public class GestionesController extends Controller implements Initializable {
                 }
             }
 
+            for (FollowsDto follow : gestion.getFollows()) {
+
+                FollowsDto currentFollow = follow;
+
+                vboxHistorial.setAlignment(Pos.TOP_CENTER);
+                vboxHistorial.setSpacing(5);
+
+                AnchorPane pane = new AnchorPane();
+                pane.setPrefHeight(50);
+                pane.setPrefWidth(100);
+                pane.getStyleClass().add("stack-historial-pane");
+                VBox.setMargin(pane, new Insets(20));
+
+                VBox vbox = new VBox();
+                vbox.getStyleClass().add("stack-personal-pane");
+                vbox.setAlignment(Pos.CENTER);
+
+                // Título de la gestión
+                Label title = new Label(follow.getDescription());
+                title.getStyleClass().add("stackpane-label-black");
+                title.setAlignment(Pos.CENTER);
+                title.setMaxWidth(Double.MAX_VALUE);
+
+                // Contenido de la gestión con TextFlow
+                TextFlow contentFlow = new TextFlow(new Text(new String(follow.getArchive(), StandardCharsets.UTF_8)));
+                contentFlow.setTextAlignment(TextAlignment.CENTER);
+                contentFlow.setMaxWidth(250);
+                contentFlow.setPrefWidth(250);
+
+                // Fecha de la gestión
+                Label date = new Label(follow.getDate().toString());
+                date.setAlignment(Pos.CENTER);
+                date.setMaxWidth(Double.MAX_VALUE);
+
+                // Añadiendo los elementos al VBox
+                vbox.getChildren().addAll(title, contentFlow, date);
+                vbox.setAlignment(Pos.CENTER);
+                vbox.setSpacing(5);
+                vbox.setPadding(new Insets(10));
+                vbox.setPrefHeight(50);
+                vbox.setPrefWidth(180);
+
+                AnchorPane.setTopAnchor(vbox, 10.0);
+                AnchorPane.setBottomAnchor(vbox, 10.0);
+                AnchorPane.setLeftAnchor(vbox, 10.0);
+                AnchorPane.setRightAnchor(vbox, 10.0);
+
+                pane.setOnMouseClicked(event -> {
+                    // Depuración: imprime los valores de follow en la consola
+                    System.out.println("ID: " + currentFollow.getId());
+                    System.out.println("Descripción: " + currentFollow.getDescription());
+                    System.out.println("Contenido: " + new String(currentFollow.getArchive(), StandardCharsets.UTF_8));
+                    System.out.println("Fecha: " + currentFollow.getDate());
+                    System.out.println(
+                            "Usuario: " + currentFollow.getUsers().getName() + " "
+                                    + currentFollow.getUsers().getLastNames());
+                    System.out.println("Estado: " + currentFollow.getState());
+
+                    // Mostrar el contenido del seguimiento
+                    txfIDSeguimiento.setText(currentFollow.getId().toString());
+                    txfDescripcionSeguimiento.setText(currentFollow.getDescription());
+                    txfUsuarioSeguimiento.setText(currentFollow.getUsers().getName() + " "
+                            + currentFollow.getUsers().getLastNames());
+                    txaTextoSeguimiento.setText(new String(currentFollow.getArchive(), StandardCharsets.UTF_8));
+                    dpFechaSeguimeinto.setValue(LocalDate.parse(follow.getDate().toString()));
+
+                    if (currentFollow.getState().equals("A")) {
+                        chkAprobadaSeguimiento.setSelected(true);
+                    } else if (currentFollow.getState().equals("R")) {
+                        chkRechazadaSeguimiento.setSelected(true);
+                    } else {
+                        chkCursoSeguimiento.setSelected(true);
+                    }
+
+                });
+
+                pane.getChildren().add(vbox);
+                vboxHistorial.getChildren().add(pane);
+            }
+
             bindGestion(false);
 
         } catch (Exception e) {
             Logger.getLogger(GestionesController.class.getName()).log(Level.SEVERE, "Error cargando la gestion", e);
             new Mensaje().showModal(AlertType.ERROR, "Cargar Gestion", getStage(), "Error cargando la gestion.");
         }
+    }
+
+    private List<UsersDto> getApprovers() {
+
+        List<UsersDto> selected = new ArrayList<>();
+
+        return null;
     }
 
     // save methods
@@ -920,6 +1141,62 @@ public class GestionesController extends Controller implements Initializable {
             new Mensaje().showModal(AlertType.ERROR, "Guardar Gestion", getStage(), "Error guardando la gestion.");
         }
 
+    }
+
+    private void saveFollow() {
+        try {
+            this.follow.setGestions(this.gestion);
+            this.follow.setUsers((UsersDto) AppContext.getInstance().get("User"));
+            this.follow.setArchive(txaTextoSeguimiento.getText().getBytes(StandardCharsets.UTF_8));
+            GestionService service = new GestionService();
+            Respuesta respuesta = service.createFollow(follow);
+            if (!respuesta.getEstado()) {
+                new Mensaje().showModal(AlertType.INFORMATION, "Seguimiento", getStage(), respuesta.getMensaje());
+            } else {
+                unbindFollow();
+                this.follow = (FollowsDto) respuesta.getResultado("Follow");
+                bindFollow(false);
+                vboxHistorial.getChildren().clear();
+                chargeGestion(Long.valueOf(txfIDGestion.getText()));
+                new Mensaje().showModal(AlertType.INFORMATION, "Seguimiento", getStage(), respuesta.getMensaje());
+
+            }
+        } catch (Exception e) {
+            Logger.getLogger(GestionesController.class.getName()).log(Level.SEVERE, "Error guardando el seguimiento",
+                    e);
+            new Mensaje().showModal(AlertType.ERROR, "Guardar Seguimiento", getStage(),
+                    "Error guardando el seguimiento.");
+        }
+    }
+
+    private void saveApproval() {
+        try {
+            this.approval.setGestion(this.gestion);
+            this.approval.setUsers((UsersDto) AppContext.getInstance().get("User"));
+            if (chkAprobadaAprobacion.isSelected()) {
+                this.approval.setState("A");
+            } else if (chkRechazadaAprobacion.isSelected()) {
+                this.approval.setState("R");
+            }
+            this.approval.setDescription(txfDescripcionAprobacion.getText());
+            this.approval.setComment(txfComentarioAprobacion.getText());
+            this.approval.setSolution(txaSolucionAprobacion.getText());
+            GestionService service = new GestionService();
+            Respuesta respuesta = service.createApproval(approval);
+            if (!respuesta.getEstado()) {
+                new Mensaje().showModal(AlertType.INFORMATION, "Aprobación", getStage(), respuesta.getMensaje());
+            } else {
+                unbindApproval();
+                this.approval = (ApprovalsDto) respuesta.getResultado("Approval");
+                bindApproval(false);
+                new Mensaje().showModal(AlertType.INFORMATION, "Aprobación", getStage(), respuesta.getMensaje());
+            }
+        } catch (Exception e) {
+            Logger.getLogger(GestionesController.class.getName()).log(Level.SEVERE, "Error guardando la aprobación",
+                    e);
+            new Mensaje().showModal(AlertType.ERROR, "Guardar Aprobación", getStage(),
+                    "Error guardando la aprobación.");
+        }
     }
 
     // delete methods
@@ -970,6 +1247,9 @@ public class GestionesController extends Controller implements Initializable {
     void onActionBtnDelete(ActionEvent event) {
         if (tptGestiones.isSelected()) {
             deleteGestion(Long.valueOf(txfIDGestion.getText()));
+        } else if (tptSeguimeinto.isSelected()) {
+            new Mensaje().showModal(AlertType.INFORMATION, "Seguimiento", getStage(),
+                    "No se puede eliminar un seguimiento ya que es parte del historial de la gestión");
         }
 
     }
@@ -987,6 +1267,11 @@ public class GestionesController extends Controller implements Initializable {
             if (new Mensaje().showConfirmation("Nueva Gestion", getStage(), "Desea crear una nueva gestion?")) {
                 newGestion();
             }
+        } else if (tptSeguimeinto.isSelected()) {
+            if (new Mensaje().showConfirmation("Nuevo Seguimiento", getStage(),
+                    "Desea crear un nuevo seguimiento?")) {
+                newFollow();
+            }
         }
 
     }
@@ -995,12 +1280,19 @@ public class GestionesController extends Controller implements Initializable {
     void onActionBtnSave(ActionEvent event) {
         if (tptGestiones.isSelected()) {
             saveGestion();
+        } else if (tptSeguimeinto.isSelected()) {
+            saveFollow();
+        } else if (tptAprobaciones.isSelected()) {
+            saveApproval();
         }
 
     }
 
     @FXML
     void onActionBtnSearch(ActionEvent event) {
+        if (tptSeguimeinto.isSelected() || tptAprobaciones.isSelected()) {
+            tbGestiones.getSelectionModel().select(tptGestiones);
+        }
 
         SpecificSearchViewController controller = (SpecificSearchViewController) FlowController.getInstance()
                 .getController("SpecificSearch");
@@ -1011,10 +1303,12 @@ public class GestionesController extends Controller implements Initializable {
 
         GestionsDto gestion = (GestionsDto) result;
         if (gestion != null) {
+            // Desenlaza temporalmente la propiedad antes de establecer el texto
+            txfIDGestion.textProperty().unbind();
             txfIDGestion.setText(gestion.getId().toString());
+
             chargeGestion(Long.valueOf(txfIDGestion.getText()));
         }
-
     }
 
     @FXML
@@ -1032,12 +1326,43 @@ public class GestionesController extends Controller implements Initializable {
 
     @FXML
     void onSelecitonChangedTptSeguimiento(Event event) {
+        if (tptSeguimeinto.isSelected()) {
+            if (this.gestion.getId() == null) {
+                new Mensaje().showModal(AlertType.INFORMATION, "Seguimiento", getStage(),
+                        "Debe de seleccionar una gestion");
+                tbGestiones.getSelectionModel().select(tptGestiones);
+            }
+            txfUsuarioSeguimiento.setText(((UsersDto) AppContext.getInstance().get("User")).getName() + " "
+                    + ((UsersDto) AppContext.getInstance().get("User")).getLastNames());
+            newFollow();
+        }
 
     }
 
     @FXML
     void onSelectionChangedTptAprobaciones(Event event) {
+        if (tptAprobaciones.isSelected()) {
+            if (this.gestion == null || this.gestion.getId() == null) {
+                // Mostrar mensaje si no se ha seleccionado una gestión
+                new Mensaje().showModal(AlertType.INFORMATION, "Aprobaciones", getStage(),
+                        "Debe de seleccionar una gestión");
+                tbGestiones.getSelectionModel().select(tptGestiones);
+            } else {
+                // Obtener el usuario actual desde AppContext
+                UsersDto currentUser = (UsersDto) AppContext.getInstance().get("User");
 
+                // Verificar si el usuario actual es un aprobador de la gestión
+                boolean isApprover = gestion.getApprovers().stream()
+                        .anyMatch(user -> user.getId().equals(currentUser.getId()));
+
+                if (!isApprover) {
+                    // Mostrar mensaje si el usuario no es un aprobador de esta gestión
+                    new Mensaje().showModal(AlertType.INFORMATION, "Aprobaciones", getStage(),
+                            "No eres aprobadador de esta gestión");
+                    tbGestiones.getSelectionModel().select(tptGestiones);
+                }
+            }
+        }
     }
 
     @Override

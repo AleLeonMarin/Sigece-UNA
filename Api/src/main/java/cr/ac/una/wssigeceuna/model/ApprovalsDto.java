@@ -1,8 +1,7 @@
 package cr.ac.una.wssigeceuna.model;
 
 import java.io.Serializable;
-import java.util.Date;
-
+import java.time.LocalDate;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
 
@@ -20,7 +19,7 @@ import jakarta.json.bind.annotation.JsonbPropertyOrder;
 })
 
 @Schema(description = "Esta clase contiene la informacion de las aprobaciones")
-public class ApprovalsDto implements Serializable{
+public class ApprovalsDto implements Serializable {
 
     @Schema(description = "Identificador de la aprobacion", example = "1")
     private Long id;
@@ -38,10 +37,10 @@ public class ApprovalsDto implements Serializable{
     private String solution;
 
     @Schema(description = "Fecha de la aprobacion", example = "2021-09-01")
-    private Date date;
+    private LocalDate date;
 
     @Schema(description = "Archivo de la aprobacion")
-    private Serializable archive;
+    private byte[] archive;
 
     @Schema(description = "Version de la aprobacion", example = "1")
     private Long version;
@@ -108,19 +107,19 @@ public class ApprovalsDto implements Serializable{
         this.solution = solution;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public Serializable getArchive() {
+    public byte[] getArchive() {
         return archive;
     }
 
-    public void setArchive(Serializable archive) {
+    public void setArchive(byte[] archive) {
         this.archive = archive;
     }
 
@@ -147,5 +146,5 @@ public class ApprovalsDto implements Serializable{
     public void setGestion(GestionsDto gestion) {
         this.gestion = gestion;
     }
-    
+
 }

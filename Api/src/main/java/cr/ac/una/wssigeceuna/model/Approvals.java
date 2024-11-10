@@ -17,11 +17,9 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.persistence.Version;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  *
@@ -82,12 +80,11 @@ public class Approvals implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "APRO_FECHA")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    private LocalDate date;
 
     @Lob
     @Column(name = "APRO_ARCHIVO")
-    private String archive;
+    private byte[] archive;
 
     @Version
     @Column(name = "APRO_VERSION")
@@ -121,7 +118,7 @@ public class Approvals implements Serializable {
         this.comentary = approvalsDto.getComment();
         this.solution = approvalsDto.getSolution();
         this.date = approvalsDto.getDate();
-        this.archive = (String) approvalsDto.getArchive();
+        this.archive = approvalsDto.getArchive();
         this.version = approvalsDto.getVersion();
         this.gestion = new Gestions(approvalsDto.getGestion());
         this.user = new Users(approvalsDto.getUsers());
@@ -167,19 +164,19 @@ public class Approvals implements Serializable {
         this.solution = solution;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public String getArchive() {
+    public byte[] getArchive() {
         return archive;
     }
 
-    public void setArchive(String archive) {
+    public void setArchive(byte[] archive) {
         this.archive = archive;
     }
 

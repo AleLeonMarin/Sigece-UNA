@@ -123,7 +123,8 @@ public class GestionService {
                     follow.setUsers(new UsersDto(gestions.getRequester()));
                     follow.setState("S");
                     follow.setArchive(
-                            ("Cambios realizados: " + String.join(", ", changes)).getBytes(StandardCharsets.UTF_8));
+                            ("Cambios automaticos realizados: " + String.join(", ", changes))
+                                    .getBytes(StandardCharsets.UTF_8));
                     followService.createFollow(follow);
                 }
             } else {
@@ -254,4 +255,74 @@ public class GestionService {
         }
     }
 
+    public Respuesta updateGestionStatus(Long gestionId) {
+        try {
+            // Buscar la gestión por ID
+            Gestions gestion = em.find(Gestions.class, gestionId);
+            if (gestion == null) {
+                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
+                        "No se encontró la gestión a actualizar",
+                        "deleteGestion No se encontró la gestión a actualizar");
+            }
+
+            // Contar aprobaciones por estado
+            Query query = em.createQuery(
+                    "SELECT a.state, COUNT(a) FROM Approvals a WHERE a.gestion.id = :gestionId GROUP BY a.state");
+            query.setParameter("gestionId", gestionId);
+            List<Object[]> results = query.getResultList();
+
+            int totalApproved = 0;
+            int totalRejected = 0;
+
+            // Procesar los resultados
+            for (Object[] result : results) {
+                String state = (String) result[0];
+                Long count = (Long) result[1];
+                if ("A".equals(state)) {
+                    totalApproved += count;
+                } else if ("R".equals(state)) {
+                    totalRejected += count;
+                }
+            }
+
+            // Número total de aprobadores
+            int totalApprovers = gestion.getApprovers().size();
+
+            // Actualizar el estado de la gestión basado en las reglas
+            if (totalApproved > totalApprovers / 2) {
+                // Mayoría de aprobaciones
+                gestion.setState("S");
+            } else if (totalRejected > totalApprovers / 2) {
+                // Mayoría de rechazos
+                gestion.setState("R");
+            } else if (totalApproved + totalRejected >= totalApprovers) {
+                // Si todos han aprobado o rechazado
+                if (totalApproved > totalRejected) {
+                    gestion.setState("S");
+                } else {
+                    gestion.setState("R");
+                }
+            } else if (totalApproved >= totalApprovers / 2) {
+                // Si la mitad o más han aprobado
+                gestion.setState("A");
+            } else if (totalApproved + totalRejected >= 1) {
+                // Si al menos una persona ha aprobado o rechazado
+                gestion.setState("E");
+            } else {
+                // Si no hay aprobaciones o rechazos
+                gestion.setState("C");
+            }
+
+            // Persistir cambios en la base de datos
+            em.merge(gestion);
+            em.flush();
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Gestion", new GestionsDto(gestion));
+
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrió un error al actualizar el estado de la gestion.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
+                    "Ocurrió un error al actualizar el estado de la gestion.",
+                    "updateGestionStatus " + ex.getMessage());
+        }
+    }
 }

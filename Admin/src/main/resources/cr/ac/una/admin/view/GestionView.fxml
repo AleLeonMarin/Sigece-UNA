@@ -210,7 +210,7 @@
                                                       <Separator prefWidth="200.0" />
                                                       <MFXScrollPane prefHeight="491.0" prefWidth="342.0">
                                                          <content>
-                                                            <VBox fx:id="vboxHistorial" alignment="TOP_CENTER" prefHeight="482.0" prefWidth="311.0" />
+                                                            <VBox fx:id="vboxHistorial" alignment="TOP_CENTER" prefHeight="489.0" prefWidth="319.0" />
                                                          </content>
                                                       </MFXScrollPane>
                                                    </children>

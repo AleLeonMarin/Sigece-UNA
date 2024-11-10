@@ -3,26 +3,27 @@ package cr.ac.una.admin.model;
 import java.io.Serializable;
 import java.time.LocalDate;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 public class ApprovalsDto implements Serializable {
 
-    private SimpleStringProperty id;
-    private SimpleStringProperty state;
-    private SimpleStringProperty description;
-    private SimpleStringProperty comment;
-    private SimpleStringProperty solution;
-    private ObjectProperty<LocalDate> date;
-    private ObjectProperty<byte[]> archive;
-    private Long version;
-    private UsersDto users;
-    private GestionsDto gestion;
+    public SimpleStringProperty id;
+    public SimpleBooleanProperty state;
+    public SimpleStringProperty description;
+    public SimpleStringProperty comment;
+    public SimpleStringProperty solution;
+    public ObjectProperty<LocalDate> date;
+    public ObjectProperty<byte[]> archive;
+    public Long version;
+    public UsersDto users;
+    public GestionsDto gestion;
 
     public ApprovalsDto() {
 
         this.id = new SimpleStringProperty("");
-        this.state = new SimpleStringProperty("");
+        this.state = new SimpleBooleanProperty(true);
         this.description = new SimpleStringProperty("");
         this.comment = new SimpleStringProperty("");
         this.solution = new SimpleStringProperty("");
@@ -43,11 +44,11 @@ public class ApprovalsDto implements Serializable {
     }
 
     public String getState() {
-        return state.get();
+        return state.get() ? "A" : "R";
     }
 
     public void setState(String state) {
-        this.state.set(state);
+        this.state.set(state.equals("A"));
     }
 
     public String getDescription() {

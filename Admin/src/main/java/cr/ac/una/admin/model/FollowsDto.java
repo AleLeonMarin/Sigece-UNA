@@ -7,13 +7,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 public class FollowsDto implements Serializable {
-    private SimpleStringProperty id;
-    private ObjectProperty<LocalDate> date;
-    private SimpleStringProperty description;
-    private ObjectProperty<byte[]> archive;
-    private Long version;
-    private GestionsDto Gestions;
-    private UsersDto Users;
+    public SimpleStringProperty id;
+    public ObjectProperty<LocalDate> date;
+    public SimpleStringProperty description;
+    public ObjectProperty<byte[]> archive;
+    public SimpleStringProperty state;
+    public Long version;
+    public GestionsDto Gestions;
+    public UsersDto Users;
 
     public FollowsDto() {
 
@@ -21,6 +22,7 @@ public class FollowsDto implements Serializable {
         this.date = new SimpleObjectProperty<>(LocalDate.now());
         this.description = new SimpleStringProperty("");
         this.archive = new SimpleObjectProperty<>(new byte[0]);
+        this.state = new SimpleStringProperty("S");
     }
 
     public Long getId() {
@@ -81,6 +83,18 @@ public class FollowsDto implements Serializable {
 
     public void setUsers(UsersDto Users) {
         this.Users = Users;
+    }
+
+    public String getState() {
+        return state.get();
+    }
+
+    public void setState(String state) {
+        if (state.equals("A") || state.equals("R") || state.equals("S")) {
+            this.state.set(state);
+        } else {
+            throw new IllegalArgumentException("Estado inválido: " + state);
+        }
     }
 
 }
