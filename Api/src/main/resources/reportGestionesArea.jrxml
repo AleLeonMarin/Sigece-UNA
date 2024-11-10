@@ -1,0 +1,78 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="Gestiones_Area_Report" language="java" pageWidth="595" pageHeight="842" columnWidth="515" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" >
+	<property name="net.sf.jasperreports.chart.pie.ignore.duplicated.key" value="true"/>
+	<parameter name="gestionesData" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="areaId" class="java.lang.Long"/>
+	<parameter name="enTiempoCount" class="java.lang.Integer"/>
+	<parameter name="fueraDeTiempoCount" class="java.lang.Integer"/>
+	<field name="id" class="java.lang.Long"/>
+	<field name="creationDate" class="java.time.LocalDate"/>
+	<field name="state" class="java.lang.String"/>
+	<field name="onTime" class="java.lang.Boolean"/>
+	<title height="50">
+		<element kind="textField" uuid="9907fb20-94fb-4c12-aab9-eef463996b13" x="0" y="0" width="515" height="30" fontSize="18.0" bold="true" hTextAlign="Center">
+			<expression><![CDATA["Reporte de Rendimiento de Gestiones" + ($P{areaId} == null ? " (Todas las Áreas)" : "")]]></expression>
+		</element>
+	</title>
+	<columnHeader height="30">
+		<element kind="staticText" uuid="4eb6c65a-1cdd-4019-841e-3cd77a61453d" x="0" y="0" width="150" height="20" bold="true" hTextAlign="Center">
+			<text><![CDATA[ID de Gestión]]></text>
+		</element>
+		<element kind="staticText" uuid="ebe37619-b89e-4b44-ac75-8f6ee65a661d" x="150" y="0" width="150" height="20" bold="true" hTextAlign="Center">
+			<text><![CDATA[Fecha de Creación]]></text>
+		</element>
+		<element kind="staticText" uuid="0ab1e1fb-f4e1-4ea6-bf9a-381d75f57c5e" x="300" y="0" width="100" height="20" bold="true" hTextAlign="Center">
+			<text><![CDATA[Estado]]></text>
+		</element>
+		<element kind="staticText" uuid="7fc364c4-1ae2-41b5-8c8e-9e5e8dc1e690" x="400" y="0" width="115" height="20" bold="true" hTextAlign="Center">
+			<text><![CDATA[Tiempo]]></text>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="30">
+			<element kind="textField" uuid="0c3bcdc6-813f-4c70-986f-f9c3620b2b3c" x="0" y="0" width="150" height="20">
+				<expression><![CDATA[$F{id}]]></expression>
+			</element>
+			<element kind="textField" uuid="ecf82d3b-9af7-4ae1-b921-848d813ec0ea" x="150" y="0" width="150" height="20">
+				<expression><![CDATA[$F{creationDate}.toString()]]></expression>
+			</element>
+			<element kind="textField" uuid="caa27559-ab42-4e2e-b540-d0c747830ba7" x="300" y="0" width="100" height="20">
+				<expression><![CDATA[$F{state}]]></expression>
+			</element>
+		</band>
+	</detail>
+	<summary height="300">
+		<element kind="chart" chartType="pie3D" uuid="5bb5ffd5-666f-47a6-b335-0c6acbf31c5f" x="-10" y="25" width="250" height="240" evaluationTime="Report">
+			<dataset kind="pie" incrementType="Report" resetType="Report">
+			<series>
+            	<keyExpression><![CDATA["En Tiempo"]]></keyExpression>
+            	<valueExpression><![CDATA[$P{enTiempoCount}]]></valueExpression>
+        	</series>
+        	<series>
+           		<keyExpression><![CDATA["Fuera de Tiempo"]]></keyExpression>
+           	 	<valueExpression><![CDATA[$P{fueraDeTiempoCount}]]></valueExpression>
+        	</series>
+			</dataset>
+			<plot>
+				<itemLabel/>
+			</plot>
+		</element>
+		<element kind="chart" chartType="bar" uuid="147f874c-5c12-413f-8c71-f0467e10b8f3" x="260" y="30" width="290" height="230" evaluationTime="Report">
+			<dataset kind="category">
+				<series>
+					<seriesExpression><![CDATA["SERIES 1"]]></seriesExpression>
+					<categoryExpression><![CDATA[0]]></categoryExpression>
+					<valueExpression><![CDATA[$P{enTiempoCount}]]></valueExpression>
+				</series>
+				<series>
+					<seriesExpression><![CDATA["Series 2"]]></seriesExpression>
+					<categoryExpression><![CDATA[0]]></categoryExpression>
+					<valueExpression><![CDATA[$P{fueraDeTiempoCount}]]></valueExpression>
+				</series>
+			</dataset>
+			<plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLineColor="#000000">
+				<itemLabel/>
+			</plot>
+		</element>
+	</summary>
+</jasperReport>

@@ -9,18 +9,18 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 @JsonbPropertyOrder({
-        "id",
-        "creationDate",
-        "solutionDate",
-        "subject",
-        "description",
-        "state",
-        "archive",
-        "version",
-        "version",
-        "Subactuvities",
-        "Requester",
-        "Assigned", })
+    "id",
+    "creationDate",
+    "solutionDate",
+    "subject",
+    "description",
+    "state",
+    "archive",
+    "version",
+    "version",
+    "Subactuvities",
+    "Requester",
+    "Assigned",})
 
 @Schema(description = "Esta clase contiene la informacion de las gestiones")
 public class GestionsDto implements Serializable {
@@ -70,6 +70,8 @@ public class GestionsDto implements Serializable {
     @JsonbTransient
     List<UsersDto> deletedApprovers;
 
+    private Boolean onTime;
+
     public GestionsDto() {
 
         this.follows = new ArrayList<>();
@@ -101,6 +103,8 @@ public class GestionsDto implements Serializable {
         if (gestions.getSubactivities() != null) {
             this.Subactivities = new SubactivitiesDto(gestions.getSubactivities());
         }
+
+    
 
     }
 
@@ -231,5 +235,14 @@ public class GestionsDto implements Serializable {
     public void setDeletedApprovers(List<UsersDto> deletedApprovers) {
         this.deletedApprovers = deletedApprovers;
     }
+
+    public Boolean getOnTime() {
+        return onTime;
+    }
+
+    public void setOnTime(Boolean onTime) {
+        this.onTime = onTime;
+    }
+
 
 }

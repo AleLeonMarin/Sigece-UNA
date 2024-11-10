@@ -8,6 +8,7 @@ import cr.ac.una.wssigeceuna.util.ReportsUtil;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
 import java.time.LocalDate;
@@ -48,8 +49,8 @@ public class ReportsService {
             // Parámetros adicionales para el reporte
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("gestionesData", new JRBeanCollectionDataSource(gestionesDto));
-            parameters.put("creationStartDate", creationStartDate); 
-            parameters.put("creationEndDate",creationEndDate);
+            parameters.put("creationStartDate", creationStartDate);
+            parameters.put("creationEndDate", creationEndDate);
 
             // Generar el reporte utilizando ReportsUtil
             byte[] reportPdf = ReportsUtil.generatePdfReport("reportGestiones.jrxml", gestionesDto, parameters);
@@ -62,4 +63,53 @@ public class ReportsService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error al generar el reporte de gestiones", ex.getMessage());
         }
     }
+
+    public Respuesta generateGestionesPerformanceReport(Long areaId) {
+        try {
+            // Consulta para obtener gestiones
+            String queryStr = "SELECT g FROM Gestions g JOIN g.activity act JOIN act.area ar ";
+            if (areaId != null) {
+                queryStr += "WHERE ar.id = :areaId";
+            }
+
+            TypedQuery<Gestions> query = em.createQuery(queryStr, Gestions.class);
+            if (areaId != null) {
+                query.setParameter("areaId", areaId);
+            }
+
+            List<Gestions> gestiones = query.getResultList();
+            List<GestionsDto> gestionesDto = gestiones.stream()
+                    .map(g -> {
+                        LocalDate a = LocalDate.of(2024, 11, 10);
+                        GestionsDto dto = new GestionsDto(g);
+                        dto.setOnTime(dto.getState().equals("C") && dto.getSolutionDate() != null && !dto.getSolutionDate().isBefore(LocalDate.now()));
+                        return dto;
+                    })
+                    .collect(Collectors.toList());
+
+            // Calcular los conteos para los gráficos
+            long enTiempoCount = gestionesDto.stream().filter(dto -> dto.getOnTime()).count();
+            long fueraDeTiempoCount = gestionesDto.stream().filter(dto -> !dto.getOnTime()).count();
+            long pendientesCount = gestionesDto.stream().filter(g -> g.getState().equals("P")).count();
+            long atendidasCount = gestionesDto.stream().filter(g -> g.getState().equals("A")).count();
+
+            // Parámetros para el reporte
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("gestionesData", new JRBeanCollectionDataSource(gestionesDto));
+            parameters.put("areaId", areaId);
+            parameters.put("enTiempoCount", (int) enTiempoCount);
+            parameters.put("fueraDeTiempoCount", (int) fueraDeTiempoCount);
+            parameters.put("pendientesCount", (int) pendientesCount);
+            parameters.put("atendidasCount", (int) atendidasCount);
+
+            byte[] reportPdf = ReportsUtil.generatePdfReport("reportGestionesArea.jrxml", gestionesDto, parameters);
+
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "Reporte generado correctamente", "", "ReportePDF", reportPdf);
+
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Error al generar el reporte de rendimiento de gestiones", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error al generar el reporte de rendimiento de gestiones", ex.getMessage());
+        }
+    }
+
 }

@@ -38,4 +38,21 @@ public class ReportsController {
                 .header("Content-Disposition", "attachment; filename=ReporteGestiones.pdf")
                 .build();
     }
+
+    @GET
+    @Path("/gestionesPerformanceReport")
+    @Produces("application/pdf")
+    public Response generateGestionesPerformanceReport(
+            @QueryParam("areaId") Long areaId) {
+
+        Respuesta respuesta = reportsService.generateGestionesPerformanceReport(areaId);
+        if (!respuesta.getEstado()) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(respuesta.getMensaje()).build();
+        }
+
+        byte[] pdfReport = (byte[]) respuesta.getResultado("ReportePDF");
+        return Response.ok(pdfReport)
+                .header("Content-Disposition", "attachment; filename=ReporteRendimientoGestiones.pdf")
+                .build();
+    }
 }
