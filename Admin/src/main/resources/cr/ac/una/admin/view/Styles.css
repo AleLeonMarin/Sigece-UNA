@@ -1150,6 +1150,52 @@
   -fx-background-image: url("../resources/costa-rica.png");
 }
 
-.jfx-pane-historial{
-  -fx-background-color: #FFFACD;
+.button-redStyle {
+  -fx-background-repeat: no-repeat;
+  -fx-background-size: contain;
+  -fx-background-position: center;
+  -fx-background-color: #b70204;
+  -fx-border-color: transparent;
+  -fx-padding: 0;
+  -fx-background-radius: 10;
+
+  -fx-focus-color: transparent;
+  -fx-faint-focus-color: transparent;
+
+  -fx-text-fill: white;
+
+  -fx-font-family: "Segoe UI", sans-serif;
+  -fx-font-size: 14px;
+  -fx-font-weight: normal;
+
+}
+
+.button-blueStyle {
+  -fx-background-repeat: no-repeat;
+  -fx-background-size: contain;
+  -fx-background-position: center;
+  -fx-background-color: #587abe;
+  -fx-border-color: transparent;
+  -fx-padding: 0;
+  -fx-background-radius: 10;
+
+  -fx-focus-color: transparent;
+  -fx-faint-focus-color: transparent;
+
+  -fx-text-fill: white;
+
+  -fx-font-family: "Segoe UI", sans-serif;
+  -fx-font-size: 14px;
+  -fx-font-weight: normal;
+
+}
+
+.button-blueStyle:hover, .button-blueStyle:pressed, .button-blueStyle:armed, .button-blueStyle:focused {
+  -fx-background-color: #0A1B42;
+  -fx-text-fill: white;
+}
+
+.button-redStyle:hover, .button-redStyle:pressed, .button-redStyle:armed, .button-redStyle:focused {
+  -fx-background-color: #0A1B42;
+  -fx-text-fill: white;
 }
