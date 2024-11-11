@@ -2,11 +2,14 @@ package cr.ac.una.wssigeceuna.service;
 
 import cr.ac.una.wssigeceuna.model.Gestions;
 import cr.ac.una.wssigeceuna.model.GestionsDto;
+import cr.ac.una.wssigeceuna.model.Users;
+import cr.ac.una.wssigeceuna.model.UsersDto;
 import cr.ac.una.wssigeceuna.util.CodigoRespuesta;
 import cr.ac.una.wssigeceuna.util.Respuesta;
 import cr.ac.una.wssigeceuna.util.ReportsUtil;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
@@ -41,16 +44,27 @@ public class ReportsService {
 
             List<Gestions> gestiones = query.getResultList();
 
+            long countAsRequester = gestiones.stream().filter(g -> g.getRequester().getId().equals(employeeId)).count();
+            long countAsAssigned = gestiones.stream().filter(g -> g.getAssigned().getId().equals(employeeId) || g.getState().equals("R") ||
+                    g.getState().equals("A")).count();
+
             // Convertir las entidades a DTOs
             List<GestionsDto> gestionesDto = gestiones.stream()
                     .map(GestionsDto::new)
                     .collect(Collectors.toList());
+
+            UsersDto usuario = getUsuarioById(employeeId); // Asumiendo que tienes un método que obtiene el usuario por ID
+            String nombreCompleto = usuario.getName() + " " + usuario.getLastNames();
 
             // Parámetros adicionales para el reporte
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("gestionesData", new JRBeanCollectionDataSource(gestionesDto));
             parameters.put("creationStartDate", creationStartDate);
             parameters.put("creationEndDate", creationEndDate);
+            parameters.put("nombreCompleto", nombreCompleto);
+
+            parameters.put("countAsRequester",(int) countAsRequester); // Cantidad de gestiones como solicitante
+            parameters.put("countAsAssigned", (int) countAsAssigned);// Cantidad de gestiones como asignado
 
             // Generar el reporte utilizando ReportsUtil
             byte[] reportPdf = ReportsUtil.generatePdfReport("reportGestiones.jrxml", gestionesDto, parameters);
@@ -81,7 +95,7 @@ public class ReportsService {
             List<GestionsDto> gestionesDto = gestiones.stream()
                     .map(g -> {
                         GestionsDto dto = new GestionsDto(g);
-                        dto.setOnTime(dto.getState().equals("R") || dto.getState().equals("A")||dto.getState().equals("C")
+                        dto.setOnTime(dto.getState().equals("R") || dto.getState().equals("A") || dto.getState().equals("C")
                                 && dto.getSolutionDate() != null && !dto.getSolutionDate().isBefore(LocalDate.now()));
                         return dto;
                     })
@@ -99,7 +113,7 @@ public class ReportsService {
             // Parámetros para el reporte
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("gestionesData", new JRBeanCollectionDataSource(gestionesDto));
-            parameters.put("areaId", areaId.toString());
+            parameters.put("areaId", areaId);
             parameters.put("enTiempoCount", (int) enTiempoCount);
             parameters.put("fueraDeTiempoCount", (int) fueraDeTiempoCount);
             parameters.put("totalGestiones", (int) totalGestiones);
@@ -115,6 +129,63 @@ public class ReportsService {
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Error al generar el reporte de rendimiento de gestiones", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error al generar el reporte de rendimiento de gestiones", ex.getMessage());
+        }
+    }
+
+    public Respuesta generateGestionesAsignadasReport(Long assignedUserId) {
+        try {
+            // Consulta para obtener gestiones asignadas al usuario
+            TypedQuery<Gestions> query = em.createQuery(
+                    "SELECT g FROM Gestions g WHERE g.assigned.id = :assignedUserId", Gestions.class);
+            query.setParameter("assignedUserId", assignedUserId);
+
+            List<Gestions> gestiones = query.getResultList();
+
+            // Convertir las entidades a DTOs
+            List<GestionsDto> gestionesDto = gestiones.stream()
+                    .map(GestionsDto::new)
+                    .collect(Collectors.toList());
+
+            // Calcular conteos
+            long pendientesCount = gestionesDto.stream().filter(g -> g.getState().equals("C")).count();
+            long completadasCount = gestionesDto.stream().filter(g -> g.getState().equals("A")).count();
+            long rechazadasCount = gestionesDto.stream().filter(g -> g.getState().equals("R")).count();
+            long totales = rechazadasCount + completadasCount;
+
+            // Parámetros para el reporte
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("gestionesData", new JRBeanCollectionDataSource(gestionesDto));
+            parameters.put("pendientesCount", (int) pendientesCount);
+            parameters.put("completadasCount", (int) completadasCount);
+            parameters.put("rechazadasCount", (int) rechazadasCount);
+            parameters.put("totales", (int) totales);
+
+            // Generar el reporte
+            byte[] reportPdf = ReportsUtil.generatePdfReport("reportGestionesAsignadas.jrxml", gestionesDto, parameters);
+
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "Reporte generado correctamente", "", "ReportePDF", reportPdf);
+
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Error al generar el reporte de gestiones asignadas", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error al generar el reporte de gestiones asignadas", ex.getMessage());
+        }
+    }
+
+    public UsersDto getUsuarioById(Long employeeId) {
+        try {
+            TypedQuery<Users> query = em.createQuery(
+                    "SELECT u FROM Users u WHERE u.id = :employeeId", Users.class);
+            query.setParameter("employeeId", employeeId);
+
+            Users user = query.getSingleResult();
+            return new UsersDto(user);
+
+        } catch (NoResultException e) {
+            LOG.log(Level.WARNING, "No se encontró el usuario con ID: " + employeeId, e);
+            return null;
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Error al obtener el usuario", e);
+            return null;
         }
     }
 

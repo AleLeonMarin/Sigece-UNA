@@ -59,7 +59,7 @@ public class GestionsDto implements Serializable {
     private UsersDto Requester;
 
     @Schema(description = "Asignado de la gestion")
-    private UsersDto Assigned;
+    private UsersDto assigned;
 
     List<FollowsDto> follows;
 
@@ -98,14 +98,13 @@ public class GestionsDto implements Serializable {
             this.Requester = new UsersDto(gestions.getRequester());
         }
         if (gestions.getAssigned() != null) {
-            this.Assigned = new UsersDto(gestions.getAssigned());
+            this.assigned = new UsersDto(gestions.getAssigned());
         }
         if (gestions.getSubactivities() != null) {
             this.Subactivities = new SubactivitiesDto(gestions.getSubactivities());
         }
 
-    
-
+   
     }
 
     public Long getId() {
@@ -197,11 +196,11 @@ public class GestionsDto implements Serializable {
     }
 
     public UsersDto getAssigned() {
-        return Assigned;
+        return assigned;
     }
 
     public void setAssigned(UsersDto Assigned) {
-        this.Assigned = Assigned;
+        this.assigned = Assigned;
     }
 
     public List<FollowsDto> getFollows() {

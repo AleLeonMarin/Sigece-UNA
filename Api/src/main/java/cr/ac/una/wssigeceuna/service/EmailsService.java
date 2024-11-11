@@ -193,7 +193,7 @@ public class EmailsService {
         } catch (MessagingException e) {
             return "Error enviando el correo: " + e.getMessage();
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // Restaurar el estado de interrupción
+            Thread.currentThread().interrupt();
             return "Error: La espera fue interrumpida.";
         }
     }

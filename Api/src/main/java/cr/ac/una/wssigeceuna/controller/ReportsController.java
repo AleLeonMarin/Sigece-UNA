@@ -55,4 +55,24 @@ public class ReportsController {
                 .header("Content-Disposition", "attachment; filename=ReporteRendimientoGestiones.pdf")
                 .build();
     }
+    
+    
+    @GET
+    @Path("/gestionesAsignadasReport")
+    @Produces("application/pdf")
+    public Response generateGestionesAsignadasReport(
+            @QueryParam("assignedUserId") Long assignedUserId) {
+
+        Respuesta respuesta = reportsService.generateGestionesAsignadasReport(assignedUserId);
+        if (!respuesta.getEstado()) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(respuesta.getMensaje()).build();
+        }
+
+        byte[] pdfReport = (byte[]) respuesta.getResultado("ReportePDF");
+        return Response.ok(pdfReport)
+                .header("Content-Disposition", "attachment; filename=ReporteGestionesAsignadas.pdf")
+                .build();
+    }
+    
+    
 }

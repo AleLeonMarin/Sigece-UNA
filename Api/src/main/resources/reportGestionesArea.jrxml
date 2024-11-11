@@ -2,7 +2,7 @@
 <jasperReport name="Gestiones_Area_Report" language="java" pageWidth="695" pageHeight="842" columnWidth="655" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="net.sf.jasperreports.chart.pie.ignore.duplicated.key" value="true"/>
 	<parameter name="gestionesData" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
-	<parameter name="areaId" class="java.lang.String"/>
+	<parameter name="areaId" class="java.lang.Long"/>
 	<parameter name="enTiempoCount" class="java.lang.Integer"/>
 	<parameter name="fueraDeTiempoCount" class="java.lang.Integer"/>
 	<parameter name="pendientesCount" class="java.lang.Integer"/>
@@ -22,7 +22,7 @@
 	<title height="73">
 		<element kind="rectangle" uuid="8486e140-f9a5-458d-88d7-a597acf7df4a" x="-20" y="-20" width="695" height="70" backcolor="rgba(45, 59, 252, 0.5568628)"/>
 		<element kind="textField" uuid="9907fb20-94fb-4c12-aab9-eef463996b13" x="70" y="0" width="515" height="30" fontSize="18.0" bold="true" hTextAlign="Center">
-			<expression><![CDATA["Reporte de Rendimiento de Gestiones" + ($P{areaId} == null ? " (Todas las Áreas)" : "")]]></expression>
+			<expression><![CDATA["Reporte de Rendimiento de Gestiones" +    ($P{areaId} == null ? " (Todas las Áreas)" : $P{areaId})]]></expression>
 		</element>
 	</title>
 	<columnHeader height="30">

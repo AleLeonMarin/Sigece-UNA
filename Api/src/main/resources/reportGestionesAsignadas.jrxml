@@ -1,0 +1,170 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="Gestiones_Area_Report" language="java" pageWidth="695" pageHeight="842" columnWidth="655" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="net.sf.jasperreports.chart.pie.ignore.duplicated.key" value="true"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<dataset name="gestionesDataSet" uuid="b93e8799-f7aa-4d00-842a-c4e2a600bc8c">
+		<field name="id" class="java.lang.Long"/>
+		<field name="creationDate" class="java.time.LocalDate"/>
+		<field name="solutionDate" class="java.time.LocalDate"/>
+		<field name="subject" class="java.lang.String"/>
+		<field name="description" class="java.lang.String"/>
+		<field name="state" class="java.lang.String"/>
+		<field name="assigned" class="cr.ac.una.wssigeceuna.model.UsersDto"/>
+	</dataset>
+	<parameter name="gestionesData" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="pendientesCount" class="java.lang.Integer"/>
+	<parameter name="rechazadasCount" class="java.lang.Integer"/>
+	<parameter name="completadasCount" class="java.lang.Integer"/>
+	<parameter name="totales" class="java.lang.Integer"/>
+	<field name="id" class="java.lang.Long"/>
+	<field name="subject" class="java.lang.String"/>
+	<field name="creationDate" class="java.time.LocalDate"/>
+	<field name="solutionDate" class="java.time.LocalDate"/>
+	<field name="state" class="java.lang.String"/>
+	<field name="onTime" class="java.lang.Boolean"/>
+	<field name="assigned" class="cr.ac.una.wssigeceuna.model.UsersDto"/>
+	<variable name="today_date" class="java.util.Date">
+		<expression><![CDATA[TODAY( )]]></expression>
+	</variable>
+	<title height="99">
+		<element kind="rectangle" uuid="8486e140-f9a5-458d-88d7-a597acf7df4a" x="-20" y="-20" width="695" height="70" backcolor="rgba(252, 215, 48, 0.5568628)"/>
+		<element kind="textField" uuid="9907fb20-94fb-4c12-aab9-eef463996b13" x="70" y="0" width="515" height="30" fontSize="18.0" bold="true" hTextAlign="Center">
+			<expression><![CDATA["Reporte de rendimiento de usuario" ]]></expression>
+		</element>
+		<element kind="staticText" uuid="49906e90-9929-40f6-8cfc-7b8ae0a7140f" x="0" y="60" width="250" height="19" fontSize="12.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Gestiones Asignadas a este usuario:]]></text>
+		</element>
+	</title>
+	<columnHeader height="43">
+		<element kind="staticText" uuid="4eb6c65a-1cdd-4019-841e-3cd77a61453d" x="0" y="17" width="120" height="20" bold="true" hTextAlign="Center">
+			<text><![CDATA[ID de Gestión]]></text>
+		</element>
+		<element kind="staticText" uuid="ebe37619-b89e-4b44-ac75-8f6ee65a661d" x="240" y="17" width="150" height="20" bold="true" hTextAlign="Center">
+			<text><![CDATA[Fecha de Creación]]></text>
+		</element>
+		<element kind="staticText" uuid="0ab1e1fb-f4e1-4ea6-bf9a-381d75f57c5e" x="550" y="17" width="100" height="20" bold="true" hTextAlign="Center">
+			<text><![CDATA[Estado]]></text>
+		</element>
+		<element kind="staticText" uuid="6569b564-0f7c-40f5-b516-145e8f5d757d" x="390" y="17" width="160" height="20" bold="true" hTextAlign="Center">
+			<text><![CDATA[Fecha de Solución]]></text>
+		</element>
+		<element kind="staticText" uuid="c415666c-83c3-4df1-841e-4d76c51b4075" x="120" y="17" width="120" height="20" bold="true" hTextAlign="Center">
+			<text><![CDATA[Asunto]]></text>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="42">
+			<element kind="textField" uuid="0c3bcdc6-813f-4c70-986f-f9c3620b2b3c" x="0" y="17" width="120" height="20" hTextAlign="Center">
+				<expression><![CDATA[$F{id}.toString()]]></expression>
+			</element>
+			<element kind="textField" uuid="ecf82d3b-9af7-4ae1-b921-848d813ec0ea" x="240" y="17" width="150" height="20" hTextAlign="Center">
+				<expression><![CDATA[$F{creationDate}.toString()]]></expression>
+			</element>
+			<element kind="textField" uuid="caa27559-ab42-4e2e-b540-d0c747830ba7" x="550" y="17" width="100" height="20" hTextAlign="Center">
+				<expression><![CDATA[$F{state}]]></expression>
+			</element>
+			<element kind="textField" uuid="c3e0332d-c8a8-49dd-aa2b-f720df7b5463" x="390" y="17" width="160" height="20" hTextAlign="Center">
+				<expression><![CDATA[$F{solutionDate}.toString()]]></expression>
+			</element>
+			<element kind="textField" uuid="6b442461-7f06-49cf-872c-a12d29f72693" x="120" y="17" width="120" height="20" fontSize="8.0" hTextAlign="Center">
+				<expression><![CDATA[$F{subject}]]></expression>
+			</element>
+		</band>
+	</detail>
+	<summary height="618">
+		<element kind="staticText" uuid="1d631aeb-85fe-4481-bd88-7ead3d0ad112" x="550" y="555" width="120" height="63" bold="true">
+			<text><![CDATA[E = "EN ESPERA"
+C = "EN CURSO"
+S = "EN APROBACIÓN"
+A = "APROBADA"
+R = "RECHAZADA"]]></text>
+		</element>
+		<element kind="staticText" uuid="51d80d28-8dd8-4efc-8711-ce5b04d0160e" x="0" y="509" width="306" height="109" fontSize="8.0">
+			<text><![CDATA[Se considera pendientes a aquellas gestiones que estan en los siguientes procesos: Aprobacion, en curso y en espera.
+
+Se considera atendidas a aquellas gestiones que estan en los siguientes procesos: Rechazadas o Aprobadas.
+
+Las gestiones "fuera de tiempo" son aquellas ya atendidas o en curso cuya fecha de solucion sea mayor a la fecha del dia de hoy  ]]></text>
+		</element>
+		<element kind="textField" uuid="02d5db7e-c799-4e9a-a234-074110c3eaf0" x="161" y="580" width="120" height="20" fontSize="8.0" bold="true">
+			<expression><![CDATA[$V{today_date}]]></expression>
+		</element>
+		<element kind="image" uuid="844fa4e7-8e4b-4dc4-8c67-ef297d129661" x="10" y="27" width="179" height="119">
+			<expression><![CDATA[$F{assigned}.photo]]></expression>
+		</element>
+		<element kind="staticText" uuid="7956cade-68a1-43a5-8e31-68f74cd70d21" x="219" y="27" width="100" height="19" fontSize="12.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Nombre]]></text>
+		</element>
+		<element kind="staticText" uuid="3077df05-a2e3-43a0-a96b-5a5b18d878f3" x="430" y="27" width="121" height="19" fontSize="12.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Apellidos]]></text>
+		</element>
+		<element kind="textField" uuid="2c10e791-f2ee-448e-a762-304baa08b7db" x="220" y="46" width="120" height="30" fontSize="12.0" hTextAlign="Center">
+			<expression><![CDATA[$F{assigned}.name]]></expression>
+		</element>
+		<element kind="textField" uuid="f559943d-2d35-40e7-897d-7ad489ec96fc" x="400" y="47" width="204" height="30" fontSize="12.0" hTextAlign="Center">
+			<expression><![CDATA[$F{assigned}.lastNames]]></expression>
+		</element>
+		<element kind="staticText" uuid="96cb3350-97d2-4a07-910f-b1914a45c3db" x="219" y="87" width="100" height="19" fontSize="12.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Cédula]]></text>
+		</element>
+		<element kind="textField" uuid="8f970d5c-72fe-44b1-9884-a41cd76c18e7" x="200" y="106" width="160" height="30" fontSize="12.0" hTextAlign="Center">
+			<expression><![CDATA[$F{assigned}.idCard]]></expression>
+		</element>
+		<element kind="staticText" uuid="4350002f-6c2b-4872-bab4-50f9599922cc" x="440" y="87" width="100" height="19" fontSize="12.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Email]]></text>
+		</element>
+		<element kind="textField" uuid="4a8b30f2-39df-47fe-b8bc-a5582ab515be" x="370" y="106" width="240" height="30" fontSize="10.0" hTextAlign="Center">
+			<expression><![CDATA[$F{assigned}.email]]></expression>
+		</element>
+		<element kind="chart" chartType="pie3D" uuid="3921ed34-ea7e-4f35-8f2c-9b1305139d8e" x="15" y="160" width="324" height="230" evaluationTime="Report">
+			<dataset kind="pie">
+				<series>
+					<keyExpression><![CDATA[$P{pendientesCount}]]></keyExpression>
+					<valueExpression><![CDATA[$P{pendientesCount}]]></valueExpression>
+					<labelExpression><![CDATA["Pendientes"]]></labelExpression>
+				</series>
+				<series>
+					<keyExpression><![CDATA[$P{completadasCount}]]></keyExpression>
+					<valueExpression><![CDATA[$P{completadasCount}]]></valueExpression>
+					<labelExpression><![CDATA["Completadas"]]></labelExpression>
+				</series>
+				<series>
+					<keyExpression><![CDATA[$P{rechazadasCount}]]></keyExpression>
+					<valueExpression><![CDATA[$P{rechazadasCount}]]></valueExpression>
+					<labelExpression><![CDATA["Rechazadas"]]></labelExpression>
+				</series>
+			</dataset>
+			<plot>
+				<itemLabel/>
+			</plot>
+		</element>
+		<element kind="chart" chartType="thermometer" uuid="c7c1073a-e862-4b51-915f-467ed1d237e7" x="440" y="170" width="159" height="240" evaluationTime="Report" linkTarget="Self">
+			<titleExpression><![CDATA["Cantidad de gestiones asignadas al usuario"]]></titleExpression>
+			<dataset kind="value" resetType="None">
+				<valueExpression><![CDATA[$P{totales}]]></valueExpression>
+			</dataset>
+			<plot mercuryColor="rgba(217, 14, 11, 0.7058824)" valueLocation="left">
+				<dataRange>
+					<lowExpression><![CDATA[1]]></lowExpression>
+					<highExpression><![CDATA[100]]></highExpression>
+				</dataRange>
+				<valueDisplay/>
+				<lowRange>
+					<lowExpression><![CDATA[1]]></lowExpression>
+					<highExpression><![CDATA[100]]></highExpression>
+				</lowRange>
+				<mediumRange>
+					<lowExpression><![CDATA[1]]></lowExpression>
+					<highExpression><![CDATA[100]]></highExpression>
+				</mediumRange>
+				<highRange>
+					<lowExpression><![CDATA[1]]></lowExpression>
+					<highExpression><![CDATA[100]]></highExpression>
+				</highRange>
+			</plot>
+		</element>
+		<element kind="textField" uuid="caf69c10-205d-4d12-b01a-cf0c27b02a83" x="484" y="346" width="70" height="20" fontSize="12.0" bold="true" hTextAlign="Center">
+			<expression><![CDATA[$P{totales}]]></expression>
+		</element>
+	</summary>
+</jasperReport>

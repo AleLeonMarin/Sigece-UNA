@@ -157,6 +157,33 @@
 
     <build>
 
+        <resources>
+            <resource>
+                <targetPath>META-INF</targetPath>
+                <directory>src</directory>
+                <includes>
+                    <include>jax-ws-catalog.xml</include>
+                    <include>wsdl/**</include>
+
+                </includes>
+            </resource>
+
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>config</directory>
+                <targetPath>config</targetPath>
+                <includes>
+                    <include>properties.ini</include>
+                </includes>
+            </resource>
+
+        </resources>
+
         <plugins>
 
 
