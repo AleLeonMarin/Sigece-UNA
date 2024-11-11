@@ -233,6 +233,7 @@ public class GestionesController extends Controller implements Initializable {
     private VBox vboxAprobaciones;
 
     UsersDto user;
+    UsersDto actualUser;
 
     GestionsDto gestion;
 
@@ -258,6 +259,19 @@ public class GestionesController extends Controller implements Initializable {
 
     @Override
     public void initialize() {
+
+        actualUser = (UsersDto) AppContext.getInstance().get("User");
+        if (actualUser.getRoles().stream().anyMatch(r -> r.getName().equals("Solicitante"))) {
+            txfIDAprobacion.setVisible(false);
+            txfIDSeguimiento.setVisible(false);
+            txfIDGestion.setVisible(false);
+            tptAprobaciones.setDisable(true);
+        } else {
+            tptAprobaciones.setDisable(false);
+            txfIDAprobacion.setVisible(true);
+            txfIDSeguimiento.setVisible(true);
+            txfIDGestion.setVisible(true);
+        }
         initValuesOfGestion();
 
         calendarGestion = (GestionsDto) AppContext.getInstance().get("Gestion");
