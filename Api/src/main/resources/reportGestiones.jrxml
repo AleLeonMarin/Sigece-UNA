@@ -1,7 +1,9 @@
 <!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
-<jasperReport name="Gestiones_Report" language="java" pageWidth="695" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="655" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+<jasperReport name="Gestiones_Report" language="java" pageWidth="695" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="655" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" >
 	<property name="template.engine" value="tabular_template"/>
+	<property name="net.sf.jasperreports.chart.pie.ignore.duplicated.key" value="true"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.report.description" value=""/>
 	<style name="Table_TH" mode="Opaque" forecolor="#5F8BFA" backcolor="#5F8BFA">
 		<pen lineColor="#000103"/>
 		<box>
@@ -33,11 +35,17 @@
 	</dataset>
 	<parameter name="creationStartDate" class="java.time.LocalDate"/>
 	<parameter name="creationEndDate" class="java.time.LocalDate"/>
+	<parameter name="nombreCompleto" class="java.lang.String"/>
+	<parameter name="countAsRequester" class="java.lang.Integer"/>
+	<parameter name="countAsAssigned" class="java.lang.Integer"/>
 	<parameter name="gestionesData" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<title height="59">
 		<element kind="frame" uuid="25fef76e-caa9-470c-8255-3aa2b60f3e81" mode="Opaque" x="-20" y="-20" width="695" height="50" backcolor="#7B1940">
-			<element kind="staticText" uuid="eceb496a-d5d0-4b4f-a3bb-1403ee25e2a6" x="80" y="10" width="555" height="30" forecolor="#FFFFFF" fontSize="20.0" bold="true" hTextAlign="Center">
+			<element kind="staticText" uuid="eceb496a-d5d0-4b4f-a3bb-1403ee25e2a6" x="-150" y="10" width="555" height="30" forecolor="#FFFFFF" fontSize="20.0" bold="true" hTextAlign="Center">
 				<text><![CDATA[Reporte de Gestiones]]></text>
+			</element>
+			<element kind="textField" uuid="181d9877-d44d-4e6a-80d3-be4d622a313c" x="250" y="13" width="445" height="30" forecolor="#FFFFFF" fontSize="16.0" bold="true" italic="true" hTextAlign="Left">
+				<expression><![CDATA[$P{nombreCompleto}]]></expression>
 			</element>
 		</element>
 		<element kind="staticText" uuid="9d711e04-c792-40fa-9df5-1f4a69973930" x="-60" y="40" width="185" height="15" fontSize="10.0" hTextAlign="Center">
@@ -54,7 +62,7 @@
 		</element>
 	</title>
 	<detail>
-		<band height="160">
+		<band height="80">
 			<element kind="component" uuid="382837ab-e830-4a98-8ce8-e5d01e399f13" x="-8" y="10" width="670" height="60">
 				<component kind="table">
 					<datasetRun uuid="eb6d77e7-0137-4151-b4ab-b4316afe36af" subDataset="gestionesDataSet">
@@ -147,18 +155,33 @@
 			</element>
 		</band>
 	</detail>
-	<pageFooter height="36">
-		<element kind="textField" uuid="30c0a284-556e-4d9a-a32d-6b076b547e35" mode="Opaque" x="0" y="17" width="621" height="13" backcolor="#E6E6E6" hTextAlign="Right">
-			<expression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></expression>
+	<summary height="280">
+		<element kind="staticText" uuid="1d631aeb-85fe-4481-bd88-7ead3d0ad112" x="530" y="201" width="120" height="63" bold="true">
+			<text><![CDATA[E = "EN ESPERA"
+C = "EN CURSO"
+S = "EN APROBACIÓN"
+A = "APROBADA"
+R = "RECHAZADA"]]></text>
 		</element>
-		<element kind="textField" uuid="7d23f304-acaa-4007-aabe-cbbfb07c075e" mode="Opaque" x="515" y="17" width="146" height="13" backcolor="#E6E6E6" evaluationTime="Report">
-			<expression><![CDATA[" " + $V{PAGE_NUMBER}]]></expression>
+		<element kind="chart" chartType="pie" uuid="18fbab61-a4ad-4155-8fa8-08bc10b8403b" x="140" y="5" width="323" height="238" evaluationTime="Report">
+			<dataset kind="pie">
+				<series>
+					<keyExpression><![CDATA[$P{countAsRequester}]]></keyExpression>
+					<valueExpression><![CDATA[$P{countAsRequester}]]></valueExpression>
+					<labelExpression><![CDATA["Gestiones Solicitadas"]]></labelExpression>
+				</series>
+				<series>
+					<keyExpression><![CDATA[$P{countAsAssigned}]]></keyExpression>
+					<valueExpression><![CDATA[$P{countAsAssigned}]]></valueExpression>
+					<labelExpression><![CDATA["Gestiones Atendidas"]]></labelExpression>
+				</series>
+			</dataset>
+			<plot>
+				<itemLabel/>
+			</plot>
 		</element>
-		<element kind="textField" uuid="8930534b-464e-4b09-bfca-2bc6e4b0b7b9" x="0" y="17" width="386" height="13" pattern="M/d/yy">
+		<element kind="textField" uuid="06f1a8c6-5b42-45c5-bb27-88bea7784459" x="0" y="250" width="100" height="30" pattern="MMMMM dd, yyyy">
 			<expression><![CDATA[new java.util.Date()]]></expression>
 		</element>
-		<element kind="staticText" uuid="8f2c46be-f10c-46a2-a8d0-071d8f0361ab" x="0" y="0" width="280" height="16" bold="true">
-			<text><![CDATA[Estado de Gestiones "C"= Completada "P"= Pendiente]]></text>
-		</element>
-	</pageFooter>
+	</summary>
 </jasperReport>

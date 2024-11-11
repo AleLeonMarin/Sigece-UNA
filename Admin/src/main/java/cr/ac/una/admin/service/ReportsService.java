@@ -33,8 +33,17 @@ public class ReportsService {
             Map<String, Object> params = new HashMap<>();
             params.put("areaId", areaId);
 
-            Request request = new Request("reports/gestionesPerformanceReport?areaId=" + areaId);
+            Request request = new Request();
+
+            if (areaId == null) {
+                //Request request = new Request("reports/gestionesPerformanceReport");
+                request = new Request("reports/gestionesPerformanceReport");
+                request.get();
+            }else{
+            //Request request = new Request("reports/gestionesPerformanceReport?areaId=" + areaId);
+            request = new Request("reports/gestionesPerformanceReport?areaId=" + areaId);
             request.get();
+            }
 
             if (request.isError()) {
                 return new Respuesta(false, request.getError(), "");
@@ -42,6 +51,7 @@ public class ReportsService {
 
             byte[] pdfReport = (byte[]) request.readEntity(byte[].class);
             return new Respuesta(true, "", "", "ReportePDF", pdfReport);
+
         } catch (Exception e) {
             return new Respuesta(false, "Error generando el reporte de rendimiento de gestiones.", e.getMessage());
         }

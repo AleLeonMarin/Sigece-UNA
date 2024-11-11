@@ -91,7 +91,6 @@ public class ReportsController extends Controller implements Initializable {
             );
 
             if (respuesta.getEstado()) {
-                // Guardar el PDF temporalmente y abrirlo
                 byte[] pdfReport = (byte[]) respuesta.getResultado("ReportePDF");
                 File tempFile;
                 try {
@@ -211,7 +210,7 @@ public class ReportsController extends Controller implements Initializable {
         tbcAreas.setCellValueFactory(new PropertyValueFactory<>("name")); // Nombre del área
         tbcEmpleados.setCellValueFactory(new PropertyValueFactory<>("name")); // Nombre del empleado
         tbcEmpleados2.setCellValueFactory(new PropertyValueFactory<>("name")); // Nombre del empleado
-        
+
         loadAreas();
         loadEmpleados();
     }
