@@ -24,4 +24,7 @@
 # Ignorar archivos de imagen
 **/photo.jpg
 
+# Ignorar todos los xlxs
+**/*.xlsx
+
 
