@@ -44,7 +44,7 @@ public class CalendarController extends Controller implements Initializable {
     private Calendar gestionCalendar;
     private final Map<Entry<String>, GestionsDto> gestionMap = new HashMap<>();
 
-    // Inicialización inicial que solo se ejecuta una vez
+    // Initializes the calendar view and sets up the main calendar instance
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         calendarView = new CalendarView();
@@ -52,36 +52,25 @@ public class CalendarController extends Controller implements Initializable {
         gestionCalendar = new Calendar("Gestiones");
         gestionCalendar.setShortName("Gestiones");
         gestionCalendar.setStyle(Calendar.Style.STYLE1);
-
         createCalendar();
     }
 
-    // Método de inicialización para cada carga de la vista
+    // Updates calendar data on each view load
     @Override
     public void initialize() {
-        // Obtener el usuario actualizado y configurar el CalendarSource
         user = (UsersDto) AppContext.getInstance().get("User");
-
-        // Remover el CalendarSource previo si existe
         calendarView.getCalendarSources().clear();
-
-        // Crear un nuevo CalendarSource con el nombre del usuario actualizado
         calendarSource = new CalendarSource(
                 "Calendario de gestiones de: " + user.getName() + " " + user.getLastNames());
         calendarSource.getCalendars().add(gestionCalendar);
-
-        // Añadir el nuevo CalendarSource al CalendarView
         calendarView.getCalendarSources().add(calendarSource);
-
-        // Limpiar y volver a añadir el CalendarView en el stackPane
         stackPane.getChildren().clear();
         stackPane.getChildren().add(calendarView);
-
-        // Cargar gestiones y actualizar el hilo de tiempo del calendario
         loadGestions();
         startCalendarUpdateThread();
     }
 
+    // Loads user-specific tasks and schedules them on the calendar
     private void loadGestions() {
         try {
             GestionService service = new GestionService();
@@ -91,16 +80,13 @@ public class CalendarController extends Controller implements Initializable {
                 new Mensaje().showModal(AlertType.ERROR, "Error en carga de gestiones", this.getStage(),
                         respuesta.getMensaje());
             } else {
-                // Obtener el usuario actual desde AppContext
                 UsersDto currentUser = (UsersDto) AppContext.getInstance().get("User");
                 List<GestionsDto> gestiones = (List<GestionsDto>) respuesta.getResultado("Gestiones");
 
                 Platform.runLater(() -> {
-                    gestionCalendar.clear(); // Limpiar las entradas anteriores en el calendario
+                    gestionCalendar.clear();
 
                     gestiones.forEach(g -> {
-                        // Filtrar la gestión solo si el usuario es Requester, Assigned o está en
-                        // Approvers
                         boolean isRequester = g.getRequester() != null
                                 && g.getRequester().getId().equals(currentUser.getId());
                         boolean isAssigned = g.getAssigned() != null
@@ -109,26 +95,20 @@ public class CalendarController extends Controller implements Initializable {
                                 .anyMatch(approver -> approver.getId().equals(currentUser.getId()));
 
                         if (isRequester || isAssigned || isApprover) {
-                            // Crear y añadir la entrada al calendario si cumple con los criterios
                             Entry<String> gestionEntry = new Entry<>(g.getSubject());
                             gestionEntry.setInterval(g.getCreationDate().atStartOfDay(),
                                     g.getSolutionDate().atStartOfDay());
-
-                            // Guardar la entrada en el mapa para acceso
                             gestionMap.put(gestionEntry, g);
-
-                            // Añadir la entrada al calendario
                             gestionCalendar.addEntry(gestionEntry);
                         }
                     });
                 });
 
-                // Añadir un listener de selección para manejar doble clic
                 calendarView.setEntryDetailsPopOverContentCallback(param -> {
                     Entry<?> entry = param.getEntry();
                     if (entry != null && gestionMap.containsKey(entry)) {
                         param.getNode().setOnMouseClicked(event -> {
-                            if (event.getClickCount() == 2) { // Detectar doble clic
+                            if (event.getClickCount() == 2) {
                                 GestionsDto gestion = gestionMap.get(entry);
                                 AppContext.getInstance().set("Gestion", gestion);
                                 FlowController.getInstance().goViewInWindow("GestionView");
@@ -140,7 +120,7 @@ public class CalendarController extends Controller implements Initializable {
                             }
                         });
                     }
-                    return null; // Evitar mostrar el popover predeterminado
+                    return null;
                 });
             }
         } catch (Exception ex) {
@@ -149,16 +129,15 @@ public class CalendarController extends Controller implements Initializable {
         }
     }
 
+    // Sets up the initial calendar view
     private void createCalendar() {
-        // Este método prepara la vista del calendario, que solo necesita llamarse una
-        // vez
         if (!stackPane.getChildren().contains(calendarView)) {
             stackPane.getChildren().add(calendarView);
         }
     }
 
+    // Updates the calendar's current date and time every 10 seconds
     private void startCalendarUpdateThread() {
-        // Hilo para actualizar la fecha y hora del calendario cada 10 segundos
         Thread updateTimeThread = new Thread(() -> {
             while (!Thread.currentThread().isInterrupted()) {
                 Platform.runLater(() -> {
@@ -166,7 +145,7 @@ public class CalendarController extends Controller implements Initializable {
                     calendarView.setTime(LocalTime.now());
                 });
                 try {
-                    Thread.sleep(10000); // Actualizar cada 10 segundos
+                    Thread.sleep(10000);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -178,6 +157,7 @@ public class CalendarController extends Controller implements Initializable {
         updateTimeThread.start();
     }
 
+    // Handles the exit button click, returning to the main view
     @FXML
     void onMouseClickedImgvExit(MouseEvent event) {
         FlowController.getInstance().goViewInWindow("PrincipalView");

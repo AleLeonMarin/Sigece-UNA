@@ -34,7 +34,7 @@ public class GestionsDto implements Serializable {
         this.solutionDate = new SimpleObjectProperty<>();
         this.subject = new SimpleStringProperty("");
         this.description = new SimpleStringProperty("");
-        this.state = new SimpleStringProperty("E");
+        this.state = new SimpleStringProperty("C");
         this.archive = new SimpleObjectProperty<>(new byte[0]);
         follows = new ArrayList<>();
         approvals = new ArrayList<>();

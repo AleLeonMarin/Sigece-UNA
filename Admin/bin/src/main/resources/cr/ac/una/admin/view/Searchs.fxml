@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" styleClass="stack-historial-pane" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.admin.controller.SearchsController">
+   <children>
+      <StackPane prefHeight="150.0" prefWidth="200.0" styleClass="stack-personal-pane">
+         <StackPane.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </StackPane.margin>
+         <children>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <StackPane.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </StackPane.margin>
+               <children>
+                  <HBox prefHeight="593.0" prefWidth="852.0">
+                     <children>
+                        <StackPane prefHeight="150.0" prefWidth="200.0" styleClass="stack-personal-pane" HBox.hgrow="ALWAYS">
+                           <children>
+                              <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                                 <StackPane.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </StackPane.margin>
+                                 <children>
+                                    <Label styleClass="stackpane-label-black" text="Criterios de busqueda" />
+                                    <Separator prefWidth="200.0" />
+                                    <Label styleClass="stackpane-label-black" text="Criterio de la gestion a buscar" />
+                                    <MFXComboBox fx:id="cmbCriterios" prefWidth="200.0" />
+                                    <Separator layoutX="10.0" layoutY="28.0" prefWidth="200.0" />
+                                    <Label layoutX="113.0" layoutY="31.0" styleClass="stackpane-label-black" text="Operando a usar" />
+                                    <MFXComboBox fx:id="cmbOperandos" layoutX="148.0" layoutY="49.0" prefWidth="200.0" />
+                                    <Separator layoutX="10.0" layoutY="94.0" prefWidth="200.0" />
+                                    <Label layoutX="157.0" layoutY="97.0" styleClass="stackpane-label-black" text="Valor" />
+                                    <MFXTextField fx:id="txfValue" prefWidth="200.0" />
+                                    <Separator layoutX="10.0" layoutY="160.0" prefWidth="200.0" />
+                                    <Label layoutX="194.0" layoutY="163.0" styleClass="stackpane-label-black" text="Fechas" />
+                                    <MFXDatePicker fx:id="dpDates" />
+                                    <Separator layoutX="10.0" layoutY="235.0" prefWidth="200.0" />
+                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../resources/Logo.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </StackPane>
+                        <StackPane prefHeight="150.0" prefWidth="200.0" styleClass="stack-personal-pane" HBox.hgrow="ALWAYS">
+                           <children>
+                              <TableView fx:id="tbvResults" prefHeight="200.0" prefWidth="200.0">
+                                 <StackPane.margin>
+                                    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                 </StackPane.margin>
+                              </TableView>
+                           </children>
+                        </StackPane>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+                     <children>
+                        <MFXButton fx:id="btnFIlter" onAction="#onActionBtnFilter" prefHeight="50.0" prefWidth="100.0" styleClass="jfx-btn-filter" text="Filtrar">
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                        </MFXButton>
+                        <MFXButton fx:id="btnClean" layoutX="391.0" layoutY="28.0" onAction="#onActionBtnClean" prefHeight="50.0" prefWidth="100.0" styleClass="jfx-btn-clean" text="Limpiar">
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                        </MFXButton>
+                        <MFXButton fx:id="btnExport" layoutX="436.0" layoutY="28.0" onAction="#onACtionBtnExport" prefHeight="50.0" prefWidth="100.0" styleClass="jfx-btn-export" text="Exportar">
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                        </MFXButton>
+                        <MFXButton fx:id="btnExit" layoutX="513.0" layoutY="28.0" onAction="#onActionBtnExit" prefHeight="50.0" prefWidth="100.0" styleClass="jfx-btn-log-out" text="Salir">
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                        </MFXButton>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </StackPane>
+   </children>
+</StackPane>

@@ -6,15 +6,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+
 import cr.ac.una.admin.model.GestionsDto;
 import cr.ac.una.admin.service.GestionService;
 import cr.ac.una.admin.util.FlowController;
 import cr.ac.una.admin.util.Mensaje;
 import cr.ac.una.admin.util.Respuesta;
+
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,8 +27,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,39 +39,25 @@ import java.awt.Desktop;
 public class SearchsController extends Controller implements Initializable {
 
     @FXML
-    private MFXButton btnClean;
-
+    private MFXButton btnClean, btnExit, btnExport, btnFIlter;
     @FXML
-    private MFXButton btnExit;
-
-    @FXML
-    private MFXButton btnExport;
-
-    @FXML
-    private MFXButton btnFIlter;
-
-    @FXML
-    private MFXComboBox<String> cmbCriterios;
-
-    @FXML
-    private MFXComboBox<String> cmbOperandos;
-
+    private MFXComboBox<String> cmbCriterios, cmbOperandos;
     @FXML
     private MFXDatePicker dpDates;
-
     @FXML
     private TableView<GestionsDto> tbvResults;
-
     @FXML
     private MFXTextField txfValue;
 
     private ObservableList<GestionsDto> gestionsFilters;
 
+    // Exports filtered results to an Excel file
     @FXML
     void onACtionBtnExport(ActionEvent event) {
         createExcel();
     }
 
+    // Clears filter fields if user confirms
     @FXML
     void onActionBtnClean(ActionEvent event) {
         if (new Mensaje().showConfirmation("Limpiar", this.getStage(), "¿Desea limpiar los campos?")) {
@@ -74,17 +65,20 @@ public class SearchsController extends Controller implements Initializable {
         }
     }
 
+    // Exits to the main view
     @FXML
     void onActionBtnExit(ActionEvent event) {
         FlowController.getInstance().goViewInWindow("PrincipalView");
         this.getStage().close();
     }
 
+    // Applies filters based on selected criteria
     @FXML
     void onActionBtnFilter(ActionEvent event) {
         search();
     }
 
+    // Adds filtering criteria options to combo box
     private void implementsCriteria() {
         cmbCriterios.getItems().add("Asunto");
         cmbCriterios.getItems().add("Descripcion");
@@ -95,6 +89,7 @@ public class SearchsController extends Controller implements Initializable {
         cmbCriterios.getItems().add("Aprobadores");
     }
 
+    // Adds operand options for filtering criteria
     private void implementsOperands() {
         cmbOperandos.getItems().add("Igual");
         cmbOperandos.getItems().add("Contiene");
@@ -105,6 +100,7 @@ public class SearchsController extends Controller implements Initializable {
         cmbOperandos.getItems().add("O");
     }
 
+    // Enables appropriate input fields based on selected criteria
     private void enableFields() {
         if ("Fecha de creacion".equals(cmbCriterios.getSelectionModel().getSelectedItem()) ||
                 "Fecha de solucion".equals(cmbCriterios.getSelectionModel().getSelectedItem())) {
@@ -116,6 +112,7 @@ public class SearchsController extends Controller implements Initializable {
         }
     }
 
+    // Performs search and updates the table with filtered results
     private void search() {
         try {
             GestionService service = new GestionService();
@@ -123,13 +120,10 @@ public class SearchsController extends Controller implements Initializable {
 
             if (res.getEstado()) {
                 List<GestionsDto> gestiones = (List<GestionsDto>) res.getResultado("Gestiones");
-
-                // Aplicar filtros en la lista de gestiones
                 List<GestionsDto> filteredGestiones = gestiones.stream()
                         .filter(this::applyFilters)
                         .collect(Collectors.toList());
 
-                // Actualizar la tabla con los resultados filtrados
                 gestionsFilters.setAll(filteredGestiones);
                 tbvResults.setItems(gestionsFilters);
             }
@@ -139,14 +133,14 @@ public class SearchsController extends Controller implements Initializable {
         }
     }
 
+    // Applies selected filters to each item in the table
     private boolean applyFilters(GestionsDto gestion) {
         String criterio = cmbCriterios.getSelectionModel().getSelectedItem();
         String operando = cmbOperandos.getSelectionModel().getSelectedItem();
         String valor = txfValue.getText();
 
-        // Validar el criterio seleccionado
         if (criterio == null || operando == null) {
-            return true; // Si no hay criterio, no aplica filtros adicionales
+            return true;
         }
 
         switch (criterio) {
@@ -171,6 +165,7 @@ public class SearchsController extends Controller implements Initializable {
         }
     }
 
+    // Compares field values based on operand for string fields
     private boolean applyStringFilter(String fieldValue, String operando, String valor) {
         if (fieldValue == null)
             return false;
@@ -185,6 +180,7 @@ public class SearchsController extends Controller implements Initializable {
         }
     }
 
+    // Compares dates based on operand
     private boolean applyDateFilter(LocalDate date, String operando) {
         if (date == null || dpDates.getValue() == null)
             return false;
@@ -209,6 +205,7 @@ public class SearchsController extends Controller implements Initializable {
         }
     }
 
+    // Resets filter fields and clears table
     private void clean() {
         cmbCriterios.getSelectionModel().clearSelection();
         cmbOperandos.getSelectionModel().clearSelection();
@@ -217,6 +214,7 @@ public class SearchsController extends Controller implements Initializable {
         tbvResults.getItems().clear();
     }
 
+    // Configures columns in the results table
     private void populateTable() {
         TableColumn<GestionsDto, String> tbcAsunto = new TableColumn<>("Asunto");
         tbcAsunto.setCellValueFactory(cd -> cd.getValue().subject);
@@ -246,12 +244,11 @@ public class SearchsController extends Controller implements Initializable {
                         tbcFechaSolucion, tbcAprobadores));
     }
 
+    // Generates and saves an Excel file with the filtered data
     private void createExcel() {
-        // Crear un libro de Excel
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Gestiones");
 
-        // Crear estilo de encabezado
         CellStyle headerStyle = workbook.createCellStyle();
         headerStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
         headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
@@ -259,7 +256,6 @@ public class SearchsController extends Controller implements Initializable {
         font.setBold(true);
         headerStyle.setFont(font);
 
-        // Crear encabezados de la tabla
         Row headerRow = sheet.createRow(0);
         String[] headers = { "Asunto", "Descripcion", "Estado", "Asignado", "Fecha de creacion", "Fecha de solucion",
                 "Aprobadores" };
@@ -269,7 +265,6 @@ public class SearchsController extends Controller implements Initializable {
             cell.setCellStyle(headerStyle);
         }
 
-        // Llenar los datos de la tabla
         ObservableList<GestionsDto> data = tbvResults.getItems();
         int rowNum = 1;
         for (GestionsDto gestion : data) {
@@ -285,19 +280,16 @@ public class SearchsController extends Controller implements Initializable {
             row.createCell(6).setCellValue(gestion.getApprovers() != null ? gestion.getApprovers().toString() : "");
         }
 
-        // Ajustar el ancho de las columnas
         for (int i = 0; i < headers.length; i++) {
             sheet.autoSizeColumn(i);
         }
 
-        // Guardar el archivo y abrirlo
         File file = new File("Gestiones.xlsx");
         try (FileOutputStream fileOut = new FileOutputStream(file)) {
             workbook.write(fileOut);
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Exportar a Excel", getStage(),
                     "Archivo Excel creado exitosamente.");
 
-            // Intentar abrir el archivo automáticamente
             if (Desktop.isDesktopSupported()) {
                 Desktop.getDesktop().open(file);
             } else {
@@ -330,6 +322,5 @@ public class SearchsController extends Controller implements Initializable {
 
     @Override
     public void initialize() {
-        // Deja esto vacío si no necesitas usar este método en particular
     }
 }

@@ -419,30 +419,29 @@ public class GestionesController extends Controller implements Initializable {
     }
 
     private void selectType() {
-        // Configura las acciones para cada CheckBox
+
         chkActividad.setOnAction(e -> {
-            selectionTypeOfGestion(chkActividad); // Asegura que solo uno de los checkboxes esté seleccionado
+            selectionTypeOfGestion(chkActividad);
             if (chkActividad.isSelected()) {
-                cmbActividades.setDisable(false); // Activa el ComboBox de Actividades
-                cmbActividades.setVisible(true); // Hace visible el ComboBox de Actividades
-                cmbSubactividades.setDisable(true); // Desactiva el ComboBox de Subactividades
-                cmbSubactividades.setVisible(false); // Oculta el ComboBox de Subactividades
+                cmbActividades.setDisable(false);
+                cmbActividades.setVisible(true);
+                cmbSubactividades.setDisable(true);
+                cmbSubactividades.setVisible(false);
             } else {
-                cmbActividades.setDisable(true); // Desactiva y oculta el ComboBox de Actividades si se deselecciona
+                cmbActividades.setDisable(true);
                 cmbActividades.setVisible(false);
             }
         });
 
         chkSubactividad.setOnAction(e -> {
-            selectionTypeOfGestion(chkSubactividad); // Asegura que solo uno de los checkboxes esté seleccionado
+            selectionTypeOfGestion(chkSubactividad);
             if (chkSubactividad.isSelected()) {
-                cmbSubactividades.setDisable(false); // Activa el ComboBox de Subactividades
-                cmbSubactividades.setVisible(true); // Hace visible el ComboBox de Subactividades
-                cmbActividades.setDisable(true); // Desactiva el ComboBox de Actividades
-                cmbActividades.setVisible(false); // Oculta el ComboBox de Actividades
+                cmbSubactividades.setDisable(false);
+                cmbSubactividades.setVisible(true);
+                cmbActividades.setDisable(true);
+                cmbActividades.setVisible(false);
             } else {
-                cmbSubactividades.setDisable(true); // Desactiva y oculta el ComboBox de Subactividades si se
-                                                    // deselecciona
+                cmbSubactividades.setDisable(true);
                 cmbSubactividades.setVisible(false);
             }
         });
@@ -483,14 +482,12 @@ public class GestionesController extends Controller implements Initializable {
     private void selectQuantityOfApprovers(CheckBox chkBox) {
         CheckBox[] checkBoxs = { chkAprobador1, chkAprobador2, chkAprobador4, chkAprobador6 };
 
-        // Desmarcar todos los demás CheckBoxes
         for (CheckBox checkBox : checkBoxs) {
             if (checkBox != chkBox) {
                 checkBox.setSelected(false);
             }
         }
 
-        // Determinar el nivel seleccionado según el CheckBox marcado
         int selectedLevel = 0;
         if (chkAprobador1.isSelected()) {
             selectedLevel = 1;
@@ -502,25 +499,21 @@ public class GestionesController extends Controller implements Initializable {
             selectedLevel = 6;
         }
 
-        // Actualizar los ComboBox según el nivel seleccionado
         updateApproverComboBoxes(selectedLevel);
     }
 
     private void selectQuantityOfApprovers() {
-        // Configura las acciones para cada CheckBox de aprobador
+
         chkAprobador1.setOnAction(e -> selectQuantityOfApprovers(chkAprobador1));
         chkAprobador2.setOnAction(e -> selectQuantityOfApprovers(chkAprobador2));
         chkAprobador4.setOnAction(e -> selectQuantityOfApprovers(chkAprobador4));
         chkAprobador6.setOnAction(e -> selectQuantityOfApprovers(chkAprobador6));
 
-        // Llama a la función de actualización inicialmente para establecer el estado
-        // correcto
-        updateApproverComboBoxes(0); // 0 para deshabilitar todos inicialmente
+        updateApproverComboBoxes(0);
     }
 
     private void updateApproverComboBoxes(int selectedLevel) {
-        // Dependiendo del nivel seleccionado, habilita y muestra los ComboBox
-        // correspondientes
+
         cmbAprobador1Gestion.setDisable(selectedLevel < 1);
         cmbAprobador2Gestion.setDisable(selectedLevel < 2);
         cmbAprobador3Gestion.setDisable(selectedLevel < 3);
@@ -535,7 +528,6 @@ public class GestionesController extends Controller implements Initializable {
         cmbAprobador5Gestion.setVisible(selectedLevel >= 5);
         cmbAprobador6Gestion.setVisible(selectedLevel >= 6);
 
-        // Limpiar selección de los ComboBox deshabilitados
         if (selectedLevel < 1) {
             cmbAprobador1Gestion.getSelectionModel().clearSelection();
         }
@@ -555,7 +547,6 @@ public class GestionesController extends Controller implements Initializable {
             cmbAprobador6Gestion.getSelectionModel().clearSelection();
         }
 
-        // Si ningún CheckBox está seleccionado, deshabilita y oculta todos
         if (selectedLevel == 0) {
             cmbAprobador1Gestion.setDisable(true);
             cmbAprobador2Gestion.setDisable(true);
@@ -817,9 +808,9 @@ public class GestionesController extends Controller implements Initializable {
         } else if (chkEsperaGestion.isSelected()) {
             gestion.state.set("E");
         } else if (chkAprobacionGestion.isSelected()) {
-            gestion.state.set("A");
+            gestion.state.set("S");
         } else if (chkAprobadaGestion.isSelected()) {
-            gestion.state.set("P");
+            gestion.state.set("A");
         } else if (chkRechazadaGestion.isSelected()) {
             gestion.state.set("R");
         }
@@ -830,8 +821,6 @@ public class GestionesController extends Controller implements Initializable {
     private List<UsersDto> setApprovers() {
         List<UsersDto> selectedApprovers = new ArrayList<>();
 
-        // Verificar y agregar los usuarios seleccionados de cada ComboBox basado en el
-        // nivel de aprobación
         if (chkAprobador1.isSelected()) {
             String selectedUser1 = cmbAprobador1Gestion.getSelectionModel().getSelectedItem();
             if (selectedUser1 != null && usersMap.containsKey(selectedUser1)) {
@@ -840,7 +829,7 @@ public class GestionesController extends Controller implements Initializable {
         }
 
         if (chkAprobador2.isSelected()) {
-            // Incluir el usuario 1 y 2 si el nivel de aprobación es 2
+
             String selectedUser1 = cmbAprobador1Gestion.getSelectionModel().getSelectedItem();
             String selectedUser2 = cmbAprobador2Gestion.getSelectionModel().getSelectedItem();
 
@@ -853,7 +842,7 @@ public class GestionesController extends Controller implements Initializable {
         }
 
         if (chkAprobador4.isSelected()) {
-            // Incluir los usuarios del 1 al 4 si el nivel de aprobación es 4
+
             String selectedUser1 = cmbAprobador1Gestion.getSelectionModel().getSelectedItem();
             String selectedUser2 = cmbAprobador2Gestion.getSelectionModel().getSelectedItem();
             String selectedUser3 = cmbAprobador3Gestion.getSelectionModel().getSelectedItem();
@@ -874,7 +863,7 @@ public class GestionesController extends Controller implements Initializable {
         }
 
         if (chkAprobador6.isSelected()) {
-            // Incluir los usuarios del 1 al 6 si el nivel de aprobación es 6
+
             String selectedUser1 = cmbAprobador1Gestion.getSelectionModel().getSelectedItem();
             String selectedUser2 = cmbAprobador2Gestion.getSelectionModel().getSelectedItem();
             String selectedUser3 = cmbAprobador3Gestion.getSelectionModel().getSelectedItem();
@@ -906,27 +895,22 @@ public class GestionesController extends Controller implements Initializable {
     }
 
     private void setApproversGestion() {
-        // Obtener los aprobadores seleccionados en los ComboBox
+
         List<UsersDto> selectedApprovers = setApprovers();
 
-        // Crear lista temporal para los usuarios eliminados
         List<UsersDto> deletedUsers = new ArrayList<>();
 
-        // Iterar sobre una copia de la lista actual de aprobadores en `gestion`
         for (UsersDto user : new ArrayList<>(gestion.getApprovers())) {
-            // Verificar si el usuario no está en la lista de seleccionados usando `id` como
-            // referencia
+
             if (selectedApprovers.stream().noneMatch(u -> u.getId().equals(user.getId()))) {
-                // Agregar al usuario a la lista de eliminados
+
                 deletedUsers.add(user);
             }
         }
 
-        // Actualizar la lista de aprobadores y de eliminados en `gestion`
-        gestion.setApprovers(new ArrayList<>(selectedApprovers)); // Asigna los nuevos aprobadores
-        gestion.setDeletedApprovers(deletedUsers); // Asigna los eliminados
+        gestion.setApprovers(new ArrayList<>(selectedApprovers));
+        gestion.setDeletedApprovers(deletedUsers);
 
-        // Opcional: Depuración para verificar el estado de las listas sin `toList()`
         System.out.println("Selected Approvers (IDs): "
                 + selectedApprovers.stream().map(UsersDto::getId).collect(Collectors.toList()));
         System.out.println(
@@ -958,22 +942,20 @@ public class GestionesController extends Controller implements Initializable {
     private void setAssigned() {
         String selectedAssigned = cmbAsiganadoGestion.getSelectionModel().getSelectedItem();
         if (selectedAssigned != null && assigned.containsKey(selectedAssigned)) {
-            // Obtener la lista de aprobadores de la gestión
+
             List<UsersDto> aprobadores = gestion.getApprovers();
 
-            // Si la lista es nula, inicializarla y agregar todos los asignados
             if (aprobadores == null) {
                 aprobadores = new ArrayList<>(assigned.values());
                 gestion.setApprovers(aprobadores);
             } else {
-                // Si la lista no es nula, agregar solo los usuarios que no estén ya en la lista
+
                 UsersDto usuarioAsignado = assigned.get(selectedAssigned);
                 if (!aprobadores.contains(usuarioAsignado)) {
                     aprobadores.add(usuarioAsignado);
                 }
             }
 
-            // Establecer el usuario asignado en la gestión (si aplica)
             gestion.setAssigned(assigned.get(selectedAssigned));
         }
     }
@@ -987,7 +969,7 @@ public class GestionesController extends Controller implements Initializable {
             if (!respuesta.getEstado()) {
                 new Mensaje().showModal(AlertType.INFORMATION, "Usuarios", getStage(), respuesta.getMensaje());
             } else {
-                // Obtener el usuario actualmente logeado desde AppContext
+
                 UsersDto currentUser = (UsersDto) AppContext.getInstance().get("User");
                 List<UsersDto> users = (List<UsersDto>) respuesta.getResultado("Usuarios");
 
@@ -1000,7 +982,6 @@ public class GestionesController extends Controller implements Initializable {
                     assigned.put(userName, user);
                 }
 
-                // Limpiar items previos en los ComboBox
                 cmbAsiganadoGestion.getItems().clear();
                 cmbAprobador1Gestion.getItems().clear();
                 cmbAprobador2Gestion.getItems().clear();
@@ -1009,7 +990,6 @@ public class GestionesController extends Controller implements Initializable {
                 cmbAprobador5Gestion.getItems().clear();
                 cmbAprobador6Gestion.getItems().clear();
 
-                // Llenar el ComboBox de Asignado excluyendo el usuario logueado
                 for (UsersDto user : users) {
                     String userName = user.getName() + " " + user.getLastNames();
                     if (!user.getId().equals(currentUser.getId())) {
@@ -1017,7 +997,6 @@ public class GestionesController extends Controller implements Initializable {
                     }
                 }
 
-                // Llenar los ComboBox de Aprobadores con todos los usuarios
                 for (UsersDto user : users) {
                     String userName = user.getName() + " " + user.getLastNames();
                     if (!user.getId().equals(currentUser.getId())) {
@@ -1030,8 +1009,6 @@ public class GestionesController extends Controller implements Initializable {
                     }
                 }
 
-                // Listener para actualizar los ComboBox de aprobadores al seleccionar un
-                // asignado
                 cmbAsiganadoGestion.getSelectionModel().selectedItemProperty()
                         .addListener((observable, oldValue, newValue) -> {
                             if (newValue != null) {
@@ -1043,7 +1020,6 @@ public class GestionesController extends Controller implements Initializable {
                                 cmbAprobador5Gestion.getItems().clear();
                                 cmbAprobador6Gestion.getItems().clear();
 
-                                // Volver a llenar los ComboBox de aprobadores sin incluir el usuario asignado
                                 for (UsersDto user : users) {
                                     String userName = user.getName() + " " + user.getLastNames();
                                     if (!userName.equals(newValue) && !user.getId().equals(currentUser.getId())) {
@@ -1078,7 +1054,6 @@ public class GestionesController extends Controller implements Initializable {
                     activityMap.put(activity.getName(), activity);
                 }
 
-                // Limpiar items previos en los ComboBox
                 cmbActividades.getItems().clear();
 
                 for (ActivitiesDto activity : activities) {
@@ -1111,7 +1086,6 @@ public class GestionesController extends Controller implements Initializable {
                     subactivityMap.put(subactivity.getName(), subactivity);
                 }
 
-                // Limpiar items previos en los ComboBox
                 cmbSubactividades.getItems().clear();
 
                 for (SubactivitiesDto subactivity : subactivities) {
@@ -1157,7 +1131,7 @@ public class GestionesController extends Controller implements Initializable {
                 chkRechazadaGestion.setSelected(false);
                 chkAprobadaGestion.setSelected(false);
                 chkAprobacionGestion.setSelected(false);
-                chkCursoGestion.setSelected(true);
+                chkCursoGestion.setSelected(false);
                 chkEsperaGestion.setSelected(true);
             } else if (gestion.getState().equals("A")) {
                 chkRechazadaGestion.setSelected(false);
@@ -1167,10 +1141,10 @@ public class GestionesController extends Controller implements Initializable {
                 chkAprobacionGestion.setSelected(true);
             } else if (gestion.getState().equals("S")) {
                 chkRechazadaGestion.setSelected(false);
-                chkAprobacionGestion.setSelected(false);
+                chkAprobacionGestion.setSelected(true);
                 chkEsperaGestion.setSelected(false);
                 chkCursoGestion.setSelected(false);
-                chkAprobadaGestion.setSelected(true);
+                chkAprobadaGestion.setSelected(false);
             } else if (gestion.getState().equals("R")) {
                 chkAprobadaGestion.setSelected(false);
                 chkAprobacionGestion.setSelected(false);
@@ -1179,7 +1153,6 @@ public class GestionesController extends Controller implements Initializable {
                 chkRechazadaGestion.setSelected(true);
             }
 
-            // Selección de actividad o subactividad
             if (gestion.getActivity() != null) {
                 chkActividad.setSelected(true);
                 if (cmbActividades.getItems().contains(gestion.getActivity().getName())) {
@@ -1202,7 +1175,6 @@ public class GestionesController extends Controller implements Initializable {
                 }
             }
 
-            // Selección de asignado
             if (gestion.getAssigned() != null) {
                 String assignedFullName = gestion.getAssigned().getName() + " " + gestion.getAssigned().getLastNames();
                 if (!cmbAsiganadoGestion.getItems().contains(assignedFullName)) {
@@ -1212,7 +1184,6 @@ public class GestionesController extends Controller implements Initializable {
                 cmbAsiganadoGestion.getSelectionModel().selectItem(assignedFullName);
             }
 
-            // Lista de ComboBox para los aprobadores, para simplificar el proceso
             List<MFXComboBox<String>> approverComboBoxes = List.of(
                     cmbAprobador1Gestion, cmbAprobador2Gestion, cmbAprobador3Gestion,
                     cmbAprobador4Gestion, cmbAprobador5Gestion, cmbAprobador6Gestion);
@@ -1225,12 +1196,10 @@ public class GestionesController extends Controller implements Initializable {
                 String approverFullName = approver.getName() + " " + approver.getLastNames();
                 MFXComboBox<String> approverComboBox = approverComboBoxes.get(i);
 
-                // Asegurarse de que el aprobador esté en el ComboBox antes de seleccionarlo
                 if (!approverComboBox.getItems().contains(approverFullName)) {
                     approverComboBox.getItems().add(approverFullName);
                 }
 
-                // Hacer visible y habilitar el ComboBox y seleccionar el aprobador
                 approverComboBox.setVisible(true);
                 approverComboBox.setDisable(false);
                 approverComboBox.getSelectionModel().selectItem(approverFullName);
@@ -1717,7 +1686,7 @@ public class GestionesController extends Controller implements Initializable {
 
         GestionsDto gestion = (GestionsDto) result;
         if (gestion != null) {
-            // Desenlaza temporalmente la propiedad antes de establecer el texto
+
             txfIDGestion.textProperty().unbind();
             txfIDGestion.setText(gestion.getId().toString());
 

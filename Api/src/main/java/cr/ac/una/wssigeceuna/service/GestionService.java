@@ -192,8 +192,17 @@ public class GestionService {
             List<Gestions> gestions = query.getResultList();
             List<GestionsDto> gestionsDto = new ArrayList<>();
 
+            // Recorrer cada Gestions y crear su correspondiente GestionsDto
             for (Gestions g : gestions) {
                 GestionsDto dto = new GestionsDto(g);
+
+                // Agregar los aprobadores al dto
+                if (g.getApprovers() != null) {
+                    for (Users u : g.getApprovers()) {
+                        dto.getApprovers().add(new UsersDto(u));
+                    }
+                }
+
                 gestionsDto.add(dto);
             }
 
@@ -300,23 +309,23 @@ public class GestionService {
             // Actualizar el estado de la gestión basado en las reglas
             if (totalApproved > totalApprovers / 2) {
                 // Mayoría de aprobaciones
-                gestion.setState("S");
+                gestion.setState("A");
             } else if (totalRejected > totalApprovers / 2) {
                 // Mayoría de rechazos
                 gestion.setState("R");
             } else if (totalApproved + totalRejected >= totalApprovers) {
                 // Si todos han aprobado o rechazado
                 if (totalApproved > totalRejected) {
-                    gestion.setState("S");
+                    gestion.setState("A");
                 } else {
                     gestion.setState("R");
                 }
             } else if (totalApproved >= totalApprovers / 2) {
                 // Si la mitad o más han aprobado
-                gestion.setState("A");
+                gestion.setState("S");
             } else if (totalApproved + totalRejected >= 1) {
                 // Si al menos una persona ha aprobado o rechazado
-                gestion.setState("E");
+                gestion.setState("S");
             } else {
                 // Si no hay aprobaciones o rechazos
                 gestion.setState("C");

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="549.0" prefWidth="795.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.admin.controller.ReportsController">
+   <children>
+      <TabPane prefHeight="549.0" prefWidth="795.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <tabs>
+          <Tab text="Reporte de Usuarios">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <MFXButton fx:id="btnUserRendimiento" layoutX="479.0" layoutY="403.0" onAction="#onActionBtnUserRendimiento" prefHeight="60.0" prefWidth="302.0" styleClass="button-blueStyle" stylesheets="@Styles.css" text="Reporte de rendimiento por empleado ">
+                           <graphic>
+                              <ImageView fitHeight="32.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../resources/users01.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </MFXButton>
+                        <TableView fx:id="tbvEmpleados" layoutX="33.0" layoutY="58.0" prefHeight="405.0" prefWidth="290.0">
+                           <columns>
+                              <TableColumn fx:id="tbcEmpleados" prefWidth="289.0" text="Empleados" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Reporte de Rendimiento de Gestiones por Area">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <MFXButton fx:id="btnReporteArea" layoutX="501.0" layoutY="403.0" nodeOrientation="LEFT_TO_RIGHT" onAction="#onActionBtnReporteArea" prefHeight="60.0" prefWidth="280.0" styleClass="button-blueStyle" stylesheets="@Styles.css" text="Rendimiento de Area">
+                           <graphic>
+                              <ImageView fitHeight="42.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../resources/assessment.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </MFXButton>
+                        <TableView fx:id="tbvAreas" layoutX="35.0" layoutY="58.0" prefHeight="405.0" prefWidth="290.0">
+                          <columns>
+                            <TableColumn fx:id="tbcAreas" prefWidth="289.0" text="Areas" />
+                          </columns>
+                        </TableView>
+                        <MFXButton fx:id="btnReporteAllAreas" layoutX="501.0" layoutY="333.0" onAction="#onActionBtnReporteAllAreas" prefHeight="60.0" prefWidth="280.0" styleClass="button-redStyle" stylesheets="@Styles.css" text="Rendimiento de todas las Areas">
+                           <graphic>
+                              <ImageView fitHeight="42.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../resources/assessment.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </MFXButton>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="Reporte de Gestiones por Fecha">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <MFXDatePicker fx:id="dateHasta" layoutX="536.0" layoutY="241.0" promptText="Hasta" />
+                        <MFXDatePicker fx:id="dateDesde" layoutX="536.0" layoutY="189.0" promptText="Desde" />
+                        <TableView fx:id="tbvEmpleados2" layoutX="33.0" layoutY="58.0" prefHeight="405.0" prefWidth="290.0">
+                          <columns>
+                            <TableColumn fx:id="tbcEmpleados2" prefWidth="289.0" text="Empleados" />
+                          </columns>
+                        </TableView>
+                        <MFXButton fx:id="btnGestionesUsuarioByFechas" layoutX="467.0" layoutY="403.0" onAction="#onActionBtnGestionesUsuarioByFechas" prefHeight="60.0" prefWidth="309.0" styleClass="button-redStyle" stylesheets="@Styles.css" text="Reporte Gestiones de Usuario">
+                           <graphic>
+                              <ImageView fitHeight="42.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../resources/assessment.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </MFXButton>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>

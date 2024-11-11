@@ -192,7 +192,6 @@ public class UsersService {
             for (Roles rol : user.getRoles()) {
                 userDto.getRoles().add(new RolesDto(rol));
             }
-
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Usuario", userDto);
 
         } catch (NoResultException ex) {
