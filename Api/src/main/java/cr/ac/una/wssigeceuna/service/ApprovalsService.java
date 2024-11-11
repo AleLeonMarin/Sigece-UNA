@@ -102,7 +102,7 @@ public class ApprovalsService {
                     followService.createFollow(follow);
                 }
             }
-            
+
             Respuesta respuesta = gestionService.updateGestionStatus(approvals.getGestion().getId());
             if (!respuesta.getEstado()) {
                 return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
@@ -113,8 +113,38 @@ public class ApprovalsService {
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "approval", new ApprovalsDto(approval));
         } catch (Exception e) {
             LOGGER.severe("Error creando/modificando la aprobación: " + e.getMessage());
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, 
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
                     "Error creando/modificando la aprobación", "createApprovals " + e.getMessage());
+        }
+    }
+
+    public Respuesta getApproval(Long id) {
+        try {
+            Approvals approval = em.find(Approvals.class, id);
+            if (approval == null) {
+                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
+                        "No se encontró la aprobación", "getApproval No se encontró la aprobación");
+            }
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "approval", new ApprovalsDto(approval));
+        } catch (Exception e) {
+            LOGGER.severe("Error obteniendo la aprobación: " + e.getMessage());
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
+                    "Error obteniendo la aprobación", "getApproval " + e.getMessage());
+        }
+    }
+
+    public Respuesta getApprovals() {
+        try {
+            List<Approvals> approvals = em.createNamedQuery("Approvals.findAll", Approvals.class).getResultList();
+            List<ApprovalsDto> approvalsDto = new ArrayList<>();
+            approvals.forEach(approval -> {
+                approvalsDto.add(new ApprovalsDto(approval));
+            });
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "approvals", approvalsDto);
+        } catch (Exception e) {
+            LOGGER.severe("Error obteniendo las aprobaciones: " + e.getMessage());
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
+                    "Error obteniendo las aprobaciones", "getApprovals " + e.getMessage());
         }
     }
 }

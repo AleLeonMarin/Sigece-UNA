@@ -349,7 +349,7 @@ public class AdminUsersController extends Controller implements Initializable {
         }
         if (validos) {
             return "";
-        }else {
+        } else {
             return validos ? "" : bundle.getString("requiredFields") + "[" + invalidos + "].";
         }
     }
@@ -395,12 +395,11 @@ public class AdminUsersController extends Controller implements Initializable {
                 Image image = SwingFXUtils.toFXImage(bufferedImage, null);
                 photo.setImage(image);
             } catch (IOException e) {
-                new Mensaje().showModal(AlertType.ERROR, bundle.getString("errorCargaImagen"), getStage(), bundle.getString("errorCargaImagen"));
+                new Mensaje().showModal(AlertType.ERROR, bundle.getString("errorCargaImagen"), getStage(),
+                        bundle.getString("errorCargaImagen"));
             }
         }
     }
-
-
 
     public void chargeRoles() {
         tbvRoles.getItems().clear();
@@ -444,33 +443,36 @@ public class AdminUsersController extends Controller implements Initializable {
                 }
                 cmbLan.getSelectionModel().selectItem(usuariosDto.getLanguage());
             } else {
-                new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("buscarUsuario"), getStage(), respuesta.getMensaje());
+                new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("buscarUsuario"), getStage(),
+                        respuesta.getMensaje());
             }
         } catch (Exception e) {
-            Logger.getLogger(AdminUsersController.class.getName()).log(Level.SEVERE, bundle.getString("errorBuscarUsuario"), e);
-            new Mensaje().showModal(AlertType.ERROR, bundle.getString("buscarUsuario"), getStage(), bundle.getString("errorBuscarUsuario"));
+            Logger.getLogger(AdminUsersController.class.getName()).log(Level.SEVERE,
+                    bundle.getString("errorBuscarUsuario"), e);
+            new Mensaje().showModal(AlertType.ERROR, bundle.getString("buscarUsuario"), getStage(),
+                    bundle.getString("errorBuscarUsuario"));
         }
     }
-
-
 
     private void chargeSistem(Long id) {
         try {
             SystemsService service = new SystemsService();
             Respuesta res = service.obtenerSystem(id);
             if (!res.getEstado()) {
-                new Mensaje().showModal(AlertType.ERROR, bundle.getString("cargarSistema"), getStage(), res.getMensaje());
+                new Mensaje().showModal(AlertType.ERROR, bundle.getString("cargarSistema"), getStage(),
+                        res.getMensaje());
             } else {
                 unbindSystems();
                 this.systems = (SystemsDto) res.getResultado("Sistema");
                 bindSystems(false);
             }
         } catch (Exception e) {
-            Logger.getLogger(AdminSystemController.class.getName()).log(Level.SEVERE, bundle.getString("errorCargarSistema"), e);
-            new Mensaje().showModal(AlertType.ERROR, bundle.getString("cargarSistema"), getStage(), bundle.getString("errorCargarSistema"));
+            Logger.getLogger(AdminSystemController.class.getName()).log(Level.SEVERE,
+                    bundle.getString("errorCargarSistema"), e);
+            new Mensaje().showModal(AlertType.ERROR, bundle.getString("cargarSistema"), getStage(),
+                    bundle.getString("errorCargarSistema"));
         }
     }
-
 
     private void chargeAreas() {
         try {
@@ -479,14 +481,16 @@ public class AdminUsersController extends Controller implements Initializable {
             if (respuesta.getEstado()) {
                 cmbAreas.setItems(FXCollections.observableArrayList((List<AreasDto>) respuesta.getResultado("Areas")));
             } else {
-                new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("cargarAreas"), getStage(), respuesta.getMensaje());
+                new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("cargarAreas"), getStage(),
+                        respuesta.getMensaje());
             }
         } catch (Exception e) {
-            Logger.getLogger(AdminUsersController.class.getName()).log(Level.SEVERE, bundle.getString("errorCargarAreas"), e);
-            new Mensaje().showModal(AlertType.ERROR, bundle.getString("cargarAreas"), getStage(), bundle.getString("errorCargarAreas"));
+            Logger.getLogger(AdminUsersController.class.getName()).log(Level.SEVERE,
+                    bundle.getString("errorCargarAreas"), e);
+            new Mensaje().showModal(AlertType.ERROR, bundle.getString("cargarAreas"), getStage(),
+                    bundle.getString("errorCargarAreas"));
         }
     }
-
 
     private void columnsTable() {
         // Configuración de la columna para el ID
@@ -547,10 +551,12 @@ public class AdminUsersController extends Controller implements Initializable {
     void selectionChangeTabUsuarios(Event event) {
         if (tptRoles.isSelected()) {
             if (this.usuariosDto.getId() == null) {
-                new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("rolesUsuario"), getStage(), bundle.getString("debeSeleccionarUsuario"));
+                new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("rolesUsuario"), getStage(),
+                        bundle.getString("debeSeleccionarUsuario"));
                 tbpUsuarios.getSelectionModel().select(tptMantenimiento);
             } else {
-                new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("inclusion"), getStage(), bundle.getString("soloUnRol"));
+                new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("inclusion"), getStage(),
+                        bundle.getString("soloUnRol"));
                 tbvUsers.getItems().clear();
                 tbvUsers.getColumns().clear();
                 if (tbvUsers.getColumns().isEmpty()) {
@@ -561,11 +567,11 @@ public class AdminUsersController extends Controller implements Initializable {
         }
     }
 
-
     @FXML
     void onActionBtnAddUser(ActionEvent event) {
         if (this.systems.getId() == null || this.systems.getName().isEmpty() || cmbRoles.getSelectedItem() == null) {
-            new Mensaje().showModal(AlertType.ERROR, bundle.getString("agregarRol"), getStage(), bundle.getString("necesarioSistemaRol"));
+            new Mensaje().showModal(AlertType.ERROR, bundle.getString("agregarRol"), getStage(),
+                    bundle.getString("necesarioSistemaRol"));
         } else if (tbvUsers.getItems() == null || !tbvUsers.getItems().stream().anyMatch(s -> s.equals(this.systems))) {
             this.usuariosDto.setModified(true);
             tbvUsers.getItems().add(this.systems);
@@ -574,41 +580,44 @@ public class AdminUsersController extends Controller implements Initializable {
         newSystem();
     }
 
-
     @FXML
     void onActionBtnDelete(ActionEvent event) {
         try {
             if (this.usuariosDto.getId() == null) {
-                new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("eliminarUsuario"), getStage(), bundle.getString("noSeleccionoUsuario"));
+                new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("eliminarUsuario"), getStage(),
+                        bundle.getString("noSeleccionoUsuario"));
             } else {
                 UsersService service = new UsersService();
                 Respuesta respuesta = service.eliminarUsuario(this.usuariosDto.getId());
                 if (!respuesta.getEstado()) {
-                    new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("eliminarUsuario"), getStage(), respuesta.getMensaje());
+                    new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("eliminarUsuario"), getStage(),
+                            respuesta.getMensaje());
                 } else {
-                    new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("eliminarUsuario"), getStage(), bundle.getString("usuarioEliminado"));
+                    new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("eliminarUsuario"), getStage(),
+                            bundle.getString("usuarioEliminado"));
                     newUser();
                 }
             }
         } catch (Exception e) {
-            Logger.getLogger(AdminUsersController.class.getName()).log(Level.SEVERE, bundle.getString("errorEliminarUsuario"), e);
-            new Mensaje().showModal(AlertType.ERROR, bundle.getString("eliminarUsuario"), getStage(), bundle.getString("errorEliminarUsuario"));
+            Logger.getLogger(AdminUsersController.class.getName()).log(Level.SEVERE,
+                    bundle.getString("errorEliminarUsuario"), e);
+            new Mensaje().showModal(AlertType.ERROR, bundle.getString("eliminarUsuario"), getStage(),
+                    bundle.getString("errorEliminarUsuario"));
         }
     }
-
 
     @FXML
     void onActionBtnNew(ActionEvent event) {
         if (tptRoles.isSelected()) {
             newSystem();
         } else if (tptMantenimiento.isSelected()) {
-            if (new Mensaje().showConfirmation(bundle.getString("limpiarUsuario"), getStage(), bundle.getString("confirmarLimpiarUsuario"))) {
+            if (new Mensaje().showConfirmation(bundle.getString("limpiarUsuario"), getStage(),
+                    bundle.getString("confirmarLimpiarUsuario"))) {
                 newUser();
                 tbvRoles.getItems().clear();
             }
         }
     }
-
 
     @FXML
     void onActionBtnSearch(ActionEvent event) {
@@ -647,7 +656,7 @@ public class AdminUsersController extends Controller implements Initializable {
     void onActionBtnSave(ActionEvent event) {
         try {
             String validation = validarRequeridos();
-            if (!validation.isEmpty()) {
+            if (!validation.isEmpty() && imgViewUser.getImage() == null) {
                 new Mensaje().showModal(AlertType.WARNING, bundle.getString("guardarUsuario"), getStage(), validation);
             } else {
                 if (this.usuariosDto.getId() == null) {
@@ -668,21 +677,24 @@ public class AdminUsersController extends Controller implements Initializable {
                 UsersService service = new UsersService();
                 Respuesta respuesta = service.guardarUsuario(usuariosDto);
                 if (!respuesta.getEstado()) {
-                    new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("guardarUsuario"), getStage(), respuesta.getMensaje());
+                    new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("guardarUsuario"), getStage(),
+                            respuesta.getMensaje());
                 } else {
                     unbindUser();
                     this.usuariosDto = (UsersDto) respuesta.getResultado("Usuario");
                     bindUser(false);
-                    new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("guardarUsuario"), getStage(), bundle.getString("usuarioGuardado"));
+                    new Mensaje().showModal(AlertType.INFORMATION, bundle.getString("guardarUsuario"), getStage(),
+                            bundle.getString("usuarioGuardado"));
                 }
                 AppContext.getInstance().set("Taken", false);
             }
         } catch (Exception e) {
-            Logger.getLogger(AdminUsersController.class.getName()).log(Level.SEVERE, bundle.getString("errorGuardarUsuario"), e);
-            new Mensaje().showModal(AlertType.ERROR, bundle.getString("guardarUsuario"), getStage(), bundle.getString("errorGuardarUsuario"));
+            Logger.getLogger(AdminUsersController.class.getName()).log(Level.SEVERE,
+                    bundle.getString("errorGuardarUsuario"), e);
+            new Mensaje().showModal(AlertType.ERROR, bundle.getString("guardarUsuario"), getStage(),
+                    bundle.getString("errorGuardarUsuario"));
         }
     }
-
 
     @FXML
     void onActionImgvPhoto(MouseEvent event) {
@@ -704,14 +716,15 @@ public class AdminUsersController extends Controller implements Initializable {
                     usuariosDto.setPhoto(toByteArray(bufferedImage));
                 } catch (IOException e) {
                     e.printStackTrace();
-                    new Mensaje().showModal(AlertType.ERROR, bundle.getString("errorCargaImagen"), getStage(), bundle.getString("errorCargaImagen"));
+                    new Mensaje().showModal(AlertType.ERROR, bundle.getString("errorCargaImagen"), getStage(),
+                            bundle.getString("errorCargaImagen"));
                 }
             } else {
-                new Mensaje().showModal(AlertType.WARNING, bundle.getString("errorCargaImagen"), getStage(), bundle.getString("archivoFotoNoExiste"));
+                new Mensaje().showModal(AlertType.WARNING, bundle.getString("errorCargaImagen"), getStage(),
+                        bundle.getString("archivoFotoNoExiste"));
             }
         }
     }
-
 
     private byte[] toByteArray(BufferedImage bufferedImage) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

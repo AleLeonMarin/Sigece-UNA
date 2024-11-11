@@ -4,15 +4,18 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCheckbox;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
+import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.Node;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -28,12 +31,14 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import cr.ac.una.admin.model.ActivitiesDto;
 import cr.ac.una.admin.model.ApprovalsDto;
@@ -58,9 +63,6 @@ public class GestionesController extends Controller implements Initializable {
 
     @FXML
     private MFXButton bntSearch;
-
-    @FXML
-    private MFXButton btnAdjuntarAprobacion;
 
     @FXML
     private MFXButton btnAdjuntarGestion;
@@ -227,6 +229,9 @@ public class GestionesController extends Controller implements Initializable {
     @FXML
     private VBox vboxHistorial;
 
+    @FXML
+    private VBox vboxAprobaciones;
+
     UsersDto user;
 
     GestionsDto gestion;
@@ -249,6 +254,8 @@ public class GestionesController extends Controller implements Initializable {
 
     List<UsersDto> deletedUsers;
 
+    List<Node> requiered = new ArrayList<>();
+
     @Override
     public void initialize() {
         initValuesOfGestion();
@@ -259,6 +266,91 @@ public class GestionesController extends Controller implements Initializable {
         } else {
             AppContext.getInstance().set("Gestion", new GestionsDto());
             calendarGestion = (GestionsDto) AppContext.getInstance().get("Gestion");
+        }
+
+    }
+
+    // requiered methods
+
+    public String validarRequeridos() {
+        Boolean validos = true;
+        String invalidos = "";
+        for (Node node : requiered) {
+            if (node instanceof MFXTextField
+                    && (((MFXTextField) node).getText() == null || ((MFXTextField) node).getText().isBlank())) {
+                if (validos) {
+                    invalidos += ((MFXTextField) node).getFloatingText();
+                } else {
+                    invalidos += "," + ((MFXTextField) node).getFloatingText();
+                }
+                validos = false;
+            } else if (node instanceof MFXPasswordField
+                    && (((MFXPasswordField) node).getText() == null || ((MFXPasswordField) node).getText().isBlank())) {
+                if (validos) {
+                    invalidos += ((MFXPasswordField) node).getFloatingText();
+                } else {
+                    invalidos += "," + ((MFXPasswordField) node).getFloatingText();
+                }
+                validos = false;
+            } else if (node instanceof MFXDatePicker && ((MFXDatePicker) node).getValue() == null) {
+                if (validos) {
+                    invalidos += ((MFXDatePicker) node).getFloatingText();
+                } else {
+                    invalidos += "," + ((MFXDatePicker) node).getFloatingText();
+                }
+                validos = false;
+            } else if (node instanceof MFXComboBox && ((MFXComboBox) node).getSelectionModel().getSelectedIndex() < 0) {
+                if (validos) {
+                    invalidos += ((MFXComboBox) node).getFloatingText();
+                } else {
+                    invalidos += "," + ((MFXComboBox) node).getFloatingText();
+                }
+                validos = false;
+            } else if (node instanceof TextArea
+                    && (((TextArea) node).getText() == null || ((TextArea) node).getText().isBlank())) {
+                if (validos) {
+                    invalidos += ((TextArea) node).getAccessibleText();
+                } else {
+                    invalidos += "," + ((TextArea) node).getAccessibleText();
+                }
+                validos = false;
+            }
+        }
+        if (validos) {
+            return "";
+        } else {
+            return "Campos requierdos o con problemas de formato: " + invalidos;
+        }
+    }
+
+    private void gestionRequiered() {
+        requiered.clear();
+        requiered.addAll(Arrays.asList(txfAsuntoGestion, txaGestion, txfSolicitanteGestion, cmbAsiganadoGestion,
+                dpCreacionGestion, dpSolucionGestion));
+    }
+
+    private void followRequiered() {
+        requiered.clear();
+        requiered.addAll(Arrays.asList(txfDescripcionSeguimiento, dpFechaSeguimeinto, txfUsuarioSeguimiento));
+    }
+
+    private void approvalRequiered() {
+        requiered.clear();
+        requiered.addAll(Arrays.asList(txfDescripcionAprobacion, txaSolucionAprobacion,
+                dpFechaAprobacion, txfAprobadorAprobacion));
+    }
+
+    private void allRequieredFields() {
+
+        if (tptGestiones.isSelected()) {
+            requiered.clear();
+            gestionRequiered();
+        } else if (tptAprobaciones.isSelected()) {
+            requiered.clear();
+            approvalRequiered();
+        } else if (tptSeguimeinto.isSelected()) {
+            requiered.clear();
+            followRequiered();
         }
 
     }
@@ -374,6 +466,20 @@ public class GestionesController extends Controller implements Initializable {
         chkRechazadaGestion.setOnAction(e -> selectionTypeOfAprobacion(chkRechazadaGestion));
     }
 
+    private void selectApproval(CheckBox checkBox) {
+        CheckBox[] checkBoxs = { chkAprobadaAprobacion, chkRechazadaAprobacion };
+        for (CheckBox chk : checkBoxs) {
+            if (chk != checkBox) {
+                chk.setSelected(false);
+            }
+        }
+    }
+
+    private void selectApproval() {
+        chkAprobadaAprobacion.setOnAction(e -> selectApproval(chkAprobadaAprobacion));
+        chkRechazadaAprobacion.setOnAction(e -> selectApproval(chkRechazadaAprobacion));
+    }
+
     private void selectQuantityOfApprovers(CheckBox chkBox) {
         CheckBox[] checkBoxs = { chkAprobador1, chkAprobador2, chkAprobador4, chkAprobador6 };
 
@@ -413,7 +519,8 @@ public class GestionesController extends Controller implements Initializable {
     }
 
     private void updateApproverComboBoxes(int selectedLevel) {
-        // Dependiendo del nivel seleccionado, habilita los ComboBox correspondientes
+        // Dependiendo del nivel seleccionado, habilita y muestra los ComboBox
+        // correspondientes
         cmbAprobador1Gestion.setDisable(selectedLevel < 1);
         cmbAprobador2Gestion.setDisable(selectedLevel < 2);
         cmbAprobador3Gestion.setDisable(selectedLevel < 3);
@@ -421,13 +528,32 @@ public class GestionesController extends Controller implements Initializable {
         cmbAprobador5Gestion.setDisable(selectedLevel < 5);
         cmbAprobador6Gestion.setDisable(selectedLevel < 6);
 
-        // Controla la visibilidad de los ComboBox también
         cmbAprobador1Gestion.setVisible(selectedLevel >= 1);
         cmbAprobador2Gestion.setVisible(selectedLevel >= 2);
         cmbAprobador3Gestion.setVisible(selectedLevel >= 3);
         cmbAprobador4Gestion.setVisible(selectedLevel >= 4);
         cmbAprobador5Gestion.setVisible(selectedLevel >= 5);
         cmbAprobador6Gestion.setVisible(selectedLevel >= 6);
+
+        // Limpiar selección de los ComboBox deshabilitados
+        if (selectedLevel < 1) {
+            cmbAprobador1Gestion.getSelectionModel().clearSelection();
+        }
+        if (selectedLevel < 2) {
+            cmbAprobador2Gestion.getSelectionModel().clearSelection();
+        }
+        if (selectedLevel < 3) {
+            cmbAprobador3Gestion.getSelectionModel().clearSelection();
+        }
+        if (selectedLevel < 4) {
+            cmbAprobador4Gestion.getSelectionModel().clearSelection();
+        }
+        if (selectedLevel < 5) {
+            cmbAprobador5Gestion.getSelectionModel().clearSelection();
+        }
+        if (selectedLevel < 6) {
+            cmbAprobador6Gestion.getSelectionModel().clearSelection();
+        }
 
         // Si ningún CheckBox está seleccionado, deshabilita y oculta todos
         if (selectedLevel == 0) {
@@ -460,6 +586,7 @@ public class GestionesController extends Controller implements Initializable {
         selectQuantityOfApprovers();
         selectStateFollows();
         selectTypeOfFollows();
+        selectApproval();
 
         // Configuración de los comboboxes
         cmbActividades.setVisible(false);
@@ -573,24 +700,31 @@ public class GestionesController extends Controller implements Initializable {
         cmbSubactividades.setVisible(false);
         cmbSubactividades.getSelectionModel().clearSelection();
         cmbAprobador1Gestion.getSelectionModel().clearSelection();
+        cmbAprobador1Gestion.getItems().clear();
         cmbAprobador1Gestion.setDisable(true);
         cmbAprobador1Gestion.setVisible(false);
         cmbAprobador2Gestion.getSelectionModel().clearSelection();
+        cmbAprobador2Gestion.getItems().clear();
         cmbAprobador2Gestion.setDisable(true);
         cmbAprobador2Gestion.setVisible(false);
         cmbAprobador3Gestion.getSelectionModel().clearSelection();
+        cmbAprobador3Gestion.getItems().clear();
         cmbAprobador3Gestion.setDisable(true);
         cmbAprobador3Gestion.setVisible(false);
         cmbAprobador4Gestion.getSelectionModel().clearSelection();
+        cmbAprobador4Gestion.getItems().clear();
         cmbAprobador4Gestion.setDisable(true);
         cmbAprobador4Gestion.setVisible(false);
         cmbAprobador5Gestion.getSelectionModel().clearSelection();
+        cmbAprobador5Gestion.getItems().clear();
         cmbAprobador5Gestion.setDisable(true);
         cmbAprobador5Gestion.setVisible(false);
         cmbAprobador6Gestion.getSelectionModel().clearSelection();
+        cmbAprobador6Gestion.getItems().clear();
         cmbAprobador6Gestion.setDisable(true);
         cmbAprobador6Gestion.setVisible(false);
         cmbAsiganadoGestion.getSelectionModel().clearSelection();
+        cmbAsiganadoGestion.getItems().clear();
         cmbAsiganadoGestion.setDisable(false);
         cmbAsiganadoGestion.setVisible(true);
         chkAprobador1.setSelected(false);
@@ -616,6 +750,7 @@ public class GestionesController extends Controller implements Initializable {
         txfIDGestion.requestFocus();
         chkEsperaGestion.setSelected(true);
         vboxHistorial.getChildren().clear();
+        chargeUsers();
 
     }
 
@@ -623,6 +758,7 @@ public class GestionesController extends Controller implements Initializable {
         unbindFollow();
         follow = new FollowsDto();
         bindFollow(true);
+        restoreFollow();
         txfIDSeguimiento.clear();
         txfIDSeguimiento.requestFocus();
         chkCursoSeguimiento.setSelected(true);
@@ -632,6 +768,45 @@ public class GestionesController extends Controller implements Initializable {
         txaTextoSeguimiento.setVisible(true);
         btnAdjuntarSeguimiento.setDisable(true);
         btnAdjuntarSeguimiento.setVisible(false);
+    }
+
+    private void restoreFollow() {
+        txfIDSeguimiento.setEditable(true);
+        txfDescripcionSeguimiento.setEditable(true);
+        dpFechaSeguimeinto.setEditable(true);
+        dpFechaSeguimeinto.setDisable(false);
+        txfUsuarioSeguimiento.setText(user.getName() + " " + user.getLastNames());
+        txfUsuarioSeguimiento.setEditable(false);
+        chkCursoSeguimiento.setDisable(false);
+        chkAprobadaSeguimiento.setDisable(false);
+        chkRechazadaSeguimiento.setDisable(false);
+        chkTextoSeguimiento.setDisable(false);
+        chkArchivoSeguimiento.setDisable(false);
+    }
+
+    private void newApproval() {
+        unbindApproval();
+        approval = new ApprovalsDto();
+        bindApproval(true);
+        restoreApproval();
+        txfIDAprobacion.clear();
+        txfIDAprobacion.requestFocus();
+        txfComentarioAprobacion.clear();
+        txaSolucionAprobacion.clear();
+    }
+
+    private void restoreApproval() {
+        txfIDAprobacion.setEditable(true);
+        txfDescripcionAprobacion.setEditable(true);
+        txfComentarioAprobacion.setEditable(true);
+        txaSolucionAprobacion.setEditable(true);
+        dpFechaAprobacion.setEditable(true);
+        dpFechaAprobacion.setDisable(false);
+        txfAprobadorAprobacion.setText(user.getName() + " " + user.getLastNames());
+        txfAprobadorAprobacion.setEditable(false);
+        chkAprobadaAprobacion.setDisable(false);
+        chkRechazadaAprobacion.setDisable(false);
+
     }
 
     // selection checkBoxes methods
@@ -731,19 +906,31 @@ public class GestionesController extends Controller implements Initializable {
     }
 
     private void setApproversGestion() {
+        // Obtener los aprobadores seleccionados en los ComboBox
         List<UsersDto> selectedApprovers = setApprovers();
 
-        deletedUsers = new ArrayList<>();
-        deletedUsers.clear();
+        // Crear lista temporal para los usuarios eliminados
+        List<UsersDto> deletedUsers = new ArrayList<>();
 
-        for (UsersDto initial : currentUsers) {
-            if (!selectedApprovers.contains(initial)) {
-                deletedUsers.add(initial);
+        // Iterar sobre una copia de la lista actual de aprobadores en `gestion`
+        for (UsersDto user : new ArrayList<>(gestion.getApprovers())) {
+            // Verificar si el usuario no está en la lista de seleccionados usando `id` como
+            // referencia
+            if (selectedApprovers.stream().noneMatch(u -> u.getId().equals(user.getId()))) {
+                // Agregar al usuario a la lista de eliminados
+                deletedUsers.add(user);
             }
         }
 
-        gestion.setApprovers(selectedApprovers);
-        gestion.setDeletedApprovers(deletedUsers);
+        // Actualizar la lista de aprobadores y de eliminados en `gestion`
+        gestion.setApprovers(new ArrayList<>(selectedApprovers)); // Asigna los nuevos aprobadores
+        gestion.setDeletedApprovers(deletedUsers); // Asigna los eliminados
+
+        // Opcional: Depuración para verificar el estado de las listas sin `toList()`
+        System.out.println("Selected Approvers (IDs): "
+                + selectedApprovers.stream().map(UsersDto::getId).collect(Collectors.toList()));
+        System.out.println(
+                "Deleted Users (IDs): " + deletedUsers.stream().map(UsersDto::getId).collect(Collectors.toList()));
     }
 
     // selection Activity or subactivity
@@ -805,13 +992,12 @@ public class GestionesController extends Controller implements Initializable {
                 List<UsersDto> users = (List<UsersDto>) respuesta.getResultado("Usuarios");
 
                 usersMap.clear();
-                for (UsersDto user : users) {
-                    usersMap.put(user.getName() + " " + user.getLastNames(), user);
-                }
-
                 assigned.clear();
+
                 for (UsersDto user : users) {
-                    assigned.put(user.getName() + " " + user.getLastNames(), user);
+                    String userName = user.getName() + " " + user.getLastNames();
+                    usersMap.put(userName, user);
+                    assigned.put(userName, user);
                 }
 
                 // Limpiar items previos en los ComboBox
@@ -823,13 +1009,18 @@ public class GestionesController extends Controller implements Initializable {
                 cmbAprobador5Gestion.getItems().clear();
                 cmbAprobador6Gestion.getItems().clear();
 
+                // Llenar el ComboBox de Asignado excluyendo el usuario logueado
                 for (UsersDto user : users) {
-                    // Excluir el usuario logueado
+                    String userName = user.getName() + " " + user.getLastNames();
                     if (!user.getId().equals(currentUser.getId())) {
-                        String userName = user.getName() + " " + user.getLastNames();
                         cmbAsiganadoGestion.getItems().add(userName);
+                    }
+                }
 
-                        // Agregar el usuario a todos los ComboBox de aprobadores
+                // Llenar los ComboBox de Aprobadores con todos los usuarios
+                for (UsersDto user : users) {
+                    String userName = user.getName() + " " + user.getLastNames();
+                    if (!user.getId().equals(currentUser.getId())) {
                         cmbAprobador1Gestion.getItems().add(userName);
                         cmbAprobador2Gestion.getItems().add(userName);
                         cmbAprobador3Gestion.getItems().add(userName);
@@ -838,6 +1029,34 @@ public class GestionesController extends Controller implements Initializable {
                         cmbAprobador6Gestion.getItems().add(userName);
                     }
                 }
+
+                // Listener para actualizar los ComboBox de aprobadores al seleccionar un
+                // asignado
+                cmbAsiganadoGestion.getSelectionModel().selectedItemProperty()
+                        .addListener((observable, oldValue, newValue) -> {
+                            if (newValue != null) {
+                                // Limpiar todos los ComboBox de aprobadores
+                                cmbAprobador1Gestion.getItems().clear();
+                                cmbAprobador2Gestion.getItems().clear();
+                                cmbAprobador3Gestion.getItems().clear();
+                                cmbAprobador4Gestion.getItems().clear();
+                                cmbAprobador5Gestion.getItems().clear();
+                                cmbAprobador6Gestion.getItems().clear();
+
+                                // Volver a llenar los ComboBox de aprobadores sin incluir el usuario asignado
+                                for (UsersDto user : users) {
+                                    String userName = user.getName() + " " + user.getLastNames();
+                                    if (!userName.equals(newValue) && !user.getId().equals(currentUser.getId())) {
+                                        cmbAprobador1Gestion.getItems().add(userName);
+                                        cmbAprobador2Gestion.getItems().add(userName);
+                                        cmbAprobador3Gestion.getItems().add(userName);
+                                        cmbAprobador4Gestion.getItems().add(userName);
+                                        cmbAprobador5Gestion.getItems().add(userName);
+                                        cmbAprobador6Gestion.getItems().add(userName);
+                                    }
+                                }
+                            }
+                        });
             }
         } catch (Exception e) {
             Logger.getLogger(GestionesController.class.getName()).log(Level.SEVERE, "Error cargando los usuarios", e);
@@ -923,15 +1142,40 @@ public class GestionesController extends Controller implements Initializable {
             unbindGestion();
             gestion = (GestionsDto) respuesta.getResultado("Gestion");
 
-            if(gestion.getState().equals("C")) {
+            txfSolicitanteGestion.setEditable(true);
+            txfSolicitanteGestion
+                    .setText(gestion.getRequester().getName() + " " + gestion.getRequester().getLastNames());
+            txfSolicitanteGestion.setEditable(false);
+
+            if (gestion.getState().equals("C")) {
+                chkRechazadaGestion.setSelected(false);
+                chkAprobadaGestion.setSelected(false);
+                chkAprobacionGestion.setSelected(false);
+                chkEsperaGestion.setSelected(false);
                 chkCursoGestion.setSelected(true);
-            } else if(gestion.getState().equals("E")) {
+            } else if (gestion.getState().equals("E")) {
+                chkRechazadaGestion.setSelected(false);
+                chkAprobadaGestion.setSelected(false);
+                chkAprobacionGestion.setSelected(false);
+                chkCursoGestion.setSelected(true);
                 chkEsperaGestion.setSelected(true);
-            } else if(gestion.getState().equals("A")) {
+            } else if (gestion.getState().equals("A")) {
+                chkRechazadaGestion.setSelected(false);
+                chkAprobadaGestion.setSelected(false);
+                chkEsperaGestion.setSelected(false);
+                chkCursoGestion.setSelected(false);
                 chkAprobacionGestion.setSelected(true);
-            } else if(gestion.getState().equals("P")) {
+            } else if (gestion.getState().equals("S")) {
+                chkRechazadaGestion.setSelected(false);
+                chkAprobacionGestion.setSelected(false);
+                chkEsperaGestion.setSelected(false);
+                chkCursoGestion.setSelected(false);
                 chkAprobadaGestion.setSelected(true);
-            } else if(gestion.getState().equals("R")) {
+            } else if (gestion.getState().equals("R")) {
+                chkAprobadaGestion.setSelected(false);
+                chkAprobacionGestion.setSelected(false);
+                chkEsperaGestion.setSelected(false);
+                chkCursoGestion.setSelected(false);
                 chkRechazadaGestion.setSelected(true);
             }
 
@@ -961,55 +1205,62 @@ public class GestionesController extends Controller implements Initializable {
             // Selección de asignado
             if (gestion.getAssigned() != null) {
                 String assignedFullName = gestion.getAssigned().getName() + " " + gestion.getAssigned().getLastNames();
-                if (cmbAsiganadoGestion.getItems().contains(assignedFullName)) {
-                    cmbAsiganadoGestion.getSelectionModel().selectItem(assignedFullName);
-                } else {
-                    System.out.println("El asignado " + assignedFullName + " no está en la lista de opciones.");
+                if (!cmbAsiganadoGestion.getItems().contains(assignedFullName)) {
+                    // Añadir el usuario asignado al ComboBox si no está ya en la lista
+                    cmbAsiganadoGestion.getItems().add(assignedFullName);
                 }
+                cmbAsiganadoGestion.getSelectionModel().selectItem(assignedFullName);
             }
 
-            currentUsers = new ArrayList<>(gestion.getApprovers());
-            System.out.println("Cantidad de aprobadores: " + currentUsers.size());
+            // Lista de ComboBox para los aprobadores, para simplificar el proceso
+            List<MFXComboBox<String>> approverComboBoxes = List.of(
+                    cmbAprobador1Gestion, cmbAprobador2Gestion, cmbAprobador3Gestion,
+                    cmbAprobador4Gestion, cmbAprobador5Gestion, cmbAprobador6Gestion);
+
             // Selección de aprobadores
+            currentUsers = gestion.getApprovers();
             int approversCount = gestion.getApprovers().size();
-            for (int i = 0; i < approversCount; i++) {
-                String approverFullName = gestion.getApprovers().get(i).getName() + " "
-                        + gestion.getApprovers().get(i).getLastNames();
+            for (int i = 0; i < approversCount && i < approverComboBoxes.size(); i++) {
+                UsersDto approver = gestion.getApprovers().get(i);
+                String approverFullName = approver.getName() + " " + approver.getLastNames();
+                MFXComboBox<String> approverComboBox = approverComboBoxes.get(i);
+
+                // Asegurarse de que el aprobador esté en el ComboBox antes de seleccionarlo
+                if (!approverComboBox.getItems().contains(approverFullName)) {
+                    approverComboBox.getItems().add(approverFullName);
+                }
+
+                // Hacer visible y habilitar el ComboBox y seleccionar el aprobador
+                approverComboBox.setVisible(true);
+                approverComboBox.setDisable(false);
+                approverComboBox.getSelectionModel().selectItem(approverFullName);
+
+                // Marcar el CheckBox correspondiente como seleccionado
                 switch (i) {
                     case 0:
                         chkAprobador1.setSelected(true);
-                        if (cmbAprobador1Gestion.getItems().contains(approverFullName)) {
-                            cmbAprobador1Gestion.setVisible(true);
-                            cmbAprobador1Gestion.setDisable(false);
-                            cmbAprobador1Gestion.getSelectionModel().selectItem(approverFullName);
-                        }
+                        chkAprobador2.setSelected(false);
+                        chkAprobador4.setSelected(false);
+                        chkAprobador6.setSelected(false);
                         break;
                     case 1:
+                        chkAprobador1.setSelected(false);
                         chkAprobador2.setSelected(true);
-                        if (cmbAprobador2Gestion.getItems().contains(approverFullName)) {
-                            cmbAprobador2Gestion.setVisible(true);
-                            cmbAprobador2Gestion.setDisable(false);
-                            cmbAprobador2Gestion.getSelectionModel().selectItem(approverFullName);
-                        }
+                        chkAprobador4.setSelected(false);
+                        chkAprobador6.setSelected(false);
                         break;
                     case 2:
+                        chkAprobador1.setSelected(false);
+                        chkAprobador2.setSelected(false);
                         chkAprobador4.setSelected(true);
-                        if (cmbAprobador4Gestion.getItems().contains(approverFullName)) {
-                            cmbAprobador4Gestion.setVisible(true);
-                            cmbAprobador4Gestion.setDisable(false);
-                            cmbAprobador4Gestion.getSelectionModel().selectItem(approverFullName);
-                        }
+                        chkAprobador6.setSelected(false);
                         break;
                     case 3:
+                        chkAprobador1.setSelected(false);
+                        chkAprobador2.setSelected(false);
+                        chkAprobador4.setSelected(false);
                         chkAprobador6.setSelected(true);
-                        if (cmbAprobador6Gestion.getItems().contains(approverFullName)) {
-                            cmbAprobador6Gestion.setVisible(true);
-                            cmbAprobador6Gestion.setDisable(false);
-                            cmbAprobador6Gestion.getSelectionModel().selectItem(approverFullName);
-                        }
                         break;
-                    default:
-                        System.out.println("Número de aprobadores excede el límite soportado.");
                 }
             }
 
@@ -1061,6 +1312,7 @@ public class GestionesController extends Controller implements Initializable {
                 AnchorPane.setRightAnchor(vbox, 10.0);
 
                 pane.setOnMouseClicked(event -> {
+                    txfUsuarioSeguimiento.setEditable(true);
                     // Depuración: imprime los valores de follow en la consola
                     System.out.println("ID: " + currentFollow.getId());
                     System.out.println("Descripción: " + currentFollow.getDescription());
@@ -1076,6 +1328,7 @@ public class GestionesController extends Controller implements Initializable {
                     txfDescripcionSeguimiento.setText(currentFollow.getDescription());
                     txfUsuarioSeguimiento.setText(currentFollow.getUsers().getName() + " "
                             + currentFollow.getUsers().getLastNames());
+                    txfUsuarioSeguimiento.setEditable(false);
                     txaTextoSeguimiento.setText(new String(currentFollow.getArchive(), StandardCharsets.UTF_8));
                     dpFechaSeguimeinto.setValue(LocalDate.parse(follow.getDate().toString()));
 
@@ -1087,10 +1340,149 @@ public class GestionesController extends Controller implements Initializable {
                         chkCursoSeguimiento.setSelected(true);
                     }
 
+                    if (currentFollow.getUsers().getId() != ((UsersDto) AppContext.getInstance().get("User"))
+                            .getId()) {
+                        new Mensaje().showModal(AlertType.INFORMATION, "Seguimiento", getStage(),
+                                "No puedes editar un seguimiento que no te pertenece.");
+                        txfIDSeguimiento.setEditable(false);
+                        txfDescripcionSeguimiento.setEditable(false);
+                        txaTextoSeguimiento.setEditable(false);
+                        chkTextoSeguimiento.setDisable(false);
+                        chkArchivoSeguimiento.setDisable(false);
+                        dpFechaSeguimeinto.setDisable(true);
+                        chkAprobadaSeguimiento.setDisable(true);
+                        chkRechazadaSeguimiento.setDisable(true);
+                        chkCursoSeguimiento.setDisable(true);
+                        txfUsuarioSeguimiento.setEditable(false);
+                    } else {
+                        txfIDSeguimiento.setEditable(true);
+                        txfDescripcionSeguimiento.setEditable(true);
+                        txaTextoSeguimiento.setEditable(true);
+                        chkTextoSeguimiento.setDisable(false);
+                        chkArchivoSeguimiento.setDisable(false);
+                        dpFechaSeguimeinto.setDisable(false);
+                        chkAprobadaSeguimiento.setDisable(false);
+                        chkRechazadaSeguimiento.setDisable(false);
+                        chkCursoSeguimiento.setDisable(false);
+                        txfUsuarioSeguimiento.setEditable(false);
+                        return;
+                    }
+
                 });
 
                 pane.getChildren().add(vbox);
                 vboxHistorial.getChildren().add(pane);
+            }
+
+            for (ApprovalsDto approval : gestion.getApprovals()) {
+                ApprovalsDto currentApproval = approval;
+
+                vboxAprobaciones.setAlignment(Pos.TOP_CENTER);
+                vboxAprobaciones.setSpacing(5);
+
+                AnchorPane pane = new AnchorPane();
+                pane.setPrefHeight(50);
+                pane.setPrefWidth(100);
+                pane.getStyleClass().add("stack-historial-pane");
+                VBox.setMargin(pane, new Insets(20));
+
+                VBox vbox = new VBox();
+                vbox.getStyleClass().add("stack-personal-pane");
+                vbox.setAlignment(Pos.CENTER);
+
+                // Título de la gestión
+                Label title = new Label(approval.getDescription());
+                title.getStyleClass().add("stackpane-label-black");
+                title.setAlignment(Pos.CENTER);
+                title.setMaxWidth(Double.MAX_VALUE);
+
+                // Contenido de la gestión con TextFlow
+                Label approver = new Label(approval.getUsers().getName() + " " + approval.getUsers().getLastNames());
+                approver.setTextAlignment(TextAlignment.CENTER);
+                approver.setMaxWidth(250);
+                approver.setPrefWidth(250);
+
+                // Fecha de la gestión
+                Label date = new Label(approval.getDate().toString());
+                date.setAlignment(Pos.CENTER);
+                date.setMaxWidth(Double.MAX_VALUE);
+
+                // Añadiendo los elementos al VBox
+                vbox.getChildren().addAll(title, approver, date);
+                vbox.setAlignment(Pos.CENTER);
+                vbox.setSpacing(5);
+                vbox.setPadding(new Insets(10));
+                vbox.setPrefHeight(50);
+                vbox.setPrefWidth(180);
+
+                AnchorPane.setTopAnchor(vbox, 10.0);
+                AnchorPane.setBottomAnchor(vbox, 10.0);
+                AnchorPane.setLeftAnchor(vbox, 10.0);
+                AnchorPane.setRightAnchor(vbox, 10.0);
+
+                pane.setOnMouseClicked(event -> {
+
+                    txfAprobadorAprobacion.setEditable(true);
+                    // Depuración: imprime los valores de follow en la consola
+                    System.out.println("ID: " + currentApproval.getId());
+                    System.out.println("Descripción: " + currentApproval.getDescription());
+                    System.out.println("Comentario: " + currentApproval.getComment());
+                    System.out.println("Solución: " + currentApproval.getSolution());
+                    System.out.println("Fecha: " + currentApproval.getDate());
+                    System.out.println(
+                            "Usuario: " + currentApproval.getUsers().getName() + " "
+                                    + currentApproval.getUsers().getLastNames());
+                    System.out.println("Estado: " + currentApproval.getState());
+
+                    // Mostrar el contenido del seguimiento
+
+                    txfIDAprobacion.setText(currentApproval.getId().toString());
+                    txfDescripcionAprobacion.setText(currentApproval.getDescription());
+                    txfAprobadorAprobacion.setText(currentApproval.getUsers().getName() + " "
+                            + currentApproval.getUsers().getLastNames());
+                    txfAprobadorAprobacion.setEditable(false);
+                    txfComentarioAprobacion.setText(currentApproval.getComment());
+                    txaSolucionAprobacion.setText(currentApproval.getSolution());
+                    dpFechaAprobacion.setValue(LocalDate.parse(approval.getDate().toString()));
+
+                    if (currentApproval.getState().equals("A")) {
+                        chkRechazadaAprobacion.setSelected(false);
+                        chkAprobadaAprobacion.setSelected(true);
+                    } else if (currentApproval.getState().equals("R")) {
+                        chkAprobadaAprobacion.setSelected(false);
+                        chkRechazadaAprobacion.setSelected(true);
+                    }
+
+                    if (currentApproval.getUsers().getId() != ((UsersDto) AppContext.getInstance().get("User"))
+                            .getId()) {
+                        new Mensaje().showModal(AlertType.INFORMATION, "Aprobación", getStage(),
+                                "No puedes editar una aprobación que no te pertenece.");
+                        txfIDAprobacion.setEditable(false);
+                        txfDescripcionAprobacion.setEditable(false);
+                        txfComentarioAprobacion.setEditable(false);
+                        txaSolucionAprobacion.setEditable(false);
+                        dpFechaAprobacion.setDisable(true);
+                        chkAprobadaAprobacion.setDisable(true);
+                        chkRechazadaAprobacion.setDisable(true);
+                        txfAprobadorAprobacion.setEditable(false);
+                    } else {
+                        txfIDAprobacion.setEditable(true);
+                        txfDescripcionAprobacion.setEditable(true);
+                        txfComentarioAprobacion.setEditable(true);
+                        txaSolucionAprobacion.setEditable(true);
+                        dpFechaAprobacion.setDisable(false);
+                        chkAprobadaAprobacion.setDisable(false);
+                        chkRechazadaAprobacion.setDisable(false);
+                        txfAprobadorAprobacion.setEditable(false);
+                        return;
+                    }
+
+                });
+
+                pane.getChildren().add(vbox);
+
+                vboxAprobaciones.getChildren().add(pane);
+
             }
 
             bindGestion(false);
@@ -1101,40 +1493,39 @@ public class GestionesController extends Controller implements Initializable {
         }
     }
 
-    private List<UsersDto> getApprovers() {
-
-        List<UsersDto> selected = new ArrayList<>();
-
-        return null;
-    }
-
     // save methods
 
     private void saveGestion() {
         try {
-            setAssigned();
-            setState();
-            setActivity();
-            setApproversGestion();
-            UsersDto user = (UsersDto) AppContext.getInstance().get("User");
-            this.gestion.setRequester(user);
-            System.out.println("Solicitante: " + gestion.getRequester().getId());
-            if (gestion.getActivity() != null) {
-                System.out.println("Actividad: " + gestion.getActivity().getId());
-            } else if (gestion.getSubactivities() != null) {
-                System.out.println("Subactividad: " + gestion.getSubactivities().getId());
-            }
-            System.out.println(gestion.getState());
-            GestionService service = new GestionService();
-            Respuesta respuesta = service.createGestion(gestion);
-            if (!respuesta.getEstado()) {
-                new Mensaje().showModal(AlertType.INFORMATION, "Gestión", getStage(), respuesta.getMensaje());
+            String invalid = validarRequeridos();
+            if (!invalid.isEmpty()) {
+                new Mensaje().showModal(AlertType.INFORMATION, "Gestión", getStage(), invalid);
             } else {
-                new Mensaje().showModal(AlertType.INFORMATION, "Gestión", getStage(), respuesta.getMensaje());
-                unbindGestion();
-                this.gestion = (GestionsDto) respuesta.getResultado("Gestion");
-                bindGestion(false);
-                new Mensaje().showModal(AlertType.INFORMATION, "Gestión", getStage(), "Gestión guardada con éxito");
+                setAssigned();
+                setState();
+                setActivity();
+                setApproversGestion();
+                UsersDto user = (UsersDto) AppContext.getInstance().get("User");
+                this.gestion.setRequester(user);
+                System.out.println("Solicitante: " + gestion.getRequester().getId());
+                if (gestion.getActivity() != null) {
+                    System.out.println("Actividad: " + gestion.getActivity().getId());
+                } else if (gestion.getSubactivities() != null) {
+                    System.out.println("Subactividad: " + gestion.getSubactivities().getId());
+                }
+                System.out.println(gestion.getState());
+                this.gestion.setDeletedApprovers(deletedUsers);
+                GestionService service = new GestionService();
+                Respuesta respuesta = service.createGestion(gestion);
+                if (!respuesta.getEstado()) {
+                    new Mensaje().showModal(AlertType.INFORMATION, "Gestión", getStage(), respuesta.getMensaje());
+                } else {
+                    new Mensaje().showModal(AlertType.INFORMATION, "Gestión", getStage(), respuesta.getMensaje());
+                    unbindGestion();
+                    this.gestion = (GestionsDto) respuesta.getResultado("Gestion");
+                    bindGestion(false);
+                    new Mensaje().showModal(AlertType.INFORMATION, "Gestión", getStage(), "Gestión guardada con éxito");
+                }
             }
         } catch (Exception e) {
             Logger.getLogger(GestionesController.class.getName()).log(Level.SEVERE, "Error guardando la gestion", e);
@@ -1145,22 +1536,31 @@ public class GestionesController extends Controller implements Initializable {
 
     private void saveFollow() {
         try {
-            this.follow.setGestions(this.gestion);
-            this.follow.setUsers((UsersDto) AppContext.getInstance().get("User"));
-            this.follow.setArchive(txaTextoSeguimiento.getText().getBytes(StandardCharsets.UTF_8));
-            GestionService service = new GestionService();
-            Respuesta respuesta = service.createFollow(follow);
-            if (!respuesta.getEstado()) {
-                new Mensaje().showModal(AlertType.INFORMATION, "Seguimiento", getStage(), respuesta.getMensaje());
+            if (txfUsuarioSeguimiento.getText().isEmpty() || txfUsuarioSeguimiento.getText().isBlank()
+                    || dpFechaSeguimeinto.getValue() == null || txaTextoSeguimiento.getText().isEmpty()
+                    || txaTextoSeguimiento.getText().isBlank() || txfDescripcionSeguimiento.getText().isEmpty()
+                    || txfDescripcionSeguimiento.getText().isBlank()) {
+                new Mensaje().showModal(AlertType.INFORMATION, "Seguimiento", getStage(),
+                        "Debe completar todos los campos requeridos");
             } else {
-                unbindFollow();
-                this.follow = (FollowsDto) respuesta.getResultado("Follow");
-                bindFollow(false);
-                vboxHistorial.getChildren().clear();
-                chargeGestion(Long.valueOf(txfIDGestion.getText()));
-                new Mensaje().showModal(AlertType.INFORMATION, "Seguimiento", getStage(), respuesta.getMensaje());
+                this.follow.setGestions(this.gestion);
+                this.follow.setUsers((UsersDto) AppContext.getInstance().get("User"));
+                this.follow.setArchive(txaTextoSeguimiento.getText().getBytes(StandardCharsets.UTF_8));
+                GestionService service = new GestionService();
+                Respuesta respuesta = service.createFollow(follow);
+                if (!respuesta.getEstado()) {
+                    new Mensaje().showModal(AlertType.INFORMATION, "Seguimiento", getStage(), respuesta.getMensaje());
+                } else {
+                    unbindFollow();
+                    this.follow = (FollowsDto) respuesta.getResultado("Follow");
+                    bindFollow(false);
+                    vboxHistorial.getChildren().clear();
+                    chargeGestion(Long.valueOf(txfIDGestion.getText()));
+                    new Mensaje().showModal(AlertType.INFORMATION, "Seguimiento", getStage(), respuesta.getMensaje());
 
+                }
             }
+
         } catch (Exception e) {
             Logger.getLogger(GestionesController.class.getName()).log(Level.SEVERE, "Error guardando el seguimiento",
                     e);
@@ -1171,25 +1571,34 @@ public class GestionesController extends Controller implements Initializable {
 
     private void saveApproval() {
         try {
-            this.approval.setGestion(this.gestion);
-            this.approval.setUsers((UsersDto) AppContext.getInstance().get("User"));
-            if (chkAprobadaAprobacion.isSelected()) {
-                this.approval.setState("A");
-            } else if (chkRechazadaAprobacion.isSelected()) {
-                this.approval.setState("R");
-            }
-            this.approval.setDescription(txfDescripcionAprobacion.getText());
-            this.approval.setComment(txfComentarioAprobacion.getText());
-            this.approval.setSolution(txaSolucionAprobacion.getText());
-            GestionService service = new GestionService();
-            Respuesta respuesta = service.createApproval(approval);
-            if (!respuesta.getEstado()) {
-                new Mensaje().showModal(AlertType.INFORMATION, "Aprobación", getStage(), respuesta.getMensaje());
+
+            if (txfAprobadorAprobacion.getText().isEmpty() || txfAprobadorAprobacion.getText().isBlank()
+                    || dpFechaAprobacion.getValue() == null || txaSolucionAprobacion.getText().isEmpty()
+                    || txaSolucionAprobacion.getText().isBlank() || txfDescripcionAprobacion.getText().isEmpty()
+                    || txfDescripcionAprobacion.getText().isBlank()) {
+                new Mensaje().showModal(AlertType.INFORMATION, "Aprobación", getStage(),
+                        "Debe completar todos los campos requeridos");
             } else {
-                unbindApproval();
-                this.approval = (ApprovalsDto) respuesta.getResultado("Approval");
-                bindApproval(false);
-                new Mensaje().showModal(AlertType.INFORMATION, "Aprobación", getStage(), respuesta.getMensaje());
+                this.approval.setGestion(this.gestion);
+                this.approval.setUsers((UsersDto) AppContext.getInstance().get("User"));
+                if (chkAprobadaAprobacion.isSelected()) {
+                    this.approval.setState("A");
+                } else if (chkRechazadaAprobacion.isSelected()) {
+                    this.approval.setState("R");
+                }
+                this.approval.setDescription(txfDescripcionAprobacion.getText());
+                this.approval.setComment(txfComentarioAprobacion.getText());
+                this.approval.setSolution(txaSolucionAprobacion.getText());
+                GestionService service = new GestionService();
+                Respuesta respuesta = service.createApproval(approval);
+                if (!respuesta.getEstado()) {
+                    new Mensaje().showModal(AlertType.INFORMATION, "Aprobación", getStage(), respuesta.getMensaje());
+                } else {
+                    unbindApproval();
+                    this.approval = (ApprovalsDto) respuesta.getResultado("Approval");
+                    bindApproval(false);
+                    new Mensaje().showModal(AlertType.INFORMATION, "Aprobación", getStage(), respuesta.getMensaje());
+                }
             }
         } catch (Exception e) {
             Logger.getLogger(GestionesController.class.getName()).log(Level.SEVERE, "Error guardando la aprobación",
@@ -1272,6 +1681,11 @@ public class GestionesController extends Controller implements Initializable {
                     "Desea crear un nuevo seguimiento?")) {
                 newFollow();
             }
+        } else if (tptAprobaciones.isSelected()) {
+            if (new Mensaje().showConfirmation("Nueva Aprobación", getStage(),
+                    "Desea crear una nueva aprobación?")) {
+                newApproval();
+            }
         }
 
     }
@@ -1290,7 +1704,7 @@ public class GestionesController extends Controller implements Initializable {
 
     @FXML
     void onActionBtnSearch(ActionEvent event) {
-        if (tptSeguimeinto.isSelected() || tptAprobaciones.isSelected()) {
+        if (tptSeguimeinto.isSelected()) {
             tbGestiones.getSelectionModel().select(tptGestiones);
         }
 
@@ -1334,6 +1748,7 @@ public class GestionesController extends Controller implements Initializable {
             }
             txfUsuarioSeguimiento.setText(((UsersDto) AppContext.getInstance().get("User")).getName() + " "
                     + ((UsersDto) AppContext.getInstance().get("User")).getLastNames());
+            txfUsuarioSeguimiento.setEditable(false);
             newFollow();
         }
 
@@ -1362,6 +1777,10 @@ public class GestionesController extends Controller implements Initializable {
                     tbGestiones.getSelectionModel().select(tptGestiones);
                 }
             }
+
+            txfAprobadorAprobacion.setText(((UsersDto) AppContext.getInstance().get("User")).getName() + " "
+                    + ((UsersDto) AppContext.getInstance().get("User")).getLastNames());
+            txfAprobadorAprobacion.setEditable(false);
         }
     }
 
@@ -1370,6 +1789,7 @@ public class GestionesController extends Controller implements Initializable {
         format();
         initEntities();
         newGestion();
+        allRequieredFields();
 
     }
 

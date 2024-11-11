@@ -309,6 +309,27 @@
                                  <children>
                                     <HBox layoutX="294.0" layoutY="221.0" prefHeight="609.0" prefWidth="1136.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
+                                          <StackPane maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="589.0" prefWidth="272.0" styleClass="stack-personal-pane" HBox.hgrow="ALWAYS">
+                                             <children>
+                                                <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                                                   <StackPane.margin>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </StackPane.margin>
+                                                   <children>
+                                                      <Label styleClass="stackpane-label-black" text="Aprobaciones" />
+                                                      <Separator prefWidth="200.0" />
+                                                      <MFXScrollPane prefHeight="491.0" prefWidth="342.0">
+                                                         <content>
+                                                            <VBox fx:id="vboxAprobaciones" alignment="TOP_CENTER" prefHeight="489.0" prefWidth="246.0" />
+                                                         </content>
+                                                      </MFXScrollPane>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                             <HBox.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </HBox.margin>
+                                          </StackPane>
                                           <StackPane prefHeight="150.0" prefWidth="200.0" styleClass="stack-personal-pane" HBox.hgrow="ALWAYS">
                                              <HBox.margin>
                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -320,10 +341,22 @@
                                                    </StackPane.margin>
                                                    <children>
                                                       <Label styleClass="stackpane-label-black" text="Informacion de la Aprobacion" />
-                                                      <MFXTextField fx:id="txfIDAprobacion" floatMode="BORDER" floatingText="ID" />
-                                                      <MFXTextField fx:id="txfDescripcionAprobacion" floatMode="BORDER" floatingText="Descripcion" minWidth="-Infinity" prefWidth="300.0" />
-                                                      <MFXTextField fx:id="txfComentarioAprobacion" floatMode="BORDER" floatingText="Comentario" minWidth="-Infinity" prefWidth="300.0" />
-                                                      <TextArea fx:id="txaSolucionAprobacion" prefHeight="137.0" prefWidth="512.0" promptText="Solucion" />
+                                                      <MFXTextField fx:id="txfIDAprobacion" floatMode="BORDER" floatingText="ID">
+                                                         <styleClass>
+                                                            <String fx:value="jfx-txfs-security" />
+                                                            <String fx:value="jfx-txfs-security-container" />
+                                                         </styleClass></MFXTextField>
+                                                      <MFXTextField fx:id="txfDescripcionAprobacion" floatMode="BORDER" floatingText="Descripcion" minWidth="-Infinity" prefWidth="300.0">
+                                                         <styleClass>
+                                                            <String fx:value="jfx-txfs-security" />
+                                                            <String fx:value="jfx-txfs-security-container" />
+                                                         </styleClass></MFXTextField>
+                                                      <MFXTextField fx:id="txfComentarioAprobacion" floatMode="BORDER" floatingText="Comentario" minWidth="-Infinity" prefWidth="300.0">
+                                                         <styleClass>
+                                                            <String fx:value="jfx-txfs-security" />
+                                                            <String fx:value="jfx-txfs-security-container" />
+                                                         </styleClass></MFXTextField>
+                                                      <TextArea fx:id="txaSolucionAprobacion" prefHeight="137.0" prefWidth="512.0" promptText="Solucion" wrapText="true" />
                                                       <Label layoutX="174.0" layoutY="10.0" styleClass="stackpane-label-black" text="Fecha de Aprobacion" />
                                                       <MFXDatePicker fx:id="dpFechaAprobacion" />
                                                    </children>
@@ -341,7 +374,11 @@
                                                    </StackPane.margin>
                                                    <children>
                                                       <Label styleClass="stackpane-label-black" text="Informacion del Aprobador" />
-                                                      <MFXTextField fx:id="txfAprobadorAprobacion" floatMode="BORDER" floatingText="Aprobador" minWidth="-Infinity" prefWidth="300.0" />
+                                                      <MFXTextField fx:id="txfAprobadorAprobacion" floatMode="BORDER" floatingText="Aprobador" minWidth="-Infinity" prefWidth="300.0">
+                                                         <styleClass>
+                                                            <String fx:value="jfx-txfs-security" />
+                                                            <String fx:value="jfx-txfs-security-container" />
+                                                         </styleClass></MFXTextField>
                                                       <Separator prefWidth="200.0" />
                                                       <Label layoutX="174.0" layoutY="10.0" styleClass="stackpane-label-black" text="Estado de la Aprobacion" />
                                                       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
@@ -350,9 +387,6 @@
                                                             <MFXCheckbox fx:id="chkRechazadaAprobacion" layoutX="10.0" layoutY="10.0" text="Rechazada" />
                                                          </children>
                                                       </HBox>
-                                                      <Separator layoutX="10.0" layoutY="82.0" prefWidth="200.0" />
-                                                      <Label layoutX="178.0" layoutY="85.0" styleClass="stackpane-label-black" text="Adjuntar Documentos" />
-                                                      <MFXButton fx:id="btnAdjuntarAprobacion" onAction="#onActionBtnAdjuntarAprobacion" text="Adjuntar" />
                                                       <Separator layoutX="10.0" layoutY="203.0" prefWidth="200.0" />
                                                       <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>

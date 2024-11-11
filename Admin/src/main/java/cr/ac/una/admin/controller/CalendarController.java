@@ -24,67 +24,123 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 public class CalendarController extends Controller implements Initializable {
 
     @FXML
     private StackPane stackPane;
+    @FXML
+    private ImageView imgvExit;
+    @FXML
+    private VBox vbContainer;
 
     private CalendarView calendarView;
     private CalendarSource calendarSource;
-    UsersDto user;
-    GestionsDto gestion;
-    Calendar gestionCalendar;
+    private UsersDto user;
+    private Calendar gestionCalendar;
     private final Map<Entry<String>, GestionsDto> gestionMap = new HashMap<>();
 
+    // Inicialización inicial que solo se ejecuta una vez
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        stackPane.setPrefSize(800, 600);
-        user = (UsersDto) AppContext.getInstance().get("User");
-        gestion = new GestionsDto();
         calendarView = new CalendarView();
-        calendarSource = new CalendarSource("Calendario de gestiones de:" + user.getName() + " " + user.getLastNames());
+        calendarView.setPrefSize(800, 550);
+        gestionCalendar = new Calendar("Gestiones");
+        gestionCalendar.setShortName("Gestiones");
+        gestionCalendar.setStyle(Calendar.Style.STYLE1);
+
         createCalendar();
+    }
+
+    // Método de inicialización para cada carga de la vista
+    @Override
+    public void initialize() {
+        // Obtener el usuario actualizado y configurar el CalendarSource
+        user = (UsersDto) AppContext.getInstance().get("User");
+
+        // Remover el CalendarSource previo si existe
+        calendarView.getCalendarSources().clear();
+
+        // Crear un nuevo CalendarSource con el nombre del usuario actualizado
+        calendarSource = new CalendarSource(
+                "Calendario de gestiones de: " + user.getName() + " " + user.getLastNames());
+        calendarSource.getCalendars().add(gestionCalendar);
+
+        // Añadir el nuevo CalendarSource al CalendarView
+        calendarView.getCalendarSources().add(calendarSource);
+
+        // Limpiar y volver a añadir el CalendarView en el stackPane
+        stackPane.getChildren().clear();
+        stackPane.getChildren().add(calendarView);
+
+        // Cargar gestiones y actualizar el hilo de tiempo del calendario
+        loadGestions();
+        startCalendarUpdateThread();
     }
 
     private void loadGestions() {
         try {
             GestionService service = new GestionService();
             Respuesta respuesta = service.getGestiones();
+
             if (!respuesta.getEstado()) {
                 new Mensaje().showModal(AlertType.ERROR, "Error en carga de gestiones", this.getStage(),
                         respuesta.getMensaje());
             } else {
+                // Obtener el usuario actual desde AppContext
+                UsersDto currentUser = (UsersDto) AppContext.getInstance().get("User");
                 List<GestionsDto> gestiones = (List<GestionsDto>) respuesta.getResultado("Gestiones");
+
                 Platform.runLater(() -> {
+                    gestionCalendar.clear(); // Limpiar las entradas anteriores en el calendario
+
                     gestiones.forEach(g -> {
-                        Entry<String> gestionEntry = new Entry<>(g.getSubject());
-                        gestionEntry.setInterval(g.getCreationDate().atStartOfDay(),
-                                g.getSolutionDate().atStartOfDay());
+                        // Filtrar la gestión solo si el usuario es Requester, Assigned o está en
+                        // Approvers
+                        boolean isRequester = g.getRequester() != null
+                                && g.getRequester().getId().equals(currentUser.getId());
+                        boolean isAssigned = g.getAssigned() != null
+                                && g.getAssigned().getId().equals(currentUser.getId());
+                        boolean isApprover = g.getApprovers() != null && g.getApprovers().stream()
+                                .anyMatch(approver -> approver.getId().equals(currentUser.getId()));
 
-                        // Store the entry in the map for access
-                        gestionMap.put(gestionEntry, g);
+                        if (isRequester || isAssigned || isApprover) {
+                            // Crear y añadir la entrada al calendario si cumple con los criterios
+                            Entry<String> gestionEntry = new Entry<>(g.getSubject());
+                            gestionEntry.setInterval(g.getCreationDate().atStartOfDay(),
+                                    g.getSolutionDate().atStartOfDay());
 
-                        // Add the entry to the calendar
-                        gestionCalendar.addEntry(gestionEntry);
+                            // Guardar la entrada en el mapa para acceso
+                            gestionMap.put(gestionEntry, g);
+
+                            // Añadir la entrada al calendario
+                            gestionCalendar.addEntry(gestionEntry);
+                        }
                     });
                 });
 
-                // Add a selection listener to handle double-clicks
+                // Añadir un listener de selección para manejar doble clic
                 calendarView.setEntryDetailsPopOverContentCallback(param -> {
                     Entry<?> entry = param.getEntry();
                     if (entry != null && gestionMap.containsKey(entry)) {
                         param.getNode().setOnMouseClicked(event -> {
-                            if (event.getClickCount() == 2) { // Detect double-click
+                            if (event.getClickCount() == 2) { // Detectar doble clic
                                 GestionsDto gestion = gestionMap.get(entry);
                                 AppContext.getInstance().set("Gestion", gestion);
                                 FlowController.getInstance().goViewInWindow("GestionView");
-                                this.getStage().close();
+                                Platform.runLater(() -> {
+                                    if (this.getStage().isShowing()) {
+                                        this.getStage().close();
+                                    }
+                                });
                             }
                         });
                     }
-                    return null; // Avoid showing the default popover
+                    return null; // Evitar mostrar el popover predeterminado
                 });
             }
         } catch (Exception ex) {
@@ -94,16 +150,14 @@ public class CalendarController extends Controller implements Initializable {
     }
 
     private void createCalendar() {
-        gestionCalendar = new Calendar("Gestiones");
-        gestionCalendar.setShortName("Gestiones");
-        gestionCalendar.setStyle(Calendar.Style.STYLE1);
-        calendarSource.getCalendars().add(gestionCalendar);
-        calendarView.getCalendarSources().add(calendarSource);
-        calendarView.setRequestedTime(LocalTime.now());
-        stackPane.getChildren().add(calendarView);
+        // Este método prepara la vista del calendario, que solo necesita llamarse una
+        // vez
+        if (!stackPane.getChildren().contains(calendarView)) {
+            stackPane.getChildren().add(calendarView);
+        }
+    }
 
-        loadGestions();
-
+    private void startCalendarUpdateThread() {
         // Hilo para actualizar la fecha y hora del calendario cada 10 segundos
         Thread updateTimeThread = new Thread(() -> {
             while (!Thread.currentThread().isInterrupted()) {
@@ -124,8 +178,9 @@ public class CalendarController extends Controller implements Initializable {
         updateTimeThread.start();
     }
 
-    @Override
-    public void initialize() {
-
+    @FXML
+    void onMouseClickedImgvExit(MouseEvent event) {
+        FlowController.getInstance().goViewInWindow("PrincipalView");
+        this.getStage().close();
     }
 }
