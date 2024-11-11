@@ -846,6 +846,14 @@
   -fx-image: url("../resources/off.png");
 }
 
+.jfx-btn-export > ImageView {
+  -fx-image: url("../resources/export.png");
+}
+
+.jfx-btn-clean > ImageView {
+  -fx-image: url("../resources/clean.png");
+}
+
 /* Botón de Guardar - Verde Pastel Oscuro */
 .jfx-btn-save {
   -fx-background-repeat: no-repeat;
@@ -1199,3 +1207,58 @@
   -fx-background-color: #0A1B42;
   -fx-text-fill: white;
 }
+
+.jfx-btn-export {
+  -fx-background-repeat: no-repeat;
+  -fx-background-size: contain;
+  -fx-background-position: center;
+  -fx-background-color: #6bffb8; /* Verde pastel */
+  -fx-border-color: transparent;
+  -fx-padding: 0;
+  -fx-background-radius: 10;
+
+  -fx-focus-color: transparent;
+  -fx-faint-focus-color: transparent;
+
+  -fx-text-fill: white;
+
+  -fx-font-family: "Segoe UI", sans-serif;
+  -fx-font-size: 14px;
+  -fx-font-weight: normal;
+}
+
+.jfx-btn-export:pressed,
+.jfx-btn-export:hover,
+.jfx-btn-export:armed,
+.jfx-btn-export:focused {
+  -fx-background-color: #5be8a3; /* Color de fondo al interactuar */
+  -fx-text-fill: white;
+}
+
+.jfx-btn-clean {
+  -fx-background-repeat: no-repeat;
+  -fx-background-size: contain;
+  -fx-background-position: center;
+  -fx-background-color: #6bb8ff; /* Azul pastel */
+  -fx-border-color: transparent;
+  -fx-padding: 0;
+  -fx-background-radius: 10;
+
+  -fx-focus-color: transparent;
+  -fx-faint-focus-color: transparent;
+
+  -fx-text-fill: white;
+
+  -fx-font-family: "Segoe UI", sans-serif;
+  -fx-font-size: 14px;
+  -fx-font-weight: normal;
+}
+
+.jfx-btn-clean:pressed,
+.jfx-btn-clean:hover,
+.jfx-btn-clean:armed,
+.jfx-btn-clean:focused {
+  -fx-background-color: #5a9ae8; /* Color de fondo al interactuar */
+  -fx-text-fill: white;
+}
+

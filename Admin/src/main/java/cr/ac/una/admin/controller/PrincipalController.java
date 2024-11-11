@@ -89,9 +89,6 @@ public class PrincipalController extends Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        user = (UsersDto) AppContext.getInstance().get("User");
-        username = user.getName();
-        updateGreeting();
         updateClock();
 
         int gestionesPendientes = 10; // Reemplazar con el valor real
@@ -110,6 +107,10 @@ public class PrincipalController extends Controller implements Initializable {
 
     @Override
     public void initialize() {
+
+        user = (UsersDto) AppContext.getInstance().get("User");
+        username = user.getName();
+        updateGreeting();
 
     }
 
@@ -165,7 +166,8 @@ public class PrincipalController extends Controller implements Initializable {
     @FXML
     void onActionBtnSearch(ActionEvent event) {
 
-        FlowController.getInstance().goViewInWindow("SearchView");
+        FlowController.getInstance().goViewInWindow("Searchs");
+        this.getStage().close();
 
     }
 
@@ -188,7 +190,7 @@ public class PrincipalController extends Controller implements Initializable {
     void onActionBtnSalir(ActionEvent event) {
 
         FlowController.getInstance().goViewInWindow("LoginView");
-        getStage().close();
+        this.getStage().close();
 
     }
 
