@@ -80,27 +80,33 @@ public class ReportsService {
             List<Gestions> gestiones = query.getResultList();
             List<GestionsDto> gestionesDto = gestiones.stream()
                     .map(g -> {
-                        LocalDate a = LocalDate.of(2024, 11, 10);
                         GestionsDto dto = new GestionsDto(g);
-                        dto.setOnTime(dto.getState().equals("C") && dto.getSolutionDate() != null && !dto.getSolutionDate().isBefore(LocalDate.now()));
+                        dto.setOnTime(dto.getState().equals("R") || dto.getState().equals("A")||dto.getState().equals("C")
+                                && dto.getSolutionDate() != null && !dto.getSolutionDate().isBefore(LocalDate.now()));
                         return dto;
                     })
                     .collect(Collectors.toList());
 
             // Calcular los conteos para los gráficos
-            long enTiempoCount = gestionesDto.stream().filter(dto -> dto.getOnTime()).count();
-            long fueraDeTiempoCount = gestionesDto.stream().filter(dto -> !dto.getOnTime()).count();
-            long pendientesCount = gestionesDto.stream().filter(g -> g.getState().equals("S")).count();
-            long atendidasCount = gestionesDto.stream().filter(g -> g.getState().equals("A")).count();
+            long enTiempoCount = gestionesDto.stream().filter(dto -> Boolean.TRUE.equals(dto.getOnTime())).count();
+            long fueraDeTiempoCount = gestionesDto.stream().filter(dto -> Boolean.FALSE.equals(dto.getOnTime())).count();
+            long pendientesCount = gestionesDto.stream().filter(g -> g.getState().equals("S") || g.getState().equals("C") || g.getState().equals("E")).count();
+            long atendidasCount = gestionesDto.stream().filter(g -> g.getState().equals("R") || g.getState().equals("A")).count();
+            long rechazadasCount = gestionesDto.stream().filter(g -> g.getState().equals("R")).count();
+            long totalAprobadas = gestionesDto.stream().filter(g -> g.getState().equals("A")).count();
+            long totalGestiones = gestionesDto.size();
 
             // Parámetros para el reporte
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("gestionesData", new JRBeanCollectionDataSource(gestionesDto));
-            parameters.put("areaId", areaId);
+            parameters.put("areaId", areaId.toString());
             parameters.put("enTiempoCount", (int) enTiempoCount);
             parameters.put("fueraDeTiempoCount", (int) fueraDeTiempoCount);
+            parameters.put("totalGestiones", (int) totalGestiones);
             parameters.put("pendientesCount", (int) pendientesCount);
             parameters.put("atendidasCount", (int) atendidasCount);
+            parameters.put("rendGestiones", (int) rechazadasCount);
+            parameters.put("totalAprobadas", (int) totalAprobadas);
 
             byte[] reportPdf = ReportsUtil.generatePdfReport("reportGestionesArea.jrxml", gestionesDto, parameters);
 
