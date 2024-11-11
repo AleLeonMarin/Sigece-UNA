@@ -117,5 +117,45 @@ public class ReportsService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error al generar el reporte de rendimiento de gestiones", ex.getMessage());
         }
     }
+    
+    
+    public Respuesta generateGestionesAsignadasReport(Long assignedUserId) {
+        try {
+            // Consulta para obtener gestiones asignadas al usuario
+            TypedQuery<Gestions> query = em.createQuery(
+                    "SELECT g FROM Gestions g WHERE g.assigned.id = :assignedUserId", Gestions.class);
+            query.setParameter("assignedUserId", assignedUserId);
+
+            List<Gestions> gestiones = query.getResultList();
+
+            // Convertir las entidades a DTOs
+            List<GestionsDto> gestionesDto = gestiones.stream()
+                    .map(GestionsDto::new)
+                    .collect(Collectors.toList());
+
+            // Calcular conteos
+            long pendientesCount = gestionesDto.stream().filter(g -> g.getState().equals("C")).count();
+            long completadasCount = gestionesDto.stream().filter(g -> g.getState().equals("A")).count();
+            long rechazadasCount = gestionesDto.stream().filter(g -> g.getState().equals("R")).count();
+            long totales = rechazadasCount + completadasCount;
+
+            // Parámetros para el reporte
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("gestionesData", new JRBeanCollectionDataSource(gestionesDto));
+            parameters.put("pendientesCount", (int) pendientesCount);
+            parameters.put("completadasCount", (int) completadasCount);
+            parameters.put("rechazadasCount", (int) rechazadasCount);
+            parameters.put("totales", (int) totales);
+
+            // Generar el reporte
+            byte[] reportPdf = ReportsUtil.generatePdfReport("reportGestionesAsignadas.jrxml", gestionesDto, parameters);
+
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "Reporte generado correctamente", "", "ReportePDF", reportPdf);
+
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Error al generar el reporte de gestiones asignadas", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error al generar el reporte de gestiones asignadas", ex.getMessage());
+        }
+    }
 
 }
