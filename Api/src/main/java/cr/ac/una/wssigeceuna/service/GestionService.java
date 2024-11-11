@@ -6,7 +6,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.jersey.jaxb.internal.XmlCollectionJaxbProvider.App;
+
 import cr.ac.una.wssigeceuna.model.Activities;
+import cr.ac.una.wssigeceuna.model.Approvals;
+import cr.ac.una.wssigeceuna.model.ApprovalsDto;
 import cr.ac.una.wssigeceuna.model.Follows;
 import cr.ac.una.wssigeceuna.model.FollowsDto;
 import cr.ac.una.wssigeceuna.model.Gestions;
@@ -54,6 +58,7 @@ public class GestionService {
                 } else if (gestion.getSubactivities() != null) {
                     gestions.setSubactivities(em.find(Subactivities.class, gestion.getSubactivities().getId()));
                 }
+                gestion.setDeletedApprovers(gestion.getDeletedApprovers());
                 boolean modificated = gestion.getId() != null && gestion.getId() > 0;
                 gestions.setSolutionDate(gestion.getSolutionDate());
                 if (modificated) {
@@ -214,6 +219,10 @@ public class GestionService {
 
             for (Follows f : gestions.getFollows()) {
                 dto.getFollows().add(new FollowsDto(f));
+            }
+
+            for (Approvals a : gestions.getApprovals()) {
+                dto.getApprovals().add(new ApprovalsDto(a));
             }
 
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Gestion", dto);

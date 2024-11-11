@@ -111,4 +111,38 @@ public class GestionService {
         }
     }
 
+    public Respuesta getApprovals() {
+        try {
+            Request request = new Request("approvals/getApprovals");
+            request.get();
+
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+
+            List<ApprovalsDto> approvals = (List<ApprovalsDto>) request
+                    .readEntity(new GenericType<List<ApprovalsDto>>() {
+                    });
+            return new Respuesta(true, "", "", "Approvals", approvals);
+        } catch (Exception ex) {
+            return new Respuesta(false, "Error obteniendo las aprobaciones.", "getApprovals " + ex.getMessage());
+        }
+    }
+
+    public Respuesta getApproval(Long id) {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("id", id);
+            Request request = new Request("approvals/getApproval", "/{id}", params);
+            request.get();
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+            ApprovalsDto approval = (ApprovalsDto) request.readEntity(ApprovalsDto.class);
+            return new Respuesta(true, "", "", "Approval", approval);
+        } catch (Exception ex) {
+            return new Respuesta(false, "Error obteniendo la aprobación.", "getApproval " + ex.getMessage());
+        }
+    }
+
 }
