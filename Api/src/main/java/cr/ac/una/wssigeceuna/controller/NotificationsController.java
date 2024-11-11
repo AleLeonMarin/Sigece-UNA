@@ -5,7 +5,9 @@ import java.util.logging.Logger;
 import cr.ac.una.wssigeceuna.model.NotificationsDto;
 import cr.ac.una.wssigeceuna.service.NotificationService;
 import cr.ac.una.wssigeceuna.util.CodigoRespuesta;
+import cr.ac.una.wssigeceuna.util.PermitAll;
 import cr.ac.una.wssigeceuna.util.Respuesta;
+import cr.ac.una.wssigeceuna.util.Secure;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -15,6 +17,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+@Secure
 @Path("/notifications")
 @Tag(name = "Notifications", description = "API para las notificaciones del sistema")
 public class NotificationsController {
@@ -24,6 +27,8 @@ public class NotificationsController {
     @EJB
     NotificationService notificationsService;
 
+    
+    @PermitAll
     @GET
     @Path("/get/{id}")
     @Produces(MediaType.APPLICATION_JSON)

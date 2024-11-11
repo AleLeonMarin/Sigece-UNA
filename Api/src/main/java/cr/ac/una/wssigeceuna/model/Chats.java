@@ -94,8 +94,8 @@ public class Chats implements Serializable {
     public void update(ChatsDto cht) {
         this.date = cht.getDate();
         this.version = cht.getVersion();
-        this.receptor = cht.getReceptor();
-        this.emisor = cht.getEmisor();
+        this.receptor = new Users(cht.getReceptor());
+        this.emisor = new Users(cht.getEmisor());
         
         if (cht.getMessages() != null) {
         this.messages = new ArrayList<>();
@@ -107,11 +107,11 @@ public class Chats implements Serializable {
     }
           if (cht.getReceptor() != null) {
         this.receptor = new Users();
-        this.receptor=cht.getReceptor();
+        this.receptor=new Users(cht.getReceptor());
     }
     if (cht.getEmisor() != null) {
         this.emisor = new Users();
-        this.emisor=cht.getEmisor();
+        this.emisor=new Users(cht.getEmisor());
     }
 
 

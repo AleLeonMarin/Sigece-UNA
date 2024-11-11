@@ -20,6 +20,7 @@ import jakarta.ws.rs.core.Response;
 import java.util.List;
 
 
+@Secure
 @Path("/variables")
 @Tag(name = "Variables", description = "API para las variables del sistema")
 public class VariablesController {

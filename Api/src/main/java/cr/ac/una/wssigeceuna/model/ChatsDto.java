@@ -33,11 +33,11 @@ public class ChatsDto implements Serializable {
 
     
     @Schema(description = "Receptor del chat")
-    private Users receptor;
+    private UsersDto receptor;
 
 
     @Schema(description = "Emisor del chat")
-    private Users emisor;
+    private UsersDto emisor;
 
     @Schema(description = "Version del chat", example = "1")
     private Long version;
@@ -52,8 +52,8 @@ public class ChatsDto implements Serializable {
         this();
         this.id = chats.getId();
         this.date = chats.getDate();
-        this.receptor = chats.getReceptor();
-        this.emisor = chats.getEmisor();
+        this.receptor = new UsersDto(chats.getReceptor());
+        this.emisor = new UsersDto(chats.getEmisor());
         this.version = chats.getVersion();
         
            if (chats.getMessages() != null) {
@@ -84,19 +84,19 @@ public class ChatsDto implements Serializable {
         this.date = date;
     }
 
-    public Users getReceptor() {
+    public UsersDto getReceptor() {
         return receptor;
     }
 
-    public void setReceptor(Users receptor) {
+    public void setReceptor(UsersDto receptor) {
         this.receptor = receptor;
     }
 
-    public Users getEmisor() {
+    public UsersDto getEmisor() {
         return emisor;
     }
 
-    public void setEmisor(Users emisor) {
+    public void setEmisor(UsersDto emisor) {
         this.emisor = emisor;
     }
 
