@@ -829,7 +829,6 @@ public class ChatsAppController extends Controller implements Initializable {
 
         if (respuesta.getEstado()) {
             System.out.println("Audio enviado correctamente.");
-            // Opcionalmente, puedes actualizar la interfaz aquí
         } else {
             System.out.println("Error enviando el audio: " + respuesta.getMensaje());
         }
