@@ -53,7 +53,7 @@ public class ReportsService {
                     .map(GestionsDto::new)
                     .collect(Collectors.toList());
 
-            UsersDto usuario = getUsuarioById(employeeId); // Asumiendo que tienes un método que obtiene el usuario por ID
+            UsersDto usuario = getUsuarioById(employeeId); 
             String nombreCompleto = usuario.getName() + " " + usuario.getLastNames();
 
             // Parámetros adicionales para el reporte
