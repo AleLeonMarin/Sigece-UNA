@@ -5,9 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
-import jakarta.json.bind.annotation.JsonbTransient;
 
-@JsonbPropertyOrder({"id", "name", "version"})
+@JsonbPropertyOrder({ "id", "name", "version" })
 @Schema(description = "Esta clase contiene la información de las actividades")
 public class ActivitiesDto implements Serializable {
 
@@ -17,7 +16,6 @@ public class ActivitiesDto implements Serializable {
     @Schema(description = "Nombre de la actividad", example = "Actividad de prueba")
     private String name;
 
-    @JsonbTransient
     private AreasDto area;
 
     @Schema(description = "Versión de la actividad", example = "1")

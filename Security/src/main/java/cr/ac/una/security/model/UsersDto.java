@@ -25,7 +25,7 @@ public class UsersDto {
     public SimpleLongProperty version;
     public SimpleBooleanProperty modified;
     public List<RolesDto> roles;
-    public List<RolesDto> eliminatedRoles; // Asegúrate de usar el mismo nombre en ambas clases
+    public List<RolesDto> eliminatedRoles; 
     public AreasDto areas;
 
     private String token;

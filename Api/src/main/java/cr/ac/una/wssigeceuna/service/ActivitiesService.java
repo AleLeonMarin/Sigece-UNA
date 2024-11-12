@@ -27,12 +27,19 @@ public class ActivitiesService {
     public Respuesta saveActivity(ActivitiesDto activity) {
 
         try {
-            Activities activities;
 
             if (activity.getArea() == null || activity.getArea().getId() == null) {
                 return new Respuesta(false, CodigoRespuesta.ERROR_CLIENTE,
-                        "Debe asociar un area válida la actividad.", "saveActivity NullPointerException");
+                        "Debe asociar un área válida a la actividad.", "saveActivity NullPointerException");
             }
+
+            Areas areaEntity = em.find(Areas.class, activity.getArea().getId());
+            if (areaEntity == null) {
+                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
+                        "No se encontró el área asociada a la actividad.", "saveActivity NoResultException");
+            }
+
+            Activities activities;
 
             if (activity.getId() != null && activity.getId() > 0) {
                 activities = em.find(Activities.class, activity.getId());
@@ -40,23 +47,14 @@ public class ActivitiesService {
                     return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
                             "No se encontró la actividad a modificar.", "saveActivity NoResultException");
                 }
-
                 activities.update(activity);
+                activities.setArea(areaEntity);
                 activities = em.merge(activities);
             } else {
+                
                 activities = new Activities(activity);
-                em.persist(activities);
-            }
-
-            Areas areaEntity = em.find(Areas.class, activity.getArea().getId());
-            if (areaEntity == null) {
-                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
-                        "No se encontró el area asociado a la actividad.", "saveActivity NoResultException");
-            }
-
-            if (activity.getArea() != null) {
                 activities.setArea(areaEntity);
-                em.merge(areaEntity);
+                em.persist(activities);
             }
 
             em.flush();
@@ -64,10 +62,9 @@ public class ActivitiesService {
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Actividad", new ActivitiesDto(activities));
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrió un error al guardar la actividad.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al guardar la actividad..",
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al guardar la actividad.",
                     "saveActivity " + ex.getMessage());
         }
-
     }
 
     public Respuesta deleteActivity(Long id) {

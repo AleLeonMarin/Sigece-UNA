@@ -82,11 +82,9 @@ public class UsersDto implements Serializable {
 
     public List<RolesDto> roles;
 
-    @JsonbTransient
     private List<RolesDto> eliminatedRoles;
 
     public AreasDto areas;
-
 
     @JsonbTransient
     public List<MessagesDto> messages;
@@ -321,6 +319,5 @@ public class UsersDto implements Serializable {
     public void setToken(String token) {
         this.token = token;
     }
-    
 
 }

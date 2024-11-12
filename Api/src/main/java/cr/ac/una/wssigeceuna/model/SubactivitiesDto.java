@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
 import jakarta.json.bind.annotation.JsonbTransient;
 
-@JsonbPropertyOrder({"id", "name", "version", "activity"})
+@JsonbPropertyOrder({ "id", "name", "version", "activity" })
 
 @Schema(description = "Clase que contiene la información de las subactividades")
 public class SubactivitiesDto {
@@ -17,7 +17,6 @@ public class SubactivitiesDto {
     @Schema(description = "Nombre de la subactividad", example = "Subactividad 1")
     private String name;
 
-    @JsonbTransient
     private ActivitiesDto activity;
 
     @Schema(description = "Versión de la subactividad", example = "1")
