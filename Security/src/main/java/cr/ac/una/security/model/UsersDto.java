@@ -25,9 +25,8 @@ public class UsersDto {
     public SimpleLongProperty version;
     public SimpleBooleanProperty modified;
     public List<RolesDto> roles;
-    public List<RolesDto> rolesDtoEliminados;
+    public List<RolesDto> eliminatedRoles; // Asegúrate de usar el mismo nombre en ambas clases
     public AreasDto areas;
-
 
     private String token;
 
@@ -55,8 +54,7 @@ public class UsersDto {
         this.version = new SimpleLongProperty(1L);
         this.modified = new SimpleBooleanProperty(false);
         this.roles = FXCollections.observableArrayList();
-        this.rolesDtoEliminados = FXCollections.observableArrayList();
-
+        this.eliminatedRoles = FXCollections.observableArrayList();
         this.token = "";
     }
 
@@ -201,14 +199,12 @@ public class UsersDto {
     }
 
     public List<RolesDto> getRolesEliminados() {
-        return rolesDtoEliminados;
+        return eliminatedRoles;
     }
 
-    public void setRolesEliminados(List<RolesDto> rolesDtoEliminados) {
-        this.rolesDtoEliminados = rolesDtoEliminados;
+    public void setRolesEliminados(List<RolesDto> eliminatedRoles) {
+        this.eliminatedRoles = FXCollections.observableArrayList(eliminatedRoles);
     }
-
-    
 
     @Override
     public String toString() {
