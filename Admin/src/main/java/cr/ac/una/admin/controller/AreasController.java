@@ -331,11 +331,31 @@ public class AreasController extends Controller implements Initializable {
 
     private void saveActivity() {
         try {
+            // Verificar si el área es nula
+            System.out.println("Área actual en actividad antes de verificar: "
+                    + (activity.getArea() == null ? "null" : activity.getArea().getName()));
+
             if (activity.getArea() == null) {
-                activity.setArea(area);
+                if (this.area != null) {
+                    activity.setArea(this.area);
+                    System.out.println("Área configurada desde this.area: " + this.area.getName());
+                } else {
+                    chargeArea(Long.valueOf(txfIDArea.getText()));
+                    if (this.area != null) {
+                        activity.setArea(this.area);
+                        System.out.println("Área cargada desde ID proporcionado: " + this.area.getName());
+                    } else {
+                        new Mensaje().showModal(AlertType.ERROR, "Guardar Actividad", getStage(),
+                                "No se encontró el área para el ID proporcionado.");
+                        return;
+                    }
+                }
             }
+
+            // Guarda la actividad
             ActivitiesService service = new ActivitiesService();
             Respuesta respuesta = service.createActivity(activity);
+
             if (!respuesta.getEstado()) {
                 new Mensaje().showModal(AlertType.ERROR, "Guardar Actividad", getStage(), respuesta.getMensaje());
             } else {

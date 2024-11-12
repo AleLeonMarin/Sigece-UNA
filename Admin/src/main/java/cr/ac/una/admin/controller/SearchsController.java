@@ -310,6 +310,7 @@ public class SearchsController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        clean();
         txfValue.setDisable(true);
         dpDates.setDisable(true);
         cmbCriterios.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> enableFields());

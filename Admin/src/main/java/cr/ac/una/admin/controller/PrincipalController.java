@@ -79,15 +79,19 @@ public class PrincipalController extends Controller implements Initializable {
                         btnReports.setVisible(false);
                         btnCalendar.setVisible(false);
                         btnSearch.setVisible(false);
+                        btnGestions.setVisible(true);
                 } else if (user.getRoles().stream().anyMatch(r -> r.getName().equals("Gestor"))) {
                         btnAreas.setVisible(false);
                         btnGestions.setVisible(false);
-                } else {
-                        btnAreas.setVisible(false);
-                        btnGestions.setVisible(false);
-                        btnReports.setVisible(false);
-                        btnCalendar.setVisible(false);
-                        btnSearch.setVisible(false);
+                        btnSearch.setVisible(true);
+                        btnReports.setVisible(true);
+                        btnCalendar.setVisible(true);
+                } else if (user.getRoles().stream().anyMatch(r -> r.getName().equals("Administrador"))) {
+                        btnAreas.setVisible(true);
+                        btnGestions.setVisible(true);
+                        btnReports.setVisible(true);
+                        btnCalendar.setVisible(true);
+                        btnSearch.setVisible(true);
                 }
         }
 
@@ -180,14 +184,25 @@ public class PrincipalController extends Controller implements Initializable {
                                 .collect(Collectors.toList()));
 
                 cargarTabla(tbvGestionArea, userGestiones.stream()
-                                .filter(g -> g.getActivity().getArea() == user.getAreas()
-                                                || g.getSubactivities().getActivity().getArea() == user.getAreas())
+                                .filter(g -> (g.getActivity() != null && g.getActivity().getArea() != null
+                                                && g.getActivity().getArea().equals(user.getAreas()))
+                                                || (g.getSubactivities() != null
+                                                                && g.getSubactivities().getActivity() != null
+                                                                && g.getSubactivities().getActivity().getArea() != null
+                                                                && g.getSubactivities().getActivity().getArea()
+                                                                                .equals(user.getAreas())))
                                 .collect(Collectors.toList()));
 
                 cargarTabla(tbvGestionAreaAsignada, userGestiones.stream()
-                                .filter(g -> g.getActivity().getArea() == user.getAreas()
-                                                || g.getSubactivities().getActivity().getArea() == user.getAreas())
+                                .filter(g -> (g.getActivity() != null && g.getActivity().getArea() != null
+                                                && g.getActivity().getArea().equals(user.getAreas()))
+                                                || (g.getSubactivities() != null
+                                                                && g.getSubactivities().getActivity() != null
+                                                                && g.getSubactivities().getActivity().getArea() != null
+                                                                && g.getSubactivities().getActivity().getArea()
+                                                                                .equals(user.getAreas())))
                                 .collect(Collectors.toList()));
+
         }
 
         /**

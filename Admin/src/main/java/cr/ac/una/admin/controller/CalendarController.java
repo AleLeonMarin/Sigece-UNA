@@ -28,6 +28,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class CalendarController extends Controller implements Initializable {
 
@@ -161,6 +162,6 @@ public class CalendarController extends Controller implements Initializable {
     @FXML
     void onMouseClickedImgvExit(MouseEvent event) {
         FlowController.getInstance().goViewInWindow("PrincipalView");
-        this.getStage().close();
+        ((Stage) imgvExit.getScene().getWindow()).close();
     }
 }

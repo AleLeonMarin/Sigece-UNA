@@ -753,7 +753,7 @@ public class GestionesController extends Controller implements Initializable {
         bindGestion(true);
         txfIDGestion.clear();
         txfIDGestion.requestFocus();
-        chkEsperaGestion.setSelected(true);
+        chkCursoGestion.setSelected(true);
         vboxHistorial.getChildren().clear();
         chargeUsers();
 
